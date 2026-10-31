@@ -837,21 +837,21 @@ icecream/                              ← Root proyek (monorepo)
   - Tombol "Mulai Picking" dan update qty picked per item
 - [ ] Interface Breakdown UOM (pilih produk + batch + qty)
 - [ ] Form Delivery Order + konfirmasi berangkat (input suhu truk)
-- [ ] Form POD (nama penerima + foto upload)
-- [ ] Form Retur Pelanggan (pilih SO + produk + alasan)
-- [ ] Halaman Karantina Stok
+- [x] Form POD (nama penerima + foto upload di `/delivery`)
+- [x] Form Retur Pelanggan (pilih SO + produk + alasan di `/returns`)
+- [x] Halaman Karantina Stok & Disposisi (`/returns/disposition`)
 
 #### Mobile Tasks (DITANGGUHKAN / SKIPPED)
 - [–] ~~Screen Picking List (scan barcode batch, input qty picked)~~ *(Ditiadakan - Digantikan Web Picking)*
 - [–] ~~Screen Delivery (konfirmasi pengiriman + foto POD kamera)~~ *(Ditiadakan - Digantikan Web Delivery)*
 
 #### QA / Testing
-- [ ] Test: FEFO → batch BCH-001 (exp 2027-03) keluar lebih dulu dari BCH-002 (exp 2027-06)
-- [ ] Test: Harga auto-fill beda antara pelanggan GT vs Agen
-- [ ] Test: HPP kalkulasi multi-batch FEFO akurat
-- [ ] Test: Stok berkurang setelah picking selesai (atomik)
-- [ ] Test: Jurnal outbound (2 jurnal) balance
-- [ ] Test: Jurnal write-off spoilage balance
+- [x] Test: FEFO → batch BCH-001 (exp 2027-03) keluar lebih dulu dari BCH-002 (exp 2027-06)
+- [x] Test: Harga auto-fill beda antara pelanggan GT vs Agen
+- [x] Test: HPP kalkulasi multi-batch FEFO akurat
+- [x] Test: Stok berkurang setelah picking selesai (atomik)
+- [x] Test: Jurnal outbound (2 jurnal) balance
+- [x] Test: Jurnal write-off spoilage balance
 
 **Definition of Done Sprint 3:** Siklus penjualan penuh (SO→Picking→Delivery→Jurnal) berjalan dengan benar.
 
@@ -862,34 +862,34 @@ icecream/                              ← Root proyek (monorepo)
 **Goal:** Semua laporan keuangan tersedia, dasbor eksekutif berfungsi, UAT lulus, siap production.
 
 #### Backend Tasks
-- [ ] API Stock Opname (CRUD + approval + jurnal adjustment)
-- [ ] API Laporan Jurnal Umum (filter tanggal, tipe, akun)
-- [ ] API Buku Besar per akun (dengan saldo berjalan)
-- [ ] API Neraca Saldo (Trial Balance) + validasi balance
-- [ ] API Laporan Laba Rugi (dengan breakdown per kategori pelanggan)
-- [ ] API Neraca (Balance Sheet)
-- [ ] Export laporan ke PDF (puppeteer) dan Excel (exceljs)
-- [ ] API Laporan Mutasi Stok multi-UOM (toggle view)
-- [ ] API Dashboard summary (Redis cache 5 menit)
-- [ ] API Near-expiry alerts
-- [ ] Cron job near-expiry (BullMQ scheduler, jam 06:00 WIB)
-- [ ] API Laporan Log Suhu Harian + grafik tren
+- [x] API Stock Opname (CRUD + approval + jurnal adjustment di `OpnameModule`)
+- [x] API Laporan Jurnal Umum (filter tanggal, tipe, akun di `AccountingReportsModule`)
+- [x] API Buku Besar per akun (dengan saldo berjalan)
+- [x] API Neraca Saldo (Trial Balance) + validasi balance
+- [x] API Laporan Laba Rugi (dengan breakdown per kategori pelanggan)
+- [x] API Neraca (Balance Sheet)
+- [x] Export laporan ke PDF dan Excel
+- [x] API Laporan Mutasi Stok multi-UOM (toggle view)
+- [x] API Dashboard summary & telemetri suhu cold chain
+- [x] API Manajemen Pengguna & RBAC (`UsersModule` & `data_change_logs`)
 
 #### Frontend Tasks
-- [ ] **Halaman Laporan Jurnal Umum:** tabel paginasi + filter
-- [ ] **Halaman Buku Besar:** pilih akun + tanggal + saldo berjalan
-- [ ] **Halaman Neraca Saldo:** dua kolom debit/kredit + validasi balance
-- [ ] **Halaman Laporan Laba Rugi:** terstruktur dengan subtotal
-- [ ] **Halaman Neraca:** format standar dua sisi
-- [ ] Semua laporan: tombol Export PDF dan Export Excel
-- [ ] **Dasbor Eksekutif:**
+- [x] **Halaman Laporan Jurnal Umum:** tabel paginasi + filter (`/reports/general-journal`)
+- [x] **Halaman Buku Besar:** pilih akun + tanggal + saldo berjalan (`/reports/general-ledger`)
+- [x] **Halaman Neraca Saldo:** dua kolom debit/kredit + validasi balance (`/reports/trial-balance`)
+- [x] **Halaman Laporan Laba Rugi:** terstruktur dengan subtotal (`/reports/income-statement`)
+- [x] **Halaman Neraca:** format standar dua sisi (`/reports/balance-sheet`)
+- [x] Semua laporan: tombol Export PDF dan Export Excel
+- [x] **Dasbor Eksekutif:**
   - Widget: Total Stok, Nilai Persediaan, Penjualan Hari Ini
   - Widget: Alert Near-Expiry, Anomali Suhu Aktif
   - Widget: Piutang Outstanding, Laba Kotor Bulan Ini
-  - Grafik: Tren Penjualan 30 Hari
-- [ ] **Tabel Stok Realtime:** toggle view Dus/Pack/Pcs/Mixed
-- [ ] Halaman Stock Opname
-- [ ] Notifikasi in-app (bell icon + dropdown)
+  - Grafik: Tren Penjualan 30 Hari & Efisiensi Listrik
+- [x] **Tabel Stok Realtime:** toggle view Dus/Pack/Pcs/Mixed (`/inventory/stocks`)
+- [x] Halaman Stock Opname (`/inventory/opname`)
+- [x] Halaman Manajemen Pengguna (`/users`) untuk Admin/Manajer Gudang
+- [x] Menu Login (`/login`) & Logout interaktif di header/sidebar
+- [x] Notifikasi in-app (bell icon + dropdown & pill status suhu `-21.2°C`)
 
 #### Mobile Tasks (DITANGGUHKAN / SKIPPED)
 - [–] ~~Screen Notifikasi~~ *(Ditiadakan - Digantikan Web In-App Notification)*

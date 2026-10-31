@@ -21,7 +21,7 @@ Semua antarmuka web dibangun menggunakan standar **TailAdmin** (Next.js 14, Tail
 ## 🚀 Status Realisasi & Capaian Proyek (Progress Tracking)
 
 > **Capaian Keseluruhan:** **168 / 168 Story Points (100.0%) — SPRINT 1, 2, 3, & 4 LULUS 100%**  
-> **Status Build:** Backend NestJS (`Exit Code 0`) | Frontend Next.js (`Exit Code 0`, 30 Rute Statis Aktif Prerendered)  
+> **Status Build:** Backend NestJS (`Exit Code 0`) | Frontend Next.js (`Exit Code 0`, 31 Rute Statis Aktif Prerendered)  
 > **Git Repository:** `https://github.com/boolank/icecreamwarehouse.git` (Branch `main`)
 
 | Siklus | Sasaran Utama | Target SP | Status | Catatan Teknis |
@@ -107,6 +107,7 @@ icecream/
 │   │   │   ├── master-data/prices/        # Layar Matriks Daftar Harga
 │   │   │   ├── master-data/products/      # Layar Katalog Produk & Multi-UOM
 │   │   │   ├── monitoring-suhu/           # Layar Telemetri Suhu Rantai Dingin 24 Jam
+│   │   │   ├── users/                     # Layar Manajemen Pengguna & Hak Akses
 │   │   │   ├── login/                     # Layar Masuk (Login TailAdmin)
 │   │   │   ├── layout.tsx                 # App Shell & Dynamic Route Wrapper
 │   │   │   └── page.tsx                   # Dasbor Utama Bento Grid

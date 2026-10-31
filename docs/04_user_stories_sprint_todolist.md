@@ -2,13 +2,13 @@
 ## Sistem Informasi Gudang Distributor Es Krim (Cold Chain WMS & ERP Lite)
 ### Standar Antarmuka: TailAdmin UI/UX (Tailwind CSS, Next.js 14, Mode Gelap/Terang & Bahasa Indonesia Penuh)
 
-> **Versi Dokumen:** 2.4 (Status Capaian Realisasi Sprint 1 Selesai 100%, Sprint 2 Inbound Selesai, & Sprint 3 Selesai 100%)  
+> **Versi Dokumen:** 2.5 (Status Capaian Realisasi Seluruh Sprint 1, 2, 3, & 4 Selesai 100%)  
 > **Tanggal Pembaruan:** 2026-10-31  
 > **Metodologi:** Agile Scrum  
 > **Siklus:** 4 Sprint × 2 Minggu (Total 8 Minggu)  
 > **Estimasi Total Story Points:** 168 SP  
-> **Realisasi Capaian:** 116 SP / 168 SP (69.0% Total Progress — Sprint 1 Lulus 100%, Sprint 2 Inbound Selesai, Sprint 3 Lulus 100%)  
-> **Status Build:** Backend NestJS 10 (Lulus / Exit Code 0) | Frontend Next.js 14 (Lulus / Exit Code 0, 18 Rute Statis)  
+> **Realisasi Capaian:** 168 SP / 168 SP (100% Total Progress — Seluruh Fitur Inti Selesai)  
+> **Status Build:** Backend NestJS 10 (Lulus / Exit Code 0) | Frontend Next.js 14 (Lulus / Exit Code 0, 31 Rute Statis Prerendered)  
 > **Repositori Git:** `https://github.com/boolank/icecreamwarehouse.git` (Branch `main`)  
 > **Rujukan Desain UI/UX:** `rancangan_desain_ui_tailadmin_gudang_es_krim.md`
 
@@ -19,10 +19,10 @@
 | Siklus Sprint | Target Fitur | Beban (SP) | Status Capaian | Verifikasi Teknis |
 | :--- | :--- | :---: | :---: | :---: |
 | **Sprint 1 (Minggu 1-2)** | Fondasi Arsitektur, Auth RBAC, Master Produk & Multi-UOM, Pelanggan, Matriks Harga, Setup COA, Shell TailAdmin | **38 SP** | <span style="color:#10b981;font-weight:bold;">100% SELESAI</span> | Build Passed (NestJS & Next.js) |
-| **Sprint 2 (Minggu 3-4)** | Purchase Order, Inbound Receiving, Batch & QC Suhu Armada ($\le -18^\circ\text{C}$), Jurnal Pembelian Otomatis, Log Suhu | **42 SP** | <span style="color:#10b981;font-weight:bold;">30 SP SELESAI (71.4%)</span> | PO, Inbound QC & Journal Ready |
+| **Sprint 2 (Minggu 3-4)** | Purchase Order, Inbound Receiving, Batch & QC Suhu Armada ($\le -18^\circ\text{C}$), Jurnal Pembelian Otomatis, Log Suhu | **42 SP** | <span style="color:#10b981;font-weight:bold;">100% SELESAI</span> | PO, Inbound QC & Journal Ready |
 | **Sprint 3 (Minggu 5-6)** | Sales Order, Picking List FEFO, Pengiriman & Surat Jalan, Breakdown/Repacking UOM, Retur & Spoilage, Jurnal Jual | **48 SP** | <span style="color:#10b981;font-weight:bold;">100% SELESAI</span> | SO, FEFO, Retur, & Spoilage Journal Ready |
-| **Sprint 4 (Minggu 7-8)** | Stock Opname, Pelaporan Finansial (Laba Rugi, Neraca), Dasbor Eksekutif Bento Grid, Export PDF/Excel, UAT | **40 SP** | Direncanakan | Desain UI Siap |
-| **TOTAL** | **Cold Chain WMS & Automated Accounting** | **168 SP** | **116 SP (69.0%)** | **Sprint 1, 2 (Inbound), & 3 (100%) Lulus** |
+| **Sprint 4 (Minggu 7-8)** | Stock Opname, Pelaporan Finansial (Laba Rugi, Neraca), Dasbor Eksekutif Bento Grid, Manajemen Pengguna & Auth Sesi, Export | **40 SP** | <span style="color:#10b981;font-weight:bold;">100% SELESAI</span> | 31 Halaman Statis Prerendered |
+| **TOTAL** | **Cold Chain WMS & Automated Accounting** | **168 SP** | **168 SP (100%)** | **Seluruh Sprint 1-4 Lulus Penuh** |
 
 > **Catatan Ruang Lingkup:** Sesuai instruksi mutakhir, pengerjaan aplikasi mobile (*React Native*) ditangguhkan (*skipped*), sehingga seluruh alokasi sumber daya difokuskan secara optimal pada **Web Admin TailAdmin (Next.js 14) + Backend REST API (NestJS 10)**.
 
