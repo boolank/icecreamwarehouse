@@ -4,7 +4,8 @@
   "private": true,
   "description": "Cold Chain WMS & ERP Lite Web Admin (TailAdmin Style, Next.js 14, Tailwind CSS, Bahasa Indonesia)",
   "scripts": {
-    "dev": "next dev",
+    "clean": "node -e \"try{fs.rmSync('.next',{recursive:true,force:true})}catch(e){}\"",
+    "dev": "node -e \"try{fs.rmSync('.next',{recursive:true,force:true})}catch(e){}\" && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
