@@ -76,3 +76,4 @@ export class ReturnOrder extends BaseAuditEntity {
   })
   items: ReturnOrderItem[];
 }
+

@@ -14,3 +14,4 @@ export class DisposeReturnOrderDto {
   @IsOptional()
   targetFreezerLocationId?: number; // Digunakan jika RESTOCK kembali ke rak aktif reguler
 }
+

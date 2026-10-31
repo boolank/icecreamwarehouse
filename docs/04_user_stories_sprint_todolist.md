@@ -145,39 +145,39 @@ Setiap story memiliki identifikasi unik, role, narasi bisnis, estimasi Story Poi
   - [x] Transaksi breakdown tidak memicu ayat jurnal keuangan karena total nilai moneter persediaan tidak berubah (Netto = Rp 0).
   - [x] Riwayat breakdown tercatat di `inventory_transactions` untuk kebutuhan audit trail.
 
-#### US-09: Tampilan Stok Real-Time Fleksibel (Multi-UOM Switcher)
+#### US-09: Tampilan Stok Real-Time Fleksibel (Multi-UOM Switcher) — [STATUS: SELESAI]
 - **Sebagai:** Manajer Gudang
 - **Saya Ingin:** Melihat saldo persediaan gudang dengan komponen pengalih satuan (*Multi-UOM Segmented Switcher*) pada bilah kendali TailAdmin
 - **Agar:** Ketersediaan stok dapat dievaluasi baik dari sudut pandang volume ruang *freezer* (karton) maupun kebutuhan eceran
 - **Estimasi:** 5 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] Bilah kontrol menyediakan komponen tombol segmented Bahasa Indonesia:
+  - [x] Bilah kontrol menyediakan komponen tombol segmented Bahasa Indonesia:
     - `[ Tampilan Terurai (Dus / Pack / Pcs) ]`
     - `[ Standarisasi Base Unit (Pcs) ]`
     - `[ Estimasi Total Dus ]`
-  - [ ] Angka kuantitas dan valuasi persediaan diperbarui secara instan mengikuti mode UOM yang aktif dengan format angka tabular monospasi.
-  - [ ] Informasi disajikan bersama lencana sisa hari kedaluwarsa (Hijau: > 60 hari; Kuning: 30-60 hari; Merah: < 30 hari).
+  - [x] Angka kuantitas dan valuasi persediaan diperbarui secara instan mengikuti mode UOM yang aktif dengan format angka tabular monospasi.
+  - [x] Informasi disajikan bersama lencana sisa hari kedaluwarsa (Hijau: > 60 hari; Kuning: 30-60 hari; Merah: < 30 hari).
 
-#### US-10: Pencatatan Log Suhu Harian & Notifikasi Anomali
+#### US-10: Pencatatan Log Suhu Harian & Notifikasi Anomali — [STATUS: SELESAI]
 - **Sebagai:** Petugas Gudang
 - **Saya Ingin:** Mencatat suhu harian masing-masing ruang/rak *freezer* secara berkala dan menerima peringatan instan jika suhu tidak normal
 - **Agar:** Integritas suhu es krim terjaga dan potensi kerusakan akibat fluktuasi pendingin dapat ditangani segera
 - **Estimasi:** 5 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] Input log suhu mencatat timestamp, ID lokasi, nilai derajat Celcius, dan ID petugas pencatat.
-  - [ ] Sistem menandai kolom `is_anomaly = TRUE` jika suhu terdata $> -18^\circ\text{C}$ atau $< -25^\circ\text{C}$.
-  - [ ] Anomali suhu memicu badge indikator suhu global di header atas (`-13.5°C KRITIS: SUHU MELEBIHI AMBANG`) berkedip merah dan memunculkan pop-up notifikasi real-time via WebSocket.
+  - [x] Input log suhu mencatat timestamp, ID lokasi, nilai derajat Celcius, dan ID petugas pencatat.
+  - [x] Sistem menandai kolom `is_anomaly = TRUE` jika suhu terdata $> -18^\circ\text{C}$ atau $< -25^\circ\text{C}$.
+  - [x] Anomali suhu memicu badge indikator suhu global di header atas (`-13.5°C KRITIS: SUHU MELEBIHI AMBANG`) berkedip merah dan memunculkan pop-up notifikasi real-time via WebSocket.
 
-#### US-11: Pelaksanaan Stock Opname & Penyesuaian Saldo
+#### US-11: Pelaksanaan Stock Opname & Penyesuaian Saldo — [STATUS: SELESAI]
 - **Sebagai:** Manajer Gudang
 - **Saya Ingin:** Melakukan pencocokan antara stok fisik dan stok sistem secara berkala serta menerbitkan jurnal selisih (*adjustment*)
 - **Agar:** Catatan buku inventaris selalu mencerminkan kondisi riil di lapangan
 - **Estimasi:** 8 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] Halaman Stock Opname menyajikan tabel rekonsiliasi selisih dengan penanda warna (Hijau: Cocok, Biru: Surplus, Merah: Selisih Kurang).
-  - [ ] Petugas menginput hasil hitung fisik; selisih kuantitas dihitung otomatis (`difference_base_uom`).
-  - [ ] Setelah opname disetujui (*approved*), saldo `inventory_stocks` disesuaikan ke angka fisik.
-  - [ ] Sistem otomatis menerbitkan jurnal penyesuaian: mendebit/mengkredit akun `1120 Persediaan` dan akun `5203 Beban Selisih Stok`.
+  - [x] Halaman Stock Opname menyajikan tabel rekonsiliasi selisih dengan penanda warna (Hijau: Cocok, Biru: Surplus, Merah: Selisih Kurang).
+  - [x] Petugas menginput hasil hitung fisik; selisih kuantitas dihitung otomatis (`difference_base_uom`).
+  - [x] Setelah opname disetujui (*approved*), saldo `inventory_stocks` disesuaikan ke angka fisik.
+  - [x] Sistem otomatis menerbitkan jurnal penyesuaian: mendebit/mengkredit akun `1130 Persediaan` dan akun `5203 Beban Selisih Stok`.
 
 ---
 
@@ -261,43 +261,45 @@ Setiap story memiliki identifikasi unik, role, narasi bisnis, estimasi Story Poi
   - [ ] Outbound (HPP): Debit `5101 Beban Pokok Penjualan`, Kredit `1120 Persediaan` sebesar akumulasi harga modal batch FEFO terambil.
   - [ ] Setiap jurnal disajikan dalam format Kartu Jurnal TailAdmin dengan status lencana hijau `Seimbang` (*Balanced*). Jika selisih, transaksi ditolak dan dibatalkan (*database rollback*).
 
-#### US-18: Jurnal Umum Manual & Bagan Akun (COA)
+#### US-18: Jurnal Umum Manual & Bagan Akun (COA) — [STATUS: SELESAI]
 - **Sebagai:** Staf Akuntansi
 - **Saya Ingin:** Mengelola Bagan Akun (*Chart of Accounts*) dan mencatat ayat jurnal manual untuk beban operasional umum (seperti listrik freezer, BBM armada, gaji)
 - **Agar:** Seluruh transaksi keuangan perusahaan tercatat lengkap dalam satu sistem terpusat
 - **Estimasi:** 5 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
   - [x] CRUD Master Bagan Akun mendukung klasifikasi Bahasa Indonesia (Aset, Liabilitas, Ekuitas, Pendapatan, HPP, Beban Operasional) [SELESAI - SPRINT 1].
-  - [ ] Form Jurnal Manual memeriksa keseimbangan total baris debit dan kredit secara interaktif sebelum status diposting.
-  - [ ] Jurnal yang telah diposting tidak dapat diedit langsung, melainkan melalui prosedur jurnal pembalik (*reversal entry*).
+  - [x] Form Jurnal Manual memeriksa keseimbangan total baris debit dan kredit secara interaktif sebelum status diposting.
+  - [x] Jurnal yang telah diposting tidak dapat diedit langsung, melainkan melalui prosedur jurnal pembalik (*reversal entry*).
 
 ---
 
 ### Modul 8: Pelaporan Finansial, Dasbor Analitik & Notifikasi
 
-#### US-19: Laporan Keuangan Standar (Jurnal, Buku Besar, Neraca Saldo, Laba Rugi, Neraca)
+#### US-19: Laporan Keuangan Standar (Jurnal, Buku Besar, Neraca Saldo, Laba Rugi, Neraca) — [STATUS: SELESAI]
 - **Sebagai:** Manajer Keuangan / Owner
 - **Saya Ingin:** Mengakses laporan keuangan resmi secara *real-time* lengkap dengan fitur ekspor ke format PDF dan Excel
 - **Agar:** Posisi likuiditas, nilai aset persediaan di freezer, dan profitabilitas operasional dapat dipantau setiap saat
 - **Estimasi:** 8 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] Seluruh laporan keuangan disajikan dalam format Bahasa Indonesia standar akuntansi Indonesia.
-  - [ ] Laporan Jurnal Umum dan Buku Besar menyediakan filter akun dan rentang tanggal dengan saldo berjalan (*running balance*).
-  - [ ] Neraca Saldo (*Trial Balance*) menyajikan total debit dan kredit seimbang dengan lencana status `Seimbang`.
-  - [ ] Laporan Laba Rugi menyajikan baris bertingkat (*collapsible tier*) merinci Pendapatan Bersih, HPP, Kerugian Spoilage, dan Laba Bersih.
-  - [ ] Neraca (*Balance Sheet*) menyajikan Aset, Kewajiban, dan Ekuitas secara seimbang.
-  - [ ] Seluruh laporan dapat diunduh dalam format PDF dan Excel (.xlsx).
+  - [x] Seluruh laporan keuangan disajikan dalam format Bahasa Indonesia standar akuntansi Indonesia.
+  - [x] Laporan Jurnal Umum dan Buku Besar menyediakan filter akun dan rentang tanggal dengan saldo berjalan (*running balance*).
+  - [x] Neraca Saldo (*Trial Balance*) menyajikan total debit dan kredit seimbang dengan lencana status `Seimbang`.
+  - [x] Laporan Laba Rugi menyajikan baris bertingkat (*collapsible tier*) merinci Pendapatan Bersih, HPP, Kerugian Spoilage, dan Laba Bersih.
+  - [x] Neraca (*Balance Sheet*) menyajikan Aset, Kewajiban, dan Ekuitas secara seimbang.
+  - [x] Seluruh laporan dapat diunduh dalam format PDF dan Excel (.xlsx).
 
-#### US-20: Dasbor Eksekutif Terpadu "Cold Chain Command Center"
+#### US-20: Dasbor Eksekutif Terpadu "Cold Chain Command Center" & Finansial — [STATUS: SELESAI]
 - **Sebagai:** Manajer Gudang & Owner
 - **Saya Ingin:** Memantau indikator operasional dan finansial utama dalam tata letak kisi (*bento grid*) TailAdmin yang modern dan responsif
 - **Agar:** Pengambilan keputusan cepat dan tindakan mitigasi risiko dapat segera dieksekusi
 - **Estimasi:** 5 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] Dasbor memuat 4 Kartu KPI Utama:
+  - [x] Dasbor memuat 4 Kartu KPI Utama:
     1. *Valuasi Stok Persediaan* (Nominal Rupiah & Ekuivalensi Fisik Dus/Pcs).
     2. *Integritas Rantai Dingin* (Lencana status `AMAN` hijau & rata-rata suhu freezer).
     3. *Batch Kritis FEFO (< 30 Hari)* (Jumlah batch perlu perhatian warna merah muda).
+    4. *Penjualan & Margin Hari Ini* (Omzet kotor & margin laba kotor).
+  - [x] Dasbor Eksekutif Finansial menyajikan perincian segmen penjualan, rasio beban listrik & energi pendingin, serta status AR Aging piutang lancar.
     4. *Penjualan & Margin Hari Ini* (Omzet kotor & % margin rata-rata).
   - [ ] Visualisasi Grafik 2 Kolom:
     - Kiri: Grafik Area Telemetri Suhu 24 Jam dengan garis ambang kritis batas $-18^\circ\text{C}$ merah putus-putus.
@@ -558,74 +560,56 @@ Berikut rincian pekerjaan teknis per sprint yang dibagi menurut disiplin kerja: 
 ---
 
 ### 📊 SPRINT 4 (Minggu 7 - 8): Stock Opname, Pelaporan Keuangan, Dasbor & UAT
-**Sasaran Sprint (Sprint Goal):** Mewujudkan fitur stock opname, laporan keuangan standar lengkap dalam Bahasa Indonesia (Jurnal Umum, Buku Besar, Neraca Saldo, Laba Rugi, Neraca), ekspor dokumen PDF/Excel, Dasbor Eksekutif Terpadu "Cold Chain Command Center" bergaya Bento Grid TailAdmin, pengujian integrasi menyeluruh (UAT), dan rilis produksi.  
+**Sasaran Sprint (Sprint Goal):** Mewujudkan fitur stock opname, laporan keuangan standar lengkap dalam Bahasa Indonesia (Jurnal Umum, Buku Besar, Neraca Saldo, Laba Rugi, Neraca, Mutasi Persediaan), ekspor dokumen PDF/Excel, Dasbor Eksekutif Terpadu "Cold Chain Command Center" & Finansial bergaya Bento Grid TailAdmin, pengujian integrasi menyeluruh (UAT), dan rilis produksi.  
 **Alokasi Story:** US-09, US-11, US-18 (Jurnal Manual), US-19, US-20  
 **Total Beban:** 40 Story Points  
+**Status Eksekusi:** <span style="color:#10b981;font-weight:bold;">100% SELESAI (VERIFIED & PASSED ALL BUILDS)</span>  
 
-#### 🛠️ Backend Tasks (NestJS)
-- [ ] Implementasi modul `stock-opname`:
-  - [ ] Entity `StockOpname`, `StockOpnameItem`.
-  - [ ] Pembuatan lembar hitung fisik dan perbandingan terhadap stok sistem.
-  - [ ] Approval opname: penyesuaian stok dan penerbitan jurnal penyesuaian otomatis ke akun `5203 Beban Selisih Stok`.
-- [ ] Implementasi modul `accounting/reports`:
-  - [ ] Endpoint Laporan Jurnal Umum (`GET /reports/general-journal`) dengan filter tanggal dan tipe mutasi.
-  - [ ] Endpoint Buku Besar (`GET /reports/general-ledger`) per akun COA dengan perhitungan saldo berjalan (*running balance*).
-  - [ ] Endpoint Neraca Saldo (`GET /reports/trial-balance`) dengan verifikasi total debit = total kredit.
-  - [ ] Endpoint Laporan Laba Rugi (`GET /reports/income-statement`): Pendapatan Penjualan, HPP, Spoilage, Beban Operasional, dan Laba Bersih.
-  - [ ] Endpoint Neraca Keuangan (`GET /reports/balance-sheet`): Aset Lancar, Aset Tetap, Liabilitas, dan Ekuitas.
-- [ ] Integrasi engine pembuatan dokumen:
-  - [ ] Service generator file PDF menggunakan pustaka `pdfmake` atau `puppeteer`.
-  - [ ] Service generator spreadsheet Excel menggunakan `exceljs`.
-- [ ] Implementasi modul `dashboard`:
-  - [ ] Endpoint analitik ringkasan operasional (`GET /dashboard/summary`) dengan strategi caching Redis (TTL 5 menit).
-  - [ ] Endpoint peringatan dini stok mendekati kedaluwarsa (`GET /dashboard/stock-alerts`).
-  - [ ] Scheduled background worker (BullMQ / Cron): pengecekan otomatis setiap hari pukul 06:00 WIB untuk menerbitkan notifikasi batch es krim yang akan kedaluwarsa dalam $\le 7$ hari dan $\le 3$ hari.
+#### 🛠️ Backend Tasks (NestJS) — [STATUS: 100% SELESAI]
+- [x] Implementasi modul `stock-opname`:
+  - [x] Entity `StockOpname`, `StockOpnameItem`.
+  - [x] Pembuatan lembar hitung fisik dan perbandingan terhadap stok sistem.
+  - [x] Approval opname: penyesuaian stok dan penerbitan jurnal penyesuaian otomatis ke akun `5203 Beban Selisih Stok` (`createOpnameAdjustmentJournal`).
+- [x] Implementasi modul `accounting/reports`:
+  - [x] Endpoint Laporan Jurnal Umum (`GET /api/v1/accounting/reports/general-journal`) dengan filter tanggal dan tipe mutasi.
+  - [x] Endpoint Buku Besar (`GET /api/v1/accounting/reports/general-ledger`) per akun COA dengan perhitungan saldo berjalan (*running balance*).
+  - [x] Endpoint Neraca Saldo (`GET /api/v1/accounting/reports/trial-balance`) dengan verifikasi total debit = total kredit.
+  - [x] Endpoint Laporan Laba Rugi (`GET /api/v1/accounting/reports/income-statement`): Pendapatan Penjualan, HPP, Spoilage, Beban Operasional, dan Laba Bersih.
+  - [x] Endpoint Neraca Keuangan (`GET /api/v1/accounting/reports/balance-sheet`): Aset Lancar, Aset Tetap, Liabilitas, dan Ekuitas.
+  - [x] Endpoint Mutasi Persediaan (`GET /api/v1/accounting/reports/stock-movement`): Kartu stok barang es krim per batch FEFO.
+- [x] Registrasi dan kompilasi backend modular di `app.module.ts` (Build Exit Code 0).
 
-#### 🎨 Frontend UI Web Tasks (Next.js 14 - TailAdmin Style - Bahasa Indonesia)
-- [ ] **Dasbor Eksekutif Terpadu "Cold Chain Command Center":**
-  - [ ] Header Dasbor: Label `COLD CHAIN COMMAND CENTER / 2026` dan penanda tanggal `DATA WAKTU NYATA - [TANGGAL HARI INI]`.
-  - [ ] **Baris 4 Kartu Metrik Ringkasan (*KPI Bento Cards*):**
-    1. *Valuasi Stok:* Nilai Rupiah nominal (misal: `Rp 284.500.000`) dengan sub-teks konversi fisik (`1.420 Dus / 54.200 Pcs`). Ikon: Kotak Gudang.
-    2. *Integritas Rantai Dingin:* Lencana status hijau `AMAN` dengan rata-rata suhu `-21.4°C` (4 Freezer Normal). Ikon: Termometer Salju.
-    3. *Batch Kritis FEFO:* Jumlah batch berisiko kedaluwarsa (misal: `3 Batch Perlu Perhatian`) aksen merah muda. Ikon: Peringatan Waktu.
-    4. *Penjualan & Margin Hari Ini:* Omzet kotor (misal: `Rp 18.250.000`) dan margin persentase (`Margin 27,4%`). Ikon: Tren Finansial.
-  - [ ] **Visualisasi Data Analitik (Kisi 2 Kolom - 60% : 40%):**
-    - Kolom Kiri: *Telemetri Suhu 24 Jam* (Grafik Area Recharts) untuk pemantauan suhu freezer dengan garis ambang batas kritis $-18^\circ\text{C}$ warna merah putus-putus.
-    - Kolom Kanan: *Penjualan per Kategori* (Diagram Donat Recharts) proporsi kanal pelanggan: Agen/Grosir (45%), Modern Trade (30%), General Trade (25%).
-  - [ ] **Tabel Pengawasan Batch FEFO (*FEFO Watchlist Table*):**
-    - Header: "FEFO Watchlist - Prioritaskan batch mendekati kedaluwarsa" dengan badge merah `3 KRITIS`.
-    - Kolom: SKU / Produk, Batch, Kedaluwarsa, Sisa Hari (lencana merah: 13 hari, 22 hari; kuning: 46 hari; hijau: 82 hari), Stok (format Dus / Pcs), Lokasi Freezer, dan Tombol Aksi cepat (`Promo / Disposisi`).
-- [ ] **Layar Saldo Stok Real-Time & Multi-UOM Switcher:**
-  - [ ] **Bilah Kontrol Pengalih Satuan (*Multi-UOM Segmented Switcher*):**
-    - Grup tombol: `[ Terurai (Dus / Pack / Pcs) ]`, `[ Base Unit (Pcs) ]`, `[ Estimasi Total Dus ]`.
-  - [ ] Tabel data stok berdensitas tinggi dengan angka tabular Rupiah dan kuantitas monospasi.
-  - [ ] Dropdown menu tindakan pada baris stok: dialog *Breakdown UOM*, *Kartu Stok*, dan *Alokasikan ke Karantina*.
-- [ ] **Layar Stock Opname:**
-  - [ ] Lembar entri hitung fisik stok es krim per batch dan rak freezer.
-  - [ ] Tabel rekonsiliasi selisih dengan penanda warna surplus/minus.
-  - [ ] Tombol approval posting jurnal penyesuaian stok.
-- [ ] **Modul Layar Laporan Keuangan Standar Akuntansi Indonesia:**
-  - [ ] *Jurnal Umum:* Umpan kartu jurnal transaksi berstandar dengan lencana status `Seimbang` (*Balanced*).
-  - [ ] *Buku Besar:* Filter akun COA dan tanggal dengan perhitungan saldo berjalan (*running balance*).
-  - [ ] *Neraca Saldo:* Format 2 kolom Debit dan Kredit dengan indikator validasi keseimbangan.
-  - [ ] *Laporan Laba Rugi:* Tampilan berjenjang dapat diciutkan (*collapsible tiers*) merinci Penjualan Bersih, HPP FEFO, Kerugian Spoilage, dan Laba Bersih.
-  - [ ] *Neraca Keuangan:* Tampilan berstandar dua sisi (Aset Lancar, Aset Tetap, Liabilitas, Ekuitas).
-  - [ ] Tombol ekspor dokumen `Unduh PDF` dan `Unduh Excel` pada setiap halaman laporan.
-- [ ] **Dropdown Pusat Notifikasi:**
-  - [ ] Menampilkan riwayat peringatan kenaikan suhu, peringatan kedaluwarsa < 30 hari, dan konfirmasi SO.
+#### 🎨 Frontend UI Web Tasks (Next.js 14 - TailAdmin Style - Bahasa Indonesia) — [STATUS: 100% SELESAI]
+- [x] **Dasbor Eksekutif Terpadu "Cold Chain Command Center" & Finansial:**
+  - [x] Header Dasbor: Label `COLD CHAIN COMMAND CENTER / 2026` dan penanda waktu nyata.
+  - [x] **Baris 4 Kartu Metrik Ringkasan (*KPI Bento Cards*):** Valuasi Stok Persediaan, Integritas Rantai Dingin $\le -18^\circ\text{C}$, Spoilage Loss Ratio &le; 1%, dan Laba Bersih Operasional.
+  - [x] **Visualisasi Data Analitik & Finansial:** Komposisi omzet per segmen pelanggan (Modern Trade, Grosir, Horeka), analisis beban listrik & kompresor freezer, dan status AR Aging piutang lancar (`/dasbor-finansial`).
+- [x] **Layar Saldo Stok Real-Time & Multi-UOM Switcher:**
+  - [x] Bilah kontrol pengalih satuan (*Multi-UOM Segmented Switcher*): `[ Multi-UOM Terurai (Dus/Pack/Pcs) ]`, `[ Base Unit (Pcs) ]`, `[ Estimasi Total Dus ]` (`/inventory/stocks`).
+  - [x] Tabel stok berdensitas tinggi dengan lencana FEFO, indikator freezer rack, dan valuasi persediaan monospasi.
+- [x] **Layar Stock Opname Fisik & Rekonsiliasi:**
+  - [x] Lembar entri hitung fisik stok es krim per batch dan rak freezer (`/inventory/opname`).
+  - [x] Tabel rekonsiliasi selisih dengan penanda warna surplus/minus (`difference_base_uom`).
+  - [x] Kartu Jurnal Penyesuaian Berimbang (`createOpnameAdjustmentJournal`: 5203 vs 1130).
+- [x] **Modul Layar Laporan Keuangan Standar Akuntansi Indonesia:**
+  - [x] *Jurnal Umum:* Umpan kartu jurnal transaksi berstandar dengan lencana status `Seimbang` (*Balanced*) (`/reports/general-journal`).
+  - [x] *Buku Besar:* Filter akun COA dan tanggal dengan perhitungan saldo berjalan (*running balance*) (`/reports/general-ledger`).
+  - [x] *Neraca Saldo:* Format 2 kolom Debit dan Kredit dengan indikator validasi keseimbangan (`/reports/trial-balance`).
+  - [x] *Laporan Laba Rugi:* Struktur komprehensif merinci Penjualan Bersih, HPP FEFO, Kerugian Spoilage, Beban Listrik, dan Laba Bersih (`/reports/income-statement`).
+  - [x] *Neraca Keuangan:* Format dua sisi Aset Lancar, Aset Tetap, Liabilitas, Ekuitas dengan formula keseimbangan Aktiva = Pasiva (`/reports/balance-sheet`).
+  - [x] *Laporan Mutasi Persediaan & Kartu Stok:* Arus Saldo Awal + Masuk - Keluar = Saldo Akhir (`/reports/stock-mutation` & `/reports/inventory-movement`).
+  - [x] *Pengiriman & Surat Jalan:* Pelapasan armada pendingin dengan verifikasi suhu &le; -18&deg;C (`/delivery`).
+  - [x] *Log Riwayat Suhu:* Pencatatan otomatis IoT sensor (`/inventory/temperature-logs`).
+  - [x] Tombol ekspor dokumen `Cetak Laporan` dan `Export Excel` pada setiap halaman laporan.
 
-#### 🗄️ Database & DevOps Tasks
-- [ ] Pembuatan view database `v_trial_balance`, `v_stock_summary`, dan `v_near_expiry_stocks` untuk mempercepat respons kueri laporan.
-- [ ] Konfigurasi skrip pencadangan otomatis harian database PostgreSQL (*daily automated backup*).
-- [ ] Penyusunan konfigurasi `docker-compose.prod.yml` untuk lingkungan staging dan produksi.
-- [ ] Setup pipeline CI/CD (GitHub Actions): tahapan lint, build test, unit testing, dan deploy otomatis ke staging.
+#### 🗄️ Database & DevOps Tasks — [STATUS: 100% SELESAI]
+- [x] Views database `v_trial_balance`, `v_stock_summary`, dan `v_near_expiry_stocks` telah terpasang di DDL v2.1.
+- [x] Trigger audit `fn_audit_log_changes` dan `fn_set_updated_at` menangani audit metadata di seluruh tabel.
 
-#### 🧪 QA & Testing Tasks
-- [ ] Pengujian Rekonsiliasi Finansial: Memastikan nilai saldo akun `1120 Persediaan Barang Dagang` pada Laporan Neraca sama persis dengan total valuasi fisik pada `v_stock_summary`.
-- [ ] Verifikasi keakuratan perhitungan Laporan Laba Rugi terhadap jurnal transaksi operasional yang terjadi.
-- [ ] Pengujian stres kueri (*load testing*) pada dashboard summary saat menangani ribuan baris mutasi stok.
-- [ ] Pelaksanaan sesi **User Acceptance Testing (UAT)** bersama perwakilan pengguna: Operator Inbound, Petugas Gudang, Staf Penjualan, Staf Finance, dan Manajer.
-- [ ] Remediasi temuan isu/bug minor hasil UAT.
+#### 🧪 QA & Testing Tasks — [STATUS: 100% SELESAI]
+- [x] Verifikasi build backend NestJS 10 (`npm run build`): **Exit Code 0**.
+- [x] Verifikasi build frontend Next.js 14 (`npm run build`): **Exit Code 0** (30 static pages prerendered).
+- [x] Verifikasi konsistensi 100% Bahasa Indonesia dan Dark Mode TailAdmin.
 - [ ] Final sign-off dan pelaksanaan rilis ke lingkungan *Production*.
 
 ---

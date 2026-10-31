@@ -352,6 +352,114 @@ export class JournalEngineService {
   }
 
   /**
+   * Otomasi Jurnal Penyesuaian Stock Opname:
+   * Jika Susut/Defisit:
+   *   Debit: 5203 Beban Selisih Stok (Susut Opname)
+   *   Kredit: 1130 Persediaan Barang Dagang Es Krim
+   * Jika Surplus/Lebih:
+   *   Debit: 1130 Persediaan Barang Dagang Es Krim
+   *   Kredit: 5203 Beban Selisih Stok (Susut Opname)
+   */
+  async createOpnameAdjustmentJournal(params: {
+    opnameCode: string;
+    varianceAmount: number; // Positif jika surplus, negatif jika susut
+    notes?: string;
+    userId?: number;
+    queryRunner?: QueryRunner;
+  }): Promise<JournalEntry | null> {
+    const { opnameCode, varianceAmount, notes, userId, queryRunner } = params;
+
+    if (Math.abs(varianceAmount) === 0) {
+      return null; // Tidak ada selisih, tidak perlu jurnal
+    }
+
+    const runner = queryRunner || this.dataSource.createQueryRunner();
+    const isLocalRunner = !queryRunner;
+
+    if (isLocalRunner) {
+      await runner.connect();
+      await runner.startTransaction();
+    }
+
+    try {
+      const entryNumber = await this.generateEntryNumber(runner);
+      const accOpnameLoss = await this.getAccountByNumber("5203", runner);
+      const accInventory = await this.getAccountByNumber("1130", runner);
+
+      const isShortage = varianceAmount < 0;
+      const absoluteAmount = Math.abs(varianceAmount);
+
+      const journal = runner.manager.create(JournalEntry, {
+        entryNumber,
+        referenceType: "OPNAME_ADJUSTMENT",
+        referenceId: 0,
+        description: `Penyesuaian Stock Opname ${opnameCode} (${isShortage ? "Selisih Kurang/Susut" : "Selisih Lebih/Surplus"})${notes ? ` - ${notes}` : ""}`,
+        isPosted: true,
+        createdBy: userId || 1,
+      });
+
+      const savedJournal = await runner.manager.save(journal);
+
+      let lineDebit: JournalLine;
+      let lineCredit: JournalLine;
+
+      if (isShortage) {
+        // Susut: Beban Bertambah (Debit 5203), Persediaan Berkurang (Kredit 1130)
+        lineDebit = runner.manager.create(JournalLine, {
+          journalId: savedJournal.id,
+          accountId: accOpnameLoss.id,
+          description: `Pengakuan Beban Selisih Kurang Opname ${opnameCode}`,
+          debitAmount: absoluteAmount,
+          creditAmount: 0,
+        });
+
+        lineCredit = runner.manager.create(JournalLine, {
+          journalId: savedJournal.id,
+          accountId: accInventory.id,
+          description: `Penyesuaian Pengurangan Persediaan Opname ${opnameCode}`,
+          debitAmount: 0,
+          creditAmount: absoluteAmount,
+        });
+      } else {
+        // Surplus: Persediaan Bertambah (Debit 1130), Beban Berkurang (Kredit 5203)
+        lineDebit = runner.manager.create(JournalLine, {
+          journalId: savedJournal.id,
+          accountId: accInventory.id,
+          description: `Penyesuaian Penambahan Persediaan Opname ${opnameCode}`,
+          debitAmount: absoluteAmount,
+          creditAmount: 0,
+        });
+
+        lineCredit = runner.manager.create(JournalLine, {
+          journalId: savedJournal.id,
+          accountId: accOpnameLoss.id,
+          description: `Pengakuan Pemulihan/Surplus Stok Opname ${opnameCode}`,
+          debitAmount: 0,
+          creditAmount: absoluteAmount,
+        });
+      }
+
+      await runner.manager.save([lineDebit, lineCredit]);
+      savedJournal.lines = [lineDebit, lineCredit];
+
+      if (isLocalRunner) {
+        await runner.commitTransaction();
+      }
+
+      return savedJournal;
+    } catch (err) {
+      if (isLocalRunner) {
+        await runner.rollbackTransaction();
+      }
+      throw err;
+    } finally {
+      if (isLocalRunner) {
+        await runner.release();
+      }
+    }
+  }
+
+  /**
    * Mengambil daftar seluruh jurnal beserta baris akunnya
    */
   async findAllJournals(): Promise<JournalEntry[]> {

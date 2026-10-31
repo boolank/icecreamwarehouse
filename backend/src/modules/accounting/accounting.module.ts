@@ -6,14 +6,24 @@ import { JournalLine } from './entities/journal-line.entity';
 import { CoaService } from './coa.service';
 import { CoaController } from './coa.controller';
 import { JournalEngineService } from './journal-engine.service';
+import { AccountingReportsService } from './reports.service';
+import { AccountingReportsController } from './reports.controller';
+import { InventoryStock } from '../inbound/entities/inventory-stock.entity';
+import { InventoryTransaction } from '../inbound/entities/inventory-transaction.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ChartOfAccount, JournalEntry, JournalLine]),
+    TypeOrmModule.forFeature([
+      ChartOfAccount,
+      JournalEntry,
+      JournalLine,
+      InventoryStock,
+      InventoryTransaction,
+    ]),
   ],
-  controllers: [CoaController],
-  providers: [CoaService, JournalEngineService],
-  exports: [CoaService, JournalEngineService],
+  controllers: [CoaController, AccountingReportsController],
+  providers: [CoaService, JournalEngineService, AccountingReportsService],
+  exports: [CoaService, JournalEngineService, AccountingReportsService],
 })
 export class AccountingModule {}
 

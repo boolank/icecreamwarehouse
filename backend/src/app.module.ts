@@ -12,6 +12,7 @@ import { AccountingModule } from './modules/accounting/accounting.module';
 import { InboundModule } from './modules/inbound/inbound.module';
 import { OutboundModule } from './modules/outbound/outbound.module';
 import { ReturnsModule } from './modules/returns/returns.module';
+import { OpnameModule } from './modules/opname/opname.module';
 
 // Entities
 import { User } from './modules/users/entities/user.entity';
@@ -44,6 +45,8 @@ import { PickingListItem } from './modules/outbound/entities/picking-list-item.e
 import { DeliveryOrder } from './modules/outbound/entities/delivery-order.entity';
 import { ReturnOrder } from './modules/returns/entities/return-order.entity';
 import { ReturnOrderItem } from './modules/returns/entities/return-order-item.entity';
+import { StockOpname } from './modules/opname/entities/stock-opname.entity';
+import { StockOpnameItem } from './modules/opname/entities/stock-opname-item.entity';
 
 @Module({
   imports: [
@@ -92,6 +95,8 @@ import { ReturnOrderItem } from './modules/returns/entities/return-order-item.en
           DeliveryOrder,
           ReturnOrder,
           ReturnOrderItem,
+          StockOpname,
+          StockOpnameItem,
         ],
         synchronize: false, // Gunakan migration / DDL script
         logging: config.get<string>('NODE_ENV') === 'development',
@@ -106,6 +111,7 @@ import { ReturnOrderItem } from './modules/returns/entities/return-order-item.en
     InboundModule,
     OutboundModule,
     ReturnsModule,
+    OpnameModule,
   ],
 })
 export class AppModule {}
