@@ -2,6 +2,8 @@ import {
   Controller,
   Get,
   Post,
+  Put,
+  Patch,
   Body,
   Param,
   Query,
@@ -32,10 +34,33 @@ export class CoaController {
     return this.coaService.findOne(id);
   }
 
+  @Get(':id/audit-logs')
+  async getAuditLogs(@Param('id', ParseIntPipe) id: number) {
+    return this.coaService.getAuditLogs(id);
+  }
+
   @Post()
   @Roles('ADMIN_SISTEM', 'STAF_FINANCE')
   async create(@Body() data: any, @CurrentUser('id') userId: number) {
     return this.coaService.create(data, userId);
   }
-}
 
+  @Put(':id')
+  @Roles('ADMIN_SISTEM', 'STAF_FINANCE')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: any,
+    @CurrentUser('id') userId: number,
+  ) {
+    return this.coaService.update(id, data, userId);
+  }
+
+  @Patch(':id/toggle-status')
+  @Roles('ADMIN_SISTEM', 'STAF_FINANCE')
+  async toggleStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser('id') userId: number,
+  ) {
+    return this.coaService.toggleStatus(id, userId);
+  }
+}

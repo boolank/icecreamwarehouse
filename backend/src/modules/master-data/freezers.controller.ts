@@ -2,6 +2,8 @@ import {
   Controller,
   Get,
   Post,
+  Put,
+  Patch,
   Body,
   Param,
   UseGuards,
@@ -28,10 +30,33 @@ export class FreezersController {
     return this.freezersService.findOne(id);
   }
 
+  @Get(':id/audit-logs')
+  async getAuditLogs(@Param('id', ParseIntPipe) id: number) {
+    return this.freezersService.getAuditLogs(id);
+  }
+
   @Post()
   @Roles('ADMIN_SISTEM', 'MANAJER_GUDANG')
   async create(@Body() data: any, @CurrentUser('id') userId: number) {
     return this.freezersService.create(data, userId);
   }
-}
 
+  @Put(':id')
+  @Roles('ADMIN_SISTEM', 'MANAJER_GUDANG')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: any,
+    @CurrentUser('id') userId: number,
+  ) {
+    return this.freezersService.update(id, data, userId);
+  }
+
+  @Patch(':id/toggle-status')
+  @Roles('ADMIN_SISTEM', 'MANAJER_GUDANG')
+  async toggleStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser('id') userId: number,
+  ) {
+    return this.freezersService.toggleStatus(id, userId);
+  }
+}

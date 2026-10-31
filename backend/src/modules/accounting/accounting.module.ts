@@ -10,6 +10,7 @@ import { AccountingReportsService } from './reports.service';
 import { AccountingReportsController } from './reports.controller';
 import { InventoryStock } from '../inbound/entities/inventory-stock.entity';
 import { InventoryTransaction } from '../inbound/entities/inventory-transaction.entity';
+import { DataChangeLog } from '../users/entities/data-change-log.entity';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { InventoryTransaction } from '../inbound/entities/inventory-transaction.
       JournalLine,
       InventoryStock,
       InventoryTransaction,
+      DataChangeLog,
     ]),
   ],
   controllers: [CoaController, AccountingReportsController],
@@ -26,4 +28,3 @@ import { InventoryTransaction } from '../inbound/entities/inventory-transaction.
   exports: [CoaService, JournalEngineService, AccountingReportsService],
 })
 export class AccountingModule {}
-
