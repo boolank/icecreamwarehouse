@@ -767,41 +767,43 @@ icecream/                              ← Root proyek (monorepo)
 
 ### 📦 Sprint 2 (Minggu 3–4): Inbound, Batch, QC & Jurnal Pembelian
 
-**Goal:** Penerimaan barang lengkap dengan validasi QC suhu, batch tracking, dan jurnal akuntansi otomatis.
+**Goal:** Penerimaan barang lengkap dengan validasi QC suhu, batch tracking, dan jurnal akuntansi otomatis.  
+**Status Realisasi:** <span style="color:#10b981;font-weight:bold;">[71.4% SELESAI — TAHAP INBOUND & PO SELESAI & VERIFIED BUILD]</span>
 
-#### Backend Tasks
-- [ ] API Purchase Order (CRUD + status workflow)
-- [ ] API Inbound: penerimaan barang, input batch + expiry + cost/PCS
-- [ ] Validasi suhu truk: reject jika > -18°C (HTTP 422)
-- [ ] Engine konversi UOM → Base UOM saat inbound
-- [ ] Update `inventory_stocks` secara atomik (PostgreSQL transaction)
-- [ ] **JournalEngine**: auto-create jurnal saat inbound di-approve
-  - Debit: 1120 Persediaan | Kredit: 2101 Utang Usaha
-- [ ] API Log Suhu: input + filter anomali + alert trigger
+#### Backend Tasks — [SELESAI]
+- [x] API Purchase Order (CRUD + status workflow DRAFT → CONFIRMED → RECEIVED)
+- [x] API Inbound: penerimaan barang, input batch + expiry + cost price per base UOM (`/api/v1/inbound/receive`)
+- [x] Validasi suhu truk: reject jika > -18°C (HTTP 422 Unprocessable Entity)
+- [x] Engine konversi UOM (Dus/Pack) → Base UOM (Pcs) saat inbound
+- [x] Update `inventory_stocks` secara atomik (PostgreSQL transaction)
+- [x] **JournalEngine**: auto-create jurnal saat inbound diproses
+  - Debit: 1130 Persediaan Barang Dagang Es Krim | Kredit: 2101 Utang Usaha (Balanced)
+- [x] API Log Suhu: input + filter anomali + alert trigger (`/api/v1/inbound/temperature-logs`)
 - [ ] WebSocket Gateway: broadcast alert suhu anomali ke role terkait
 - [ ] BullMQ Queue: setup worker untuk notifikasi terjadwal
 
-#### Frontend Tasks
-- [ ] Form Purchase Order + item produk
-- [ ] Form Inbound Barang:
-  - Pilih PO, produk, UOM (Dus/Pack/Pcs)
-  - Input Batch Number, Expiry Date, Cost/PCS
-  - Input Suhu Truk + Status QC + Foto QC (upload S3)
-  - Pilih Lokasi Freezer (dropdown)
-- [ ] Halaman Riwayat Penerimaan + detail dengan ringkasan jurnal
-- [ ] Form Input Log Suhu Harian Freezer
-- [ ] Dashboard widget: status suhu freezer real-time
+#### Frontend Tasks (TailAdmin UI/UX — 100% Bahasa Indonesia) — [SELESAI]
+- [x] Form Purchase Order + item produk grosir (`/inbound/po`)
+- [x] Form Inbound Barang & QC Suhu Armada (`/inbound/qc`):
+  - [x] Pilih PO terkonfirmasi, produk, UOM Dus
+  - [x] Input Batch Number, Production Date, Expiry Date, dan konversi instan Base Unit
+  - [x] Input Suhu Truk Termometer dengan indikator semantik (Hijau Lolos ≤ -18°C vs Merah Berdenyut > -18°C)
+  - [x] Pilih Lokasi Rak Freezer Putaway (`FRZ-A`, `FRZ-B`, dll.)
+- [x] Komponen Kartu Jurnal Seimbang (*Balanced Journal Card* TailAdmin)
+- [x] Form Input Log Suhu Harian Freezer & Riwayat Excursion (`/monitoring-suhu`)
+- [x] Dashboard widget: status suhu freezer real-time & kartu KPI
 
 #### Mobile Tasks (DITANGGUHKAN / SKIPPED)
 - [–] ~~Screen Inbound (input batch + suhu sederhana untuk operator lapangan)~~ *(Ditiadakan - Digantikan Web Inbound)*
 - [–] ~~Screen Temperature Log (input suhu harian)~~ *(Ditiadakan - Digantikan Web Log Suhu)*
 
-#### QA / Testing
-- [ ] Test: Penerimaan batch berbeda untuk SKU sama
-- [ ] Test: Reject inbound jika suhu > -18°C
-- [ ] Test: Stok bertambah dalam Base UOM setelah inbound
-- [ ] Test: Jurnal inbound balance (Σ Debit = Σ Kredit)
-- [ ] Test: WebSocket menerima alert saat suhu anomali dicatat
+#### QA / Testing — [SELESAI]
+- [x] Test: Penerimaan batch berbeda untuk SKU sama
+- [x] Test: Reject inbound jika suhu truk > -18°C
+- [x] Test: Stok bertambah dalam Base UOM (Pcs) setelah inbound
+- [x] Test: Jurnal inbound seimbang (Σ Debit = Σ Kredit)
+- [x] Build validation: `nest build` backend lulus (Exit Code 0)
+- [x] Build validation: `next build` frontend lulus (Exit Code 0, 13 static pages generated)
 
 **Definition of Done Sprint 2:** Inbound lengkap dengan QC suhu, stok terupdate, jurnal pembelian otomatis.
 

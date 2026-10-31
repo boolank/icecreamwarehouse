@@ -9,6 +9,7 @@ import { MasterDataModule } from './modules/master-data/master-data.module';
 import { CustomersModule } from './modules/customers/customers.module';
 import { PricingModule } from './modules/pricing/pricing.module';
 import { AccountingModule } from './modules/accounting/accounting.module';
+import { InboundModule } from './modules/inbound/inbound.module';
 
 // Entities
 import { User } from './modules/users/entities/user.entity';
@@ -26,6 +27,14 @@ import { CustomerCategory } from './modules/customers/entities/customer-category
 import { Customer } from './modules/customers/entities/customer.entity';
 import { ProductCustomerPrice } from './modules/pricing/entities/product-customer-price.entity';
 import { ChartOfAccount } from './modules/accounting/entities/chart-of-account.entity';
+import { JournalEntry } from './modules/accounting/entities/journal-entry.entity';
+import { JournalLine } from './modules/accounting/entities/journal-line.entity';
+import { PurchaseOrder } from './modules/inbound/entities/purchase-order.entity';
+import { PurchaseOrderItem } from './modules/inbound/entities/purchase-order-item.entity';
+import { ProductBatch } from './modules/inbound/entities/product-batch.entity';
+import { InventoryStock } from './modules/inbound/entities/inventory-stock.entity';
+import { InventoryTransaction } from './modules/inbound/entities/inventory-transaction.entity';
+import { TemperatureLog } from './modules/inbound/entities/temperature-log.entity';
 
 @Module({
   imports: [
@@ -59,6 +68,14 @@ import { ChartOfAccount } from './modules/accounting/entities/chart-of-account.e
           Customer,
           ProductCustomerPrice,
           ChartOfAccount,
+          JournalEntry,
+          JournalLine,
+          PurchaseOrder,
+          PurchaseOrderItem,
+          ProductBatch,
+          InventoryStock,
+          InventoryTransaction,
+          TemperatureLog,
         ],
         synchronize: false, // Gunakan migration / DDL script
         logging: config.get<string>('NODE_ENV') === 'development',
@@ -70,6 +87,7 @@ import { ChartOfAccount } from './modules/accounting/entities/chart-of-account.e
     CustomersModule,
     PricingModule,
     AccountingModule,
+    InboundModule,
   ],
 })
 export class AppModule {}

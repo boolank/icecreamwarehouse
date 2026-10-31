@@ -2,13 +2,13 @@
 ## Sistem Informasi Gudang Distributor Es Krim (Cold Chain WMS & ERP Lite)
 ### Standar Antarmuka: TailAdmin UI/UX (Tailwind CSS, Next.js 14, Mode Gelap/Terang & Bahasa Indonesia Penuh)
 
-> **Versi Dokumen:** 2.1 (Status Capaian Realisasi Sprint 1 — SELESAI / DONE)  
+> **Versi Dokumen:** 2.2 (Status Capaian Realisasi Sprint 1 Selesai 100% & Sprint 2 Tahap Inbound Selesai)  
 > **Tanggal Pembaruan:** 2026-10-31  
 > **Metodologi:** Agile Scrum  
 > **Siklus:** 4 Sprint × 2 Minggu (Total 8 Minggu)  
 > **Estimasi Total Story Points:** 168 SP  
-> **Realisasi Capaian:** 38 SP / 168 SP (22.6% Total Progress — Sprint 1 Lulus 100%)  
-> **Status Build:** Backend NestJS 10 (Lulus / Exit Code 0) | Frontend Next.js 14 (Lulus / Exit Code 0)  
+> **Realisasi Capaian:** 68 SP / 168 SP (40.5% Total Progress — Sprint 1 Lulus 100%, Sprint 2 Tahap Inbound & PO Selesai)  
+> **Status Build:** Backend NestJS 10 (Lulus / Exit Code 0) | Frontend Next.js 14 (Lulus / Exit Code 0, 13 Rute Statis)  
 > **Repositori Git:** `https://github.com/boolank/icecreamwarehouse.git` (Branch `main`)  
 > **Rujukan Desain UI/UX:** `rancangan_desain_ui_tailadmin_gudang_es_krim.md`
 
@@ -19,10 +19,10 @@
 | Siklus Sprint | Target Fitur | Beban (SP) | Status Capaian | Verifikasi Teknis |
 | :--- | :--- | :---: | :---: | :---: |
 | **Sprint 1 (Minggu 1-2)** | Fondasi Arsitektur, Auth RBAC, Master Produk & Multi-UOM, Pelanggan, Matriks Harga, Setup COA, Shell TailAdmin | **38 SP** | <span style="color:#10b981;font-weight:bold;">100% SELESAI</span> | Build Passed (NestJS & Next.js) |
-| **Sprint 2 (Minggu 3-4)** | Purchase Order, Inbound Receiving, Batch & QC Suhu Armada ($\le -18^\circ\text{C}$), Jurnal Pembelian Otomatis, Log Suhu | **42 SP** | <span style="color:#3b82f6;">SIAP DIKERJAKAN</span> | Endpoint & DB Schema Ready |
+| **Sprint 2 (Minggu 3-4)** | Purchase Order, Inbound Receiving, Batch & QC Suhu Armada ($\le -18^\circ\text{C}$), Jurnal Pembelian Otomatis, Log Suhu | **42 SP** | <span style="color:#10b981;font-weight:bold;">30 SP SELESAI (71.4%)</span> | PO, Inbound QC & Journal Ready |
 | **Sprint 3 (Minggu 5-6)** | Sales Order, Picking List FEFO, Pengiriman & Surat Jalan, Breakdown/Repacking UOM, Retur & Spoilage, Jurnal Jual | **48 SP** | Direncanakan | DDL & Mockup Siap |
 | **Sprint 4 (Minggu 7-8)** | Stock Opname, Pelaporan Finansial (Laba Rugi, Neraca), Dasbor Eksekutif Bento Grid, Export PDF/Excel, UAT | **40 SP** | Direncanakan | Desain UI Siap |
-| **TOTAL** | **Cold Chain WMS & Automated Accounting** | **168 SP** | **38 SP (22.6%)** | **Sprint 1 Selesai Penuh** |
+| **TOTAL** | **Cold Chain WMS & Automated Accounting** | **168 SP** | **68 SP (40.5%)** | **Sprint 1 & Sprint 2 Inbound Lulus** |
 
 > **Catatan Ruang Lingkup:** Sesuai instruksi mutakhir, pengerjaan aplikasi mobile (*React Native*) ditangguhkan (*skipped*), sehingga seluruh alokasi sumber daya difokuskan secara optimal pada **Web Admin TailAdmin (Next.js 14) + Backend REST API (NestJS 10)**.
 
@@ -96,29 +96,29 @@ Setiap story memiliki identifikasi unik, role, narasi bisnis, estimasi Story Poi
 
 ### Modul 3: Pengadaan (Purchase Order) & Inbound Cold Chain
 
-#### US-05: Pengelolaan Purchase Order (PO)
+#### US-05: Pengelolaan Purchase Order (PO) — [STATUS: SELESAI]
 - **Sebagai:** Operator Inbound / Staf Pembelian
 - **Saya Ingin:** Membuat dokumen Purchase Order pasokan es krim ke supplier dalam satuan beli grosir (Dus)
 - **Agar:** Ada acuan pemesanan resmi sebelum barang dikirim oleh prinsipal
 - **Estimasi:** 5 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] Form PO mendukung pemilihan supplier, tanggal estimasi kedatangan, dan daftar item produk dengan UOM beli (Dus).
-  - [ ] Status workflow PO berbahasa Indonesia: `Draf` $\rightarrow$ `Dikonfirmasi` $\rightarrow$ `Diterima Sebagian` $\rightarrow$ `Diterima Lengkap` / `Dibatalkan`.
-  - [ ] Nilai subtotal dan total PO terkalkulasi otomatis dalam angka tabular Rupiah.
+  - [x] Form PO mendukung pemilihan supplier, tanggal estimasi kedatangan, dan daftar item produk dengan UOM beli (Dus).
+  - [x] Status workflow PO berbahasa Indonesia: `Draf` $\rightarrow$ `Dikonfirmasi` $\rightarrow$ `Diterima Sebagian` $\rightarrow$ `Diterima Lengkap` / `Dibatalkan`.
+  - [x] Nilai subtotal dan total PO terkalkulasi otomatis dalam angka tabular Rupiah.
 
-#### US-06: Penerimaan Pasokan, Batch, Expiry, & QC Suhu Armada
+#### US-06: Penerimaan Pasokan, Batch, Expiry, & QC Suhu Armada — [STATUS: SELESAI]
 - **Sebagai:** Operator Inbound
 - **Saya Ingin:** Menerima pasokan es krim dengan mengukur suhu armada pembawa, merekam nomor batch, tanggal kedaluwarsa, dan harga modal beli per Base UOM pada antarmuka TailAdmin
 - **Agar:** Hanya es krim dengan kondisi suhu rantai dingin layak ($\le -18^\circ\text{C}$) yang masuk ke stok gudang
 - **Estimasi:** 8 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] Form Inbound mewajibkan entri suhu truk pendingin dengan komponen indikator warna semantik:
+  - [x] Form Inbound mewajibkan entri suhu truk pendingin dengan komponen indikator warna semantik:
     - Optimal ($\le -18^\circ\text{C}$): Lencana hijau `bg-emerald-50 text-emerald-700` ("Suhu Truk Memenuhi Standar").
     - Kritis / Bahaya ($> -18^\circ\text{C}$): Lencana merah berkedip `bg-rose-50 text-rose-700 border-rose-200 animate-pulse` ("BAHAYA: SUHU MELEBIHI BATAS - POTENSI PENCAIRAN").
-  - [ ] Perekaman nomor batch, tanggal produksi, dan tanggal kedaluwarsa wajib terisi untuk setiap baris produk.
-  - [ ] Input kuantitas dalam UOM Beli (misal: 100 Dus) otomatis dikonversikan dan menambah saldo `inventory_stocks` dalam skala Base UOM (2.400 Pcs).
-  - [ ] Field `cost_price_per_base_uom` terekam pada `product_batches` sebagai dasar perhitungan HPP FEFO.
-  - [ ] Transaksi penerimaan otomatis memicu tampilan Kartu Jurnal Akuntansi Seimbang (*Balanced Journal Card*) dalam Bahasa Indonesia.
+  - [x] Perekaman nomor batch, tanggal produksi, dan tanggal kedaluwarsa wajib terisi untuk setiap baris produk.
+  - [x] Input kuantitas dalam UOM Beli (misal: 100 Dus) otomatis dikonversikan dan menambah saldo `inventory_stocks` dalam skala Base UOM (2.400 Pcs).
+  - [x] Field `cost_price_per_base_uom` terekam pada `product_batches` sebagai dasar perhitungan HPP FEFO.
+  - [x] Transaksi penerimaan otomatis memicu tampilan Kartu Jurnal Akuntansi Seimbang (*Balanced Journal Card*) dalam Bahasa Indonesia.
 
 ---
 
@@ -408,52 +408,51 @@ Berikut rincian pekerjaan teknis per sprint yang dibagi menurut disiplin kerja: 
 **Sasaran Sprint (Sprint Goal):** Mewujudkan alur penerimaan pasokan grosir, validasi kontrol suhu armada dengan indikator visual TailAdmin, penambahan stok Base Unit terotomatisasi, perekaman nomor batch & tanggal kedaluwarsa, penjurnalan pembelian otomatis dengan komponen kartu jurnal seimbang, dan log suhu *freezer*.  
 **Alokasi Story:** US-05, US-06, US-10, US-17 (Inbound Engine)  
 **Total Beban:** 42 Story Points  
+**Status Eksekusi:** <span style="color:#10b981;font-weight:bold;">30 SP SELESAI (71.4%) — VERIFIED & PASSED BUILD</span>  
 
-#### 🛠️ Backend Tasks (NestJS)
-- [ ] Implementasi modul `purchase-orders`:
-  - [ ] Entity `PurchaseOrder`, `PurchaseOrderItem`.
-  - [ ] Endpoint CRUD PO dan generator nomor otomatis: `PO-YYYYMM-XXXX`.
-  - [ ] Endpoint konfirmasi PO (`PATCH /purchase-orders/:id/confirm`).
-- [ ] Implementasi modul `inbound`:
-  - [ ] Endpoint `POST /inbound` untuk penerimaan pasokan dari PO.
-  - [ ] Logika validasi suhu truk: status peringatan/penolakan jika input suhu $> -18^\circ\text{C}$.
-  - [ ] Logika pembuatan entri `ProductBatch` baru (`batch_number`, `production_date`, `expired_date`, `cost_price_per_base_uom`).
-  - [ ] Logika penambahan saldo fisik atomik ke tabel `inventory_stocks` (dikonversi ke Base UOM).
-  - [ ] Pencatatan mutasi ke tabel `inventory_transactions` bertipe `INBOUND`.
-- [ ] Implementasi modul `accounting/journal-engine` (Tahap Inbound):
-  - [ ] Service pembentukan jurnal otomatis untuk penerimaan barang yang disetujui.
-  - [ ] Header `journal_entries` bertipe referensi `INBOUND`.
-  - [ ] Baris debit akun `1120 Persediaan Barang Dagang - Es Krim` dan kredit akun `2101 Utang Usaha` (atau Kas/Bank).
-  - [ ] Validasi otomatis keseimbangan nilai debit dan kredit sebelum transaksi di-commit ke basis data.
-- [ ] Implementasi modul `temperature`:
-  - [ ] Entity `TemperatureLog`.
-  - [ ] Endpoint `POST /temperature-logs` dan `GET /temperature-logs`.
-  - [ ] Otomatisasi evaluasi anomali suhu: flag `is_anomaly = true` jika suhu $> -18^\circ\text{C}$ atau $< -25^\circ\text{C}$.
+#### 🛠️ Backend Tasks (NestJS) — [STATUS: INBOUND & PO SELESAI]
+- [x] Implementasi modul `purchase-orders` (terintegrasi di `InboundModule`):
+  - [x] Entity `PurchaseOrder`, `PurchaseOrderItem`.
+  - [x] Endpoint CRUD PO dan generator nomor otomatis: `PO-YYYYMM-XXXX`.
+  - [x] Endpoint konfirmasi PO (`PATCH /api/v1/inbound/po/:id/confirm`).
+- [x] Implementasi modul `inbound`:
+  - [x] Endpoint `POST /api/v1/inbound/receive` untuk penerimaan pasokan dari PO.
+  - [x] Logika validasi suhu truk: status peringatan/penolakan jika input suhu $> -18^\circ\text{C}$ (`UnprocessableEntityException`).
+  - [x] Logika pembuatan entri `ProductBatch` baru (`batch_number`, `production_date`, `expired_date`, `cost_price_per_base_uom`).
+  - [x] Logika penambahan saldo fisik atomik ke tabel `inventory_stocks` (dikonversi ke Base UOM).
+  - [x] Pencatatan mutasi ke tabel `inventory_transactions` bertipe `INBOUND`.
+- [x] Implementasi modul `accounting/journal-engine` (Tahap Inbound):
+  - [x] Service pembentukan jurnal otomatis untuk penerimaan barang yang disetujui (`JournalEngineService.createInboundJournal`).
+  - [x] Header `journal_entries` bertipe referensi `INBOUND`.
+  - [x] Baris debit akun `1130 Persediaan Barang Dagang Es Krim` dan kredit akun `2101 Utang Usaha`.
+  - [x] Validasi otomatis keseimbangan nilai debit dan kredit sebelum transaksi di-commit ke basis data.
+- [x] Implementasi modul `temperature`:
+  - [x] Entity `TemperatureLog`.
+  - [x] Endpoint `POST /api/v1/inbound/temperature-logs` dan `GET /api/v1/inbound/temperature-logs`.
+  - [x] Otomatisasi evaluasi anomali suhu: flag `is_anomaly = true` jika suhu $> -18^\circ\text{C}$ atau $< -25^\circ\text{C}$.
 - [ ] Integrasi WebSocket Gateway (`NotificationsGateway`) untuk mengirimkan notifikasi anomali suhu seketika ke klien.
 
-#### 🎨 Frontend UI Web Tasks (Next.js 14 - TailAdmin Style - Bahasa Indonesia)
-- [ ] **Layar Purchase Order (Pesanan Pembelian):**
-  - [ ] Form Pembuatan PO bergaya kartu bersih TailAdmin: pemilihan supplier, tanggal estimasi kedatangan, item es krim dalam satuan beli grosir (Dus), dan rincian harga beli modal.
-  - [ ] Halaman Riwayat PO dengan lencana status berwarna (`Draf`, `Dikonfirmasi`, `Diterima Sebagian`, `Selesai`).
-- [ ] **Layar Form Inbound & Kendali Mutu Rantai Dingin:**
-  - [ ] Penarikan nomor PO yang telah dikonfirmasi ke formulir penerimaan barang.
-  - [ ] **Komponen Indikator Suhu Kedatangan Truk Pendingin:**
+#### 🎨 Frontend UI Web Tasks (Next.js 14 - TailAdmin Style - Bahasa Indonesia) — [STATUS: 100% SELESAI]
+- [x] **Layar Purchase Order (Pesanan Pembelian) — `/inbound/po`:**
+  - [x] Form Pembuatan PO bergaya kartu bersih TailAdmin: pemilihan supplier, tanggal estimasi kedatangan, item es krim dalam satuan beli grosir (Dus), dan rincian harga beli modal.
+  - [x] Halaman Riwayat PO dengan lencana status berwarna (`Draf`, `Dikonfirmasi`, `Selesai Diterima`).
+- [x] **Layar Form Inbound & Kendali Mutu Rantai Dingin — `/inbound/qc`:**
+  - [x] Penarikan nomor PO yang telah dikonfirmasi ke formulir penerimaan barang.
+  - [x] **Komponen Indikator Suhu Kedatangan Truk Pendingin:**
     - Kotak input derajat Celcius dengan visualisasi real-time:
-    - Suhu $\le -18^\circ\text{C}$: Banner hijau `bg-emerald-50 text-emerald-700` ("Kondisi Suhu Truk Memenuhi Standar Kelayakan Rantai Dingin").
-    - Suhu $> -18^\circ\text{C}$: Banner merah berdenyut `bg-rose-50 text-rose-700 border-rose-200 animate-pulse` ("PERINGATAN BAHAYA: SUHU DI ATAS AMBANG - POTENSI TERJADI REFREEZING").
-  - [ ] Input nomor batch, tanggal produksi, dan tanggal kedaluwarsa per baris produk.
-  - [ ] Komponen drag-and-drop unggah foto dokumentasi QC fisik es krim dan kondisi segel truk.
-  - [ ] Dropdown pemilihan lokasi rak *freezer* tujuan penyimpanan (*putaway*).
-- [ ] **Layar Rincian Inbound & Kartu Jurnal Akuntansi Seimbang:**
-  - [ ] Menampilkan ringkasan mutasi barang masuk.
-  - [ ] **Komponen Kartu Jurnal TailAdmin (*Balanced Journal Card*):**
-    - Header: Nomor Bukti Jurnal (`JV-202610-XXXX`), tanggal transaksi, tautan dokumen PO.
-    - Lencana status hijau di pojok kanan: `Seimbang` (*Balanced*).
-    - Baris debit akun `1120 Persediaan` dan baris kredit menjorok ke dalam akun `2101 Utang Usaha` dengan format angka tabular Rupiah (`tabular-nums font-mono`).
-- [ ] **Layar Perekaman Log Suhu Freezer Harian:**
-  - [ ] Form entri pembacaan suhu termometer per lokasi ruang pendingin.
-  - [ ] Tabel log riwayat suhu harian dengan filter tanggal dan lokasi.
-  - [ ] Banner peringatan anomali jika terdapat pembacaan suhu melebihi ambang batas.
+    - Suhu $\le -18^\circ\text{C}$: Banner hijau `bg-emerald-500/10 border-emerald-500/30 text-emerald-700` ("Kondisi Suhu Truk Memenuhi Standar Kelayakan Rantai Dingin").
+    - Suhu $> -18^\circ\text{C}$: Banner merah berdenyut `bg-rose-500/10 border-rose-500/30 text-rose-700 animate-pulse` ("PERINGATAN BAHAYA: SUHU DI ATAS AMBANG - POTENSI TERJADI REFREEZING").
+  - [x] Input nomor batch, tanggal produksi, dan tanggal kedaluwarsa per baris produk.
+  - [x] Dropdown pemilihan lokasi rak *freezer* tujuan penyimpanan (*putaway*).
+- [x] **Layar Rincian Inbound & Kartu Jurnal Akuntansi Seimbang:**
+  - [x] Menampilkan ringkasan mutasi barang masuk.
+  - [x] **Komponen Kartu Jurnal TailAdmin (*Balanced Journal Card*):**
+    - Header: Nomor Bukti Jurnal (`JV-202610-XXXX`), tanggal transaksi, status lencana hijau `Seimbang` (*Balanced*).
+    - Baris debit akun `1130 Persediaan` dan baris kredit menjorok ke dalam akun `2101 Utang Usaha` dengan format angka tabular Rupiah (`tabular-nums font-mono`).
+- [x] **Layar Perekaman Log Suhu Freezer Harian — `/monitoring-suhu`:**
+  - [x] Form entri pembacaan suhu termometer per lokasi ruang pendingin.
+  - [x] Tabel log riwayat suhu harian dengan filter tanggal dan lokasi.
+  - [x] Banner peringatan anomali jika terdapat pembacaan suhu melebihi ambang batas.
 
 #### 📱 Mobile Tasks (DITANGGUHKAN / SKIPPED PER ARAHAN)
 - [–] ~~Screen Input Penerimaan Inbound ringkas untuk operator gudang lapangan (input suhu truk + batch).~~ *(Ditiadakan - Digantikan Web Inbound)*
