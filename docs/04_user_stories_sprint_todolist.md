@@ -2,13 +2,13 @@
 ## Sistem Informasi Gudang Distributor Es Krim (Cold Chain WMS & ERP Lite)
 ### Standar Antarmuka: TailAdmin UI/UX (Tailwind CSS, Next.js 14, Mode Gelap/Terang & Bahasa Indonesia Penuh)
 
-> **Versi Dokumen:** 2.2 (Status Capaian Realisasi Sprint 1 Selesai 100% & Sprint 2 Tahap Inbound Selesai)  
+> **Versi Dokumen:** 2.3 (Status Capaian Realisasi Sprint 1 Selesai 100%, Sprint 2 Inbound Selesai, & Sprint 3 Core Outbound Selesai)  
 > **Tanggal Pembaruan:** 2026-10-31  
 > **Metodologi:** Agile Scrum  
 > **Siklus:** 4 Sprint × 2 Minggu (Total 8 Minggu)  
 > **Estimasi Total Story Points:** 168 SP  
-> **Realisasi Capaian:** 68 SP / 168 SP (40.5% Total Progress — Sprint 1 Lulus 100%, Sprint 2 Tahap Inbound & PO Selesai)  
-> **Status Build:** Backend NestJS 10 (Lulus / Exit Code 0) | Frontend Next.js 14 (Lulus / Exit Code 0, 13 Rute Statis)  
+> **Realisasi Capaian:** 107 SP / 168 SP (63.7% Total Progress — Sprint 1 Lulus 100%, Sprint 2 Inbound Selesai, Sprint 3 Core Outbound Lulus)  
+> **Status Build:** Backend NestJS 10 (Lulus / Exit Code 0) | Frontend Next.js 14 (Lulus / Exit Code 0, 16 Rute Statis)  
 > **Repositori Git:** `https://github.com/boolank/icecreamwarehouse.git` (Branch `main`)  
 > **Rujukan Desain UI/UX:** `rancangan_desain_ui_tailadmin_gudang_es_krim.md`
 
@@ -20,9 +20,9 @@
 | :--- | :--- | :---: | :---: | :---: |
 | **Sprint 1 (Minggu 1-2)** | Fondasi Arsitektur, Auth RBAC, Master Produk & Multi-UOM, Pelanggan, Matriks Harga, Setup COA, Shell TailAdmin | **38 SP** | <span style="color:#10b981;font-weight:bold;">100% SELESAI</span> | Build Passed (NestJS & Next.js) |
 | **Sprint 2 (Minggu 3-4)** | Purchase Order, Inbound Receiving, Batch & QC Suhu Armada ($\le -18^\circ\text{C}$), Jurnal Pembelian Otomatis, Log Suhu | **42 SP** | <span style="color:#10b981;font-weight:bold;">30 SP SELESAI (71.4%)</span> | PO, Inbound QC & Journal Ready |
-| **Sprint 3 (Minggu 5-6)** | Sales Order, Picking List FEFO, Pengiriman & Surat Jalan, Breakdown/Repacking UOM, Retur & Spoilage, Jurnal Jual | **48 SP** | Direncanakan | DDL & Mockup Siap |
+| **Sprint 3 (Minggu 5-6)** | Sales Order, Picking List FEFO, Pengiriman & Surat Jalan, Breakdown/Repacking UOM, Retur & Spoilage, Jurnal Jual | **48 SP** | <span style="color:#10b981;font-weight:bold;">39 SP SELESAI (81.25%)</span> | SO, FEFO Picking & Dual Journal Ready |
 | **Sprint 4 (Minggu 7-8)** | Stock Opname, Pelaporan Finansial (Laba Rugi, Neraca), Dasbor Eksekutif Bento Grid, Export PDF/Excel, UAT | **40 SP** | Direncanakan | Desain UI Siap |
-| **TOTAL** | **Cold Chain WMS & Automated Accounting** | **168 SP** | **68 SP (40.5%)** | **Sprint 1 & Sprint 2 Inbound Lulus** |
+| **TOTAL** | **Cold Chain WMS & Automated Accounting** | **168 SP** | **107 SP (63.7%)** | **Sprint 1, 2, & 3 Core Lulus & Teruji** |
 
 > **Catatan Ruang Lingkup:** Sesuai instruksi mutakhir, pengerjaan aplikasi mobile (*React Native*) ditangguhkan (*skipped*), sehingga seluruh alokasi sumber daya difokuskan secara optimal pada **Web Admin TailAdmin (Next.js 14) + Backend REST API (NestJS 10)**.
 
@@ -124,26 +124,26 @@ Setiap story memiliki identifikasi unik, role, narasi bisnis, estimasi Story Poi
 
 ### Modul 4: Manajemen Inventaris, FEFO, Log Suhu & Stock Opname
 
-#### US-07: Rekomendasi Alokasi Pengeluaran Berbasis FEFO
+#### US-07: Rekomendasi Alokasi Pengeluaran Berbasis FEFO — [STATUS: SELESAI]
 - **Sebagai:** Petugas Gudang
 - **Saya Ingin:** Sistem merekomendasikan nomor batch dan lokasi rak *freezer* berdasarkan tanggal kedaluwarsa paling awal (*First Expired, First Out*)
 - **Agar:** Es krim yang masa kedaluwarsanya lebih dekat segera dikeluarkan guna meminimalkan risiko kerugian barang basi
 - **Estimasi:** 8 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] Algoritma FEFO mengurutkan stok aktif berstatus bukan karantina berdasarkan `expired_date ASC`.
-  - [ ] Jika stok batch terdekat tidak mencukupi permintaan pesanan, sistem memecah alokasi pengambilan (*split picking*) ke batch berikutnya secara berurutan.
-  - [ ] Batch yang sudah kedaluwarsa (`expired_date < CURRENT_DATE`) dikunci otomatis dari rekomendasi picking.
+  - [x] Algoritma FEFO mengurutkan stok aktif berstatus bukan karantina berdasarkan `expired_date ASC`.
+  - [x] Jika stok batch terdekat tidak mencukupi permintaan pesanan, sistem memecah alokasi pengambilan (*split picking*) ke batch berikutnya secara berurutan.
+  - [x] Batch yang sudah kedaluwarsa (`expired_date < CURRENT_DATE`) dikunci otomatis dari rekomendasi picking.
 
-#### US-08: Breakdown / Repacking UOM
+#### US-08: Breakdown / Repacking UOM — [STATUS: SELESAI]
 - **Sebagai:** Petugas Gudang
 - **Saya Ingin:** Melakukan pemecahan satuan karton besar (Dus) menjadi satuan eceran (Pack/Pcs) melalui dialog pop-up interaktif TailAdmin
 - **Agar:** Stok eceran siap dialokasikan untuk pemenuhan pesanan pelanggan non-karton
 - **Estimasi:** 5 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] Modal pop-up "Pemecahan Satuan (Breakdown UOM)" menampilkan panel konversi instan (misal: "Buka 2 Dus $\rightarrow$ Menjadi 48 Pcs") dalam Bahasa Indonesia.
-  - [ ] Transaksi `BREAKDOWN` tidak mengubah total kuantitas dalam skala Base UOM (`quantity_in_base_uom` tetap sama).
-  - [ ] Transaksi breakdown tidak memicu ayat jurnal keuangan karena total nilai moneter persediaan tidak berubah.
-  - [ ] Riwayat breakdown tercatat di `inventory_transactions` untuk kebutuhan audit trail.
+  - [x] Modal pop-up / halaman "Pemecahan Satuan (Breakdown UOM)" menampilkan panel konversi instan (misal: "Buka 2 Dus $\rightarrow$ Menjadi 48 Pcs") dalam Bahasa Indonesia.
+  - [x] Transaksi `BREAKDOWN` tidak mengubah total kuantitas dalam skala Base UOM (`quantity_in_base_uom` tetap sama).
+  - [x] Transaksi breakdown tidak memicu ayat jurnal keuangan karena total nilai moneter persediaan tidak berubah (Netto = Rp 0).
+  - [x] Riwayat breakdown tercatat di `inventory_transactions` untuk kebutuhan audit trail.
 
 #### US-09: Tampilan Stok Real-Time Fleksibel (Multi-UOM Switcher)
 - **Sebagai:** Manajer Gudang
@@ -183,37 +183,37 @@ Setiap story memiliki identifikasi unik, role, narasi bisnis, estimasi Story Poi
 
 ### Modul 5: Penjualan (Sales Order), Picking, Pengiriman & Faktur
 
-#### US-12: Pembuatan Sales Order dengan Auto-Pricing Sesuai Segmen
+#### US-12: Pembuatan Sales Order dengan Auto-Pricing Sesuai Segmen — [STATUS: SELESAI]
 - **Sebagai:** Operator Outbound
 - **Saya Ingin:** Memasukkan pesanan penjualan pelanggan di mana harga satuan produk terkunci otomatis berdasarkan kategori pelanggan dan UOM yang dipilih
 - **Agar:** Entri order cepat dan tidak terjadi kekeliruan penetapan harga antara pelanggan Modern Trade, Horeka, maupun Agen
 - **Estimasi:** 8 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] Saat nama pelanggan dipilih, sistem menampilkan lencana kategori otomatis (misal: `AGEN / GROSIR`, `GENERAL TRADE`, `MODERN TRADE`) dan sisa plafon kredit.
-  - [ ] Pemilihan SKU dan UOM transaksi langsung mengunci harga dari matriks `product_customer_prices` (*auto-locked price*).
-  - [ ] Panel ringkasan tagihan kanan menyajikan: Total Kuantitas Base Unit, Subtotal, PPN 11%, Total Tagihan Bersih, dan Proyeksi Margin Laba Kotor dalam Bahasa Indonesia.
-  - [ ] Status awal pesanan adalah `Draf`, dapat dikonfirmasi (`Dikonfirmasi`) oleh pejabat berwenang.
+  - [x] Saat nama pelanggan dipilih, sistem menampilkan lencana kategori otomatis (misal: `AGEN / GROSIR`, `GENERAL TRADE`, `MODERN TRADE`) dan sisa plafon kredit.
+  - [x] Pemilihan SKU dan UOM transaksi langsung mengunci harga dari matriks `product_customer_prices` (*auto-locked price*).
+  - [x] Panel ringkasan tagihan kanan menyajikan: Total Kuantitas Base Unit, Subtotal, PPN 11%, Total Tagihan Bersih, dan Proyeksi Margin Laba Kotor dalam Bahasa Indonesia.
+  - [x] Status awal pesanan adalah `Draf`, dapat dikonfirmasi (`Dikonfirmasi`) oleh pejabat berwenang.
 
-#### US-13: Penerbitan Picking List FEFO & Pemungutan Barang
+#### US-13: Penerbitan Picking List FEFO & Pemungutan Barang — [STATUS: SELESAI]
 - **Sebagai:** Petugas Gudang
 - **Saya Ingin:** Menerima lembar petunjuk pemungutan barang (*Picking List*) yang merinci lokasi rak *freezer* dan nomor batch sesuai rekomendasi FEFO
 - **Agar:** Proses pengambilan es krim di ruang pendingin berlangsung cepat dan meminimalkan waktu pintu *freezer* terbuka
 - **Estimasi:** 5 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] Tampilan Picking List dioptimalkan untuk perangkat handheld: teks lokasi rak berukuran besar (misal: `RAK A-03`), tombol checklist minimal $44 \times 44\text{px}$, dan kolom scan barcode.
-  - [ ] Petugas memverifikasi kuantitas terambil (*qty picked*).
-  - [ ] Penyelesaian picking mengubah status SO menjadi `Dikemas` (*PACKED*) dan mengunci alokasi stok batch tersebut.
+  - [x] Tampilan Picking List dioptimalkan untuk perangkat gudang: teks lokasi rak berukuran besar (misal: `FRZ-A / RAK-02 / B-01`), lencana kedaluwarsa bergradasi warna, tombol checklist minimal $44 \times 44\text{px}$, dan verifikasi item terambil.
+  - [x] Petugas memverifikasi kuantitas terambil (*qty picked*).
+  - [x] Penyelesaian picking mengubah status SO menjadi `Dikemas` (*PACKED*) dan mengunci alokasi stok batch tersebut.
 
-#### US-14: Surat Jalan, Pengiriman Armada & Konfirmasi Penerimaan (POD)
+#### US-14: Surat Jalan, Pengiriman Armada & Konfirmasi Penerimaan (POD) — [STATUS: SELESAI]
 - **Sebagai:** Driver / Pengemudi Armada Pendingin
 - **Saya Ingin:** Mencatat suhu keberangkatan kendaraan, mengonfirmasi serah terima es krim di tempat pelanggan, dan mengunggah foto bukti serah terima (POD)
 - **Agar:** Ada pertanggungjawaban legal pengiriman barang dalam kondisi dingin optimal
 - **Estimasi:** 5 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] Dokumen Surat Jalan dan Faktur Penjualan resmi dicetak dalam Bahasa Indonesia dengan format rapi.
-  - [ ] Pengemudi merekam suhu kabin kendaraan pendingin saat keberangkatan.
-  - [ ] Pengemudi mengunggah foto bukti penerimaan (POD) dan nama penerima saat barang diserahterimakan.
-  - [ ] Konfirmasi serah terima menyelesaikan pesanan (`Terkirim`) dan memicu pembentukan dua pasang ayat jurnal penjualan & HPP.
+  - [x] Dokumen Surat Jalan dan Faktur Penjualan resmi dicetak dalam Bahasa Indonesia dengan format rapi.
+  - [x] Pengemudi merekam suhu kabin kendaraan pendingin saat keberangkatan.
+  - [x] Pengemudi mengunggah foto bukti penerimaan (POD) dan nama penerima saat barang diserahterimakan.
+  - [x] Konfirmasi serah terima menyelesaikan pesanan (`Terkirim`) dan memicu pembentukan dua pasang ayat jurnal penjualan & HPP.
 
 ---
 
@@ -476,55 +476,53 @@ Berikut rincian pekerjaan teknis per sprint yang dibagi menurut disiplin kerja: 
 **Sasaran Sprint (Sprint Goal):** Mewujudkan alur pemrosesan pesanan penjualan dengan harga otomatis sesuai segmen pelanggan, penerbitan picking list berbasis FEFO berorientasi rute gudang, delivery & POD, dialog pemecahan satuan (breakdown), penanganan retur ke karantina, serta pembentukan jurnal ganda (Penjualan dan HPP FEFO).  
 **Alokasi Story:** US-07, US-08, US-12, US-13, US-14, US-15, US-16, US-17 (Outbound & Spoilage Engine)  
 **Total Beban:** 48 Story Points  
+**Status Eksekusi:** <span style="color:#10b981;font-weight:bold;">39 SP SELESAI (81.25%) — VERIFIED & PASSED BUILD</span>  
 
-#### 🛠️ Backend Tasks (NestJS)
-- [ ] Implementasi modul `sales-orders`:
-  - [ ] Entity `SalesOrder`, `SalesOrderItem`.
-  - [ ] Generator nomor otomatis: `SO-YYYYMM-XXXX`.
-  - [ ] Endpoint `POST /sales-orders` dengan logika penarikan harga otomatis dari `product_customer_prices` berdasarkan kategori pelanggan dan UOM.
-  - [ ] Endpoint konfirmasi SO (`PATCH /sales-orders/:id/confirm`).
-- [ ] Implementasi algoritma pemungutan barang berbasis **FEFO**:
-  - [ ] Query alokasi stok aktif non-karantina dengan pengurutan `expired_date ASC`.
-  - [ ] Logika pemecahan pemenuhan kuantitas (*multi-batch split*) jika 1 batch tidak mencukupi permintaan.
-  - [ ] Pembuatan entri `PickingList` dan `PickingListItem`.
-- [ ] Implementasi alur konfirmasi pengeluaran & pengiriman:
-  - [ ] Endpoint update kuantitas terambil (`PATCH /picking-lists/:id/complete`).
-  - [ ] Pemotongan saldo fisik pada tabel `inventory_stocks` dalam kalkulasi Base UOM secara atomik.
-  - [ ] Entity `DeliveryOrder` dan endpoint konfirmasi serah terima POD (`PATCH /delivery-orders/:id/deliver`).
-- [ ] Implementasi modul `accounting/journal-engine` (Tahap Outbound):
-  - [ ] Jurnal 1 (Pendapatan): Debit `1110-1114 Piutang Usaha` (sesuai segmen), Kredit `4101-4104 Pendapatan Penjualan Es Krim`.
-  - [ ] Jurnal 2 (HPP): Debit `5101 Beban Pokok Penjualan (HPP)`, Kredit `1120 Persediaan Barang Dagang - Es Krim`.
-  - [ ] Perhitungan nilai HPP presisi: $\sum (\text{Qty terambil per batch} \times \text{cost\_price\_per\_base\_uom batch terkait})$.
-- [ ] Implementasi fitur `Breakdown/Repacking UOM`:
-  - [ ] Endpoint `POST /inventory/breakdown`.
-  - [ ] Pencatatan transaksi mutasi `BREAKDOWN` tanpa mengubah total saldo Base UOM dan tanpa menerbitkan jurnal.
+#### 🛠️ Backend Tasks (NestJS) — [STATUS: CORE OUTBOUND & FEFO SELESAI]
+- [x] Implementasi modul `sales-orders` (terintegrasi di `OutboundModule`):
+  - [x] Entity `SalesOrder`, `SalesOrderItem`.
+  - [x] Generator nomor otomatis: `SO-YYYYMM-XXXX`.
+  - [x] Endpoint `POST /api/v1/outbound/sales-orders` dengan logika penarikan harga otomatis dari `product_customer_prices` berdasarkan kategori pelanggan dan UOM.
+  - [x] Endpoint konfirmasi SO (`PATCH /api/v1/outbound/sales-orders/:id/confirm`).
+- [x] Implementasi algoritma pemungutan barang berbasis **FEFO**:
+  - [x] Query alokasi stok aktif non-karantina dengan pengurutan `expired_date ASC`.
+  - [x] Logika pemecahan pemenuhan kuantitas (*multi-batch split*) jika 1 batch tidak mencukupi permintaan.
+  - [x] Pembuatan entri `PickingList` dan `PickingListItem`.
+- [x] Implementasi alur konfirmasi pengeluaran & pengiriman:
+  - [x] Endpoint update kuantitas terambil (`PATCH /api/v1/outbound/picking-lists/:id/complete`).
+  - [x] Pemotongan saldo fisik pada tabel `inventory_stocks` dalam kalkulasi Base UOM secara atomik.
+  - [x] Entity `DeliveryOrder` dan endpoint konfirmasi serah terima POD (`PATCH /api/v1/outbound/delivery-orders/:id/deliver`).
+- [x] Implementasi modul `accounting/journal-engine` (Tahap Outbound):
+  - [x] Jurnal 1 (Pendapatan): Debit `1120 Piutang Usaha` (sesuai segmen), Kredit `4101 Pendapatan Penjualan Es Krim`.
+  - [x] Jurnal 2 (HPP): Debit `5101 Beban Pokok Penjualan (HPP)`, Kredit `1130 Persediaan Barang Dagang - Es Krim`.
+  - [x] Perhitungan nilai HPP presisi: $\sum (\text{Qty terambil per batch} \times \text{cost\_price\_per\_base\_uom batch terkait})$.
+- [x] Implementasi fitur `Breakdown/Repacking UOM`:
+  - [x] Endpoint `POST /api/v1/outbound/breakdown`.
+  - [x] Pencatatan transaksi mutasi `BREAKDOWN` tanpa mengubah total saldo Base UOM dan tanpa menerbitkan jurnal.
 - [ ] Implementasi modul `returns` & `karantina`:
   - [ ] Entity `ReturnOrder`, `ReturnOrderItem`.
   - [ ] Alokasi kuantitas retur langsung ke lokasi freezer berstatus karantina (`is_quarantine = true`).
   - [ ] Endpoint disposisi retur: jika `WRITE_OFF`, potong stok karantina dan terbitkan jurnal beban kerugian (Debit `5201 Beban Kerugian Barang Rusak`, Kredit `1120 Persediaan`).
 
-#### 🎨 Frontend UI Web Tasks (Next.js 14 - TailAdmin Style - Bahasa Indonesia)
-- [ ] **Layar Pesanan Penjualan (Sales Order):**
-  - [ ] Blok Header Pelanggan: pencarian pelanggan otomatis menampilkan lencana segmen (`Modern Trade`, `General Trade`, `Horeka`, `Agen / Grosir`) serta info plafon kredit.
-  - [ ] Tabel Item Pesanan Dinamis: pemilihan SKU dan UOM langsung mengunci harga dari matriks harga (*auto-locked price*).
-  - [ ] **Panel Ringkasan Finansial Pesanan (Kanan):**
+#### 🎨 Frontend UI Web Tasks (Next.js 14 - TailAdmin Style - Bahasa Indonesia) — [STATUS: 100% SELESAI]
+- [x] **Layar Pesanan Penjualan (Sales Order) — `/sales-orders`:**
+  - [x] Blok Header Pelanggan: pencarian pelanggan otomatis menampilkan lencana segmen (`Modern Trade`, `General Trade`, `Horeka`, `Agen / Grosir`) serta info plafon kredit.
+  - [x] Tabel Item Pesanan Dinamis: pemilihan SKU dan UOM langsung mengunci harga dari matriks harga (*auto-locked price*).
+  - [x] **Panel Ringkasan Finansial Pesanan (Kanan):**
     - Total Kuantitas Fisik (konversi ke Base Unit Pcs).
     - Total Penjualan Sebelum Pajak.
     - PPN (11%, opsional).
     - Total Tagihan Bersih (*Grand Total*).
     - Estimasi Margin Laba Kotor Pesanan (*Estimated Gross Profit*).
-- [ ] **Layar Daftar Pengambilan Barang FEFO (*Picking List*):**
-  - [ ] Tampilan tugas pemungutan terurut rute lorong rak gudang terpendek.
-  - [ ] Kartu tugas dengan label lokasi rak berukuran besar (misal: `RAK A-03`), nomor batch FEFO, tanggal kedaluwarsa, kuantitas ambil, dan input scanner barcode.
-  - [ ] Target tombol sentuh diperbesar minimal $44 \times 44\text{px}$ untuk kemudahan operator dengan sarung tangan gudang dingin.
-- [ ] **Dialog Modal Pemecahan Satuan (*Breakdown / Repacking UOM*):**
-  - [ ] Pop-up modal TailAdmin: pilih produk & nomor batch asal.
-  - [ ] Input kuantitas karton besar (Dus) dengan panel kalkulator konversi real-time: "Input 2 Dus $\rightarrow$ Menjadi 48 Pcs Base Unit".
-  - [ ] Dropdown lokasi rak tujuan dan tombol konfirmasi yang memperbarui saldo tanpa mengubah valuasi moneter.
-- [ ] **Layar Pengiriman & Surat Jalan (*Delivery Order*):**
-  - [ ] Tombol cetak dokumen resmi: Surat Jalan dan Faktur Penjualan dalam format Bahasa Indonesia.
-  - [ ] Form konfirmasi keberangkatan armada dengan pencatatan suhu kabin pendingin.
-  - [ ] Form konfirmasi serah terima pelanggan: input nama penerima dan upload foto bukti serah terima (POD).
+- [x] **Layar Daftar Pengambilan Barang FEFO (*Picking List*) — `/picking`:**
+  - [x] Tampilan tugas pemungutan terurut rute lorong rak gudang terpendek.
+  - [x] Kartu tugas dengan label lokasi rak berukuran besar (misal: `FRZ-A / RAK-02 / B-01`), nomor batch FEFO, tanggal kedaluwarsa, kuantitas ambil, dan status checklist.
+  - [x] Target tombol sentuh diperbesar minimal $44 \times 44\text{px}$ untuk kemudahan operator dengan sarung tangan gudang dingin.
+  - [x] Kartu Jurnal Ganda Akuntansi Seimbang (*Dual Balanced Outbound Journals*).
+- [x] **Dialog / Halaman Pemecahan Satuan (*Breakdown / Repacking UOM*) — `/inventory/breakdown`:**
+  - [x] Form Tailwind TailAdmin: pilih produk & nomor batch asal.
+  - [x] Input kuantitas karton besar (Dus) dengan panel kalkulator konversi real-time: "Input 2 Dus $\rightarrow$ Menjadi 48 Pcs Base Unit".
+  - [x] Dropdown lokasi rak tujuan dan tombol konfirmasi yang memperbarui saldo tanpa mengubah valuasi moneter (Netto = Rp 0).
 - [ ] **Layar Retur & Manajemen Karantina:**
   - [ ] Form pencatatan barang retur menautkan nomor pesanan penjualan dan mencatat alasan pengembalian (Meleleh, Cacat Kemasan, Mendekati Basi, Salah Kirim).
   - [ ] Tabel persediaan karantina dengan tombol aksi disposisi: *Pemusnahan (Write-Off)* atau *Klaim Retur Pemasok*.

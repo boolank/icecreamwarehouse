@@ -20,16 +20,16 @@ Semua antarmuka web dibangun menggunakan standar **TailAdmin** (Next.js 14, Tail
 
 ## 🚀 Status Realisasi & Capaian Proyek (Progress Tracking)
 
-> **Capaian Keseluruhan:** **38 / 168 Story Points (22.6%) — Sprint 1 LULUS 100%**  
-> **Status Build:** Backend NestJS (`Exit Code 0`) | Frontend Next.js (`Exit Code 0`)  
+> **Capaian Keseluruhan:** **107 / 168 Story Points (63.7%) — Sprint 1 LULUS 100%, Sprint 2 Inbound LULUS 71.4%, Sprint 3 Core Outbound LULUS 81.25%**  
+> **Status Build:** Backend NestJS (`Exit Code 0`) | Frontend Next.js (`Exit Code 0`, 16 Rute Statis Aktif)  
 > **Git Repository:** `https://github.com/boolank/icecreamwarehouse.git` (Branch `main`)
 
 | Siklus | Sasaran Utama | Target SP | Status | Catatan Teknis |
 | :--- | :--- | :---: | :---: | :--- |
 | **Sprint 1 (Minggu 1-2)** | Fondasi Sistem, Auth RBAC, Master Produk & Multi-UOM, Pelanggan, Matriks Harga, Setup COA, Shell TailAdmin | **38 SP** | **100% SELESAI** | Build Lulus, 8 Halaman UI Aktif, DDL Database Ready |
-| **Sprint 2 (Minggu 3-4)** | Purchase Order, Inbound Receiving, Batch & QC Suhu Armada ($\le -18^\circ\text{C}$), Jurnal Pembelian Otomatis, Log Suhu | **42 SP** | **Siap Dikerjakan** | Modul Inbound & QC Engine |
-| **Sprint 3 (Minggu 5-6)** | Sales Order, Picking List FEFO, Pengiriman & Surat Jalan, Breakdown/Repacking UOM, Retur & Spoilage, Jurnal Jual | **48 SP** | Direncanakan | FEFO Engine & Dispatch |
-| **Sprint 4 (Minggu 7-8)** | Stock Opname, Pelaporan Finansial (Laba Rugi, Neraca), Dasbor Eksekutif Bento Grid, Export PDF/Excel, UAT | **40 SP** | Direncanakan | Reporting & Analytics |
+| **Sprint 2 (Minggu 3-4)** | Purchase Order, Inbound Receiving, Batch & QC Suhu Armada ($\le -18^\circ\text{C}$), Jurnal Pembelian Otomatis, Log Suhu | **42 SP** | **30 SP SELESAI (71.4%)** | Modul Inbound, PO Management, QC Suhu & Journal Ready |
+| **Sprint 3 (Minggu 5-6)** | Sales Order, Picking List FEFO, Pengiriman & Surat Jalan, Breakdown/Repacking UOM, Retur & Spoilage, Jurnal Jual | **48 SP** | **39 SP SELESAI (81.25%)** | SO Auto-Pricing, FEFO Picking, Breakdown UOM & Dual Balanced Journals Ready |
+| **Sprint 4 (Minggu 7-8)** | Stock Opname, Pelaporan Finansial (Laba Rugi, Neraca), Dasbor Eksekutif Bento Grid, Export PDF/Excel, UAT | **40 SP** | Direncanakan | Reporting, Stock Opname & Analytics |
 
 *Catatan: Sesuai instruksi mutakhir, pengembangan aplikasi mobile (React Native) ditiadakan guna memfokuskan 100% kapabilitas pada platform Web Admin TailAdmin dan Backend REST API.*
 
