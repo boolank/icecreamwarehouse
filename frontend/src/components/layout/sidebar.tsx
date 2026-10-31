@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   ThermometerSnowflake,
@@ -29,6 +29,9 @@ import {
   Landmark,
   Layers,
   Snowflake,
+  UserCheck,
+  LogOut,
+  Shield
 } from "lucide-react";
 
 interface MenuItem {
@@ -103,10 +106,40 @@ const menuGroups: MenuGroup[] = [
       { title: "Laporan Mutasi Persediaan", href: "/reports/stock-mutation", icon: Layers },
     ],
   },
+  {
+    groupName: "PENGATURAN & AKSES",
+    items: [
+      { title: "Manajemen Pengguna", href: "/users", icon: UserCheck },
+    ],
+  },
 ];
 
 export function Sidebar({ isOpen }: { isOpen: boolean }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const [currentUser, setCurrentUser] = useState({
+    name: "Bambang Pratama",
+    role: "Manajer Gudang (Admin)",
+    initials: "BP",
+  });
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("icecream_user_session");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed.name) setCurrentUser(parsed);
+      }
+    } catch (e) {}
+  }, []);
+
+  const handleLogout = () => {
+    if (confirm("Apakah Anda yakin ingin keluar dari sistem?")) {
+      localStorage.removeItem("icecream_user_session");
+      router.push("/login");
+    }
+  };
 
   return (
     <aside
@@ -115,16 +148,16 @@ export function Sidebar({ isOpen }: { isOpen: boolean }) {
       }`}
     >
       {/* Brand Header */}
-      <div className="h-16 flex items-center gap-3 px-5 border-b border-slate-100 dark:border-slate-800">
-        <div className="w-9 h-9 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-sm">
+      <div className="h-16 flex items-center gap-3 px-5 border-b border-slate-100 dark:border-slate-800 shrink-0">
+        <div className="w-9 h-9 rounded-xl bg-cyan-600 flex items-center justify-center text-white shadow-sm">
           <Snowflake className="w-5 h-5 animate-spin-slow" />
         </div>
         <div>
           <h1 className="text-sm font-black tracking-wider text-slate-900 dark:text-white uppercase">
-            FROST/FLOW
+            FROST<span className="text-cyan-500">/FLOW</span>
           </h1>
-          <p className="text-[10px] font-semibold tracking-widest text-slate-400 uppercase">
-            WAREHOUSE + FINANCE
+          <p className="text-[9px] font-semibold tracking-widest text-slate-400 uppercase">
+            COLD CHAIN WMS &amp; ERP
           </p>
         </div>
       </div>
@@ -133,7 +166,7 @@ export function Sidebar({ isOpen }: { isOpen: boolean }) {
       <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-6 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">
         {menuGroups.map((group) => (
           <div key={group.groupName} className="space-y-1">
-            <h2 className="px-3 text-[11px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase">
+            <h2 className="px-3 text-[10px] font-bold tracking-wider text-slate-400 dark:text-slate-500 uppercase">
               {group.groupName}
             </h2>
             <div className="space-y-0.5">
@@ -144,15 +177,15 @@ export function Sidebar({ isOpen }: { isOpen: boolean }) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                    className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
                       isActive
-                        ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 font-semibold"
+                        ? "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 font-semibold border border-cyan-500/20"
                         : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white"
                     }`}
                   >
                     <Icon
                       className={`w-4 h-4 shrink-0 ${
-                        isActive ? "text-indigo-600 dark:text-indigo-400" : "text-slate-400"
+                        isActive ? "text-cyan-600 dark:text-cyan-400" : "text-slate-400"
                       }`}
                     />
                     <span className="truncate">{item.title}</span>
@@ -164,14 +197,36 @@ export function Sidebar({ isOpen }: { isOpen: boolean }) {
         ))}
       </nav>
 
-      {/* Footer Info */}
-      <div className="p-4 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400">
-        <p className="font-semibold text-slate-600 dark:text-slate-300">PROTOTIPE</p>
-        <p className="text-[10px] text-slate-400 leading-tight mt-0.5">
-          Data simulasi, bukan telemetri sensor langsung.
-        </p>
+      {/* User Session & Logout Footer */}
+      <div className="p-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 shrink-0">
+        <div className="flex items-center justify-between gap-2 p-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm">
+          <Link
+            href="/users"
+            className="flex items-center gap-2.5 min-w-0 flex-1 hover:opacity-80 transition"
+            title="Buka Manajemen Pengguna"
+          >
+            <div className="w-8 h-8 rounded-lg bg-cyan-600 text-white flex items-center justify-center text-xs font-bold shrink-0">
+              {currentUser.initials}
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-slate-800 dark:text-slate-100 truncate">
+                {currentUser.name}
+              </p>
+              <p className="text-[10px] text-cyan-600 dark:text-cyan-400 truncate font-semibold">
+                {currentUser.role.split(" ")[0]}
+              </p>
+            </div>
+          </Link>
+
+          <button
+            onClick={handleLogout}
+            title="Keluar dari Sistem (Logout)"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition cursor-pointer shrink-0"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </aside>
   );
 }
-
