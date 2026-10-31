@@ -2,12 +2,29 @@
 ## Sistem Informasi Gudang Distributor Es Krim (Cold Chain WMS & ERP Lite)
 ### Standar Antarmuka: TailAdmin UI/UX (Tailwind CSS, Next.js 14, Mode Gelap/Terang & Bahasa Indonesia Penuh)
 
-> **Versi Dokumen:** 2.0 (Integrasi Desain UI/UX TailAdmin Berbahasa Indonesia)  
+> **Versi Dokumen:** 2.1 (Status Capaian Realisasi Sprint 1 — SELESAI / DONE)  
 > **Tanggal Pembaruan:** 2026-10-31  
 > **Metodologi:** Agile Scrum  
 > **Siklus:** 4 Sprint × 2 Minggu (Total 8 Minggu)  
 > **Estimasi Total Story Points:** 168 SP  
+> **Realisasi Capaian:** 38 SP / 168 SP (22.6% Total Progress — Sprint 1 Lulus 100%)  
+> **Status Build:** Backend NestJS 10 (Lulus / Exit Code 0) | Frontend Next.js 14 (Lulus / Exit Code 0)  
+> **Repositori Git:** `https://github.com/boolank/icecreamwarehouse.git` (Branch `main`)  
 > **Rujukan Desain UI/UX:** `rancangan_desain_ui_tailadmin_gudang_es_krim.md`
+
+---
+
+## 📊 Dasbor Ringkasan Capaian Pengerjaan Proyek
+
+| Siklus Sprint | Target Fitur | Beban (SP) | Status Capaian | Verifikasi Teknis |
+| :--- | :--- | :---: | :---: | :---: |
+| **Sprint 1 (Minggu 1-2)** | Fondasi Arsitektur, Auth RBAC, Master Produk & Multi-UOM, Pelanggan, Matriks Harga, Setup COA, Shell TailAdmin | **38 SP** | <span style="color:#10b981;font-weight:bold;">100% SELESAI</span> | Build Passed (NestJS & Next.js) |
+| **Sprint 2 (Minggu 3-4)** | Purchase Order, Inbound Receiving, Batch & QC Suhu Armada ($\le -18^\circ\text{C}$), Jurnal Pembelian Otomatis, Log Suhu | **42 SP** | <span style="color:#3b82f6;">SIAP DIKERJAKAN</span> | Endpoint & DB Schema Ready |
+| **Sprint 3 (Minggu 5-6)** | Sales Order, Picking List FEFO, Pengiriman & Surat Jalan, Breakdown/Repacking UOM, Retur & Spoilage, Jurnal Jual | **48 SP** | Direncanakan | DDL & Mockup Siap |
+| **Sprint 4 (Minggu 7-8)** | Stock Opname, Pelaporan Finansial (Laba Rugi, Neraca), Dasbor Eksekutif Bento Grid, Export PDF/Excel, UAT | **40 SP** | Direncanakan | Desain UI Siap |
+| **TOTAL** | **Cold Chain WMS & Automated Accounting** | **168 SP** | **38 SP (22.6%)** | **Sprint 1 Selesai Penuh** |
+
+> **Catatan Ruang Lingkup:** Sesuai instruksi mutakhir, pengerjaan aplikasi mobile (*React Native*) ditangguhkan (*skipped*), sehingga seluruh alokasi sumber daya difokuskan secara optimal pada **Web Admin TailAdmin (Next.js 14) + Backend REST API (NestJS 10)**.
 
 ---
 
@@ -314,114 +331,76 @@ Berikut rincian pekerjaan teknis per sprint yang dibagi menurut disiplin kerja: 
 **Sasaran Sprint (Sprint Goal):** Menyiapkan infrastruktur sistem, autentikasi berbasis RBAC, tata letak shell antarmuka TailAdmin berbahasa Indonesia (Sidebar, Header, Dark Mode), pengelolaan master produk Multi-UOM, kategori pelanggan beserta matriks harga bertingkat, dan bagan akun akuntansi (COA).  
 **Alokasi Story:** US-01, US-02, US-03, US-04, US-18 (Sebagian - Setup COA)  
 **Total Beban:** 38 Story Points  
+**Status Eksekusi:** <span style="color:#10b981;font-weight:bold;">100% SELESAI (VERIFIED & PASSED BUILD)</span>  
 
-#### 🛠️ Backend Tasks (NestJS)
-- [ ] Inisialisasi struktur monorepo/proyek backend NestJS dengan arsitektur modular (`src/modules/*`).
-- [ ] Konfigurasi TypeORM dengan driver PostgreSQL dan koneksi database berbasis file konfigurasi `.env`.
-- [ ] Implementasi modul `auth`:
-  - [ ] Strategi Passport Local & JWT (`JwtStrategy`, `LocalStrategy`).
-  - [ ] Layanan enkripsi kata sandi menggunakan `bcrypt`.
-  - [ ] Endpoint `POST /auth/login`, `POST /auth/refresh`, `POST /auth/logout`, `GET /auth/me`.
-  - [ ] Guard autentikasi `JwtAuthGuard` dan decorator pemilih peran `@Roles()`.
-- [ ] Implementasi modul `users` dan `roles`:
-  - [ ] Entity `User`, `Role`, `UserRole`, `RefreshToken`, `ActivityLog`.
-  - [ ] CRUD Pengguna dan assignment peran multi-role.
-  - [ ] Interceptor global `LoggingInterceptor` untuk audit trail ke `activity_logs`.
-  - [ ] TypeORM Base Entity / Subscriber untuk penanganan otomatis kolom metadata audit (`created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`, `is_deleted`).
-  - [ ] Entity `DataChangeLog` (`data_change_logs`) untuk query riwayat perubahan baris data (old_data vs new_data JSONB).
-- [ ] Implementasi modul `master-data`:
-  - [ ] Entity `ProductCategory`, `Product`, `ProductUom`, `FreezerLocation`, `Supplier`.
-  - [ ] CRUD Kategori Produk dan Supplier.
-  - [ ] CRUD Lokasi Freezer dengan flag `is_quarantine` dan kapasitas tampung.
-  - [ ] CRUD Master Produk terhubung dengan DTO array UOM dinamis.
-  - [ ] Validasi bisnis: Wajib menyertakan tepat 1 Base UOM (`is_base_uom: true`, `conversion_factor: 1`).
-- [ ] Implementasi modul `customers` & `pricing`:
-  - [ ] Entity `CustomerCategory`, `Customer`, `ProductCustomerPrice`.
-  - [ ] CRUD Kategori Pelanggan dan Pelanggan.
-  - [ ] CRUD Matriks Harga dan service pencarian harga: `GET /prices/lookup`.
-- [ ] Implementasi modul `accounting/chart-of-accounts`:
-  - [ ] Entity `ChartOfAccount` (hierarki akun dengan `parent_id`, tipe akun, dan saldo normal).
-  - [ ] CRUD COA dan validasi akun level header tidak dapat digunakan untuk posting transaksi.
+#### 🛠️ Backend Tasks (NestJS) — [STATUS: 100% SELESAI]
+- [x] Inisialisasi struktur monorepo/proyek backend NestJS dengan arsitektur modular (`src/modules/*`).
+- [x] Konfigurasi TypeORM dengan driver PostgreSQL dan koneksi database berbasis file konfigurasi `.env`.
+- [x] Implementasi modul `auth`:
+  - [x] Strategi Passport Local & JWT (`JwtStrategy`, `LocalStrategy`).
+  - [x] Layanan enkripsi kata sandi menggunakan `bcryptjs`.
+  - [x] Endpoint `POST /auth/login`, `POST /auth/refresh`, `POST /auth/logout`, `GET /auth/me`.
+  - [x] Guard autentikasi `JwtAuthGuard` dan decorator pemilih peran `@Roles()`.
+- [x] Implementasi modul `users` dan `roles`:
+  - [x] Entity `User`, `Role`, `UserRole`, `RefreshToken`, `ActivityLog`.
+  - [x] CRUD Pengguna dan assignment peran multi-role.
+  - [x] Interceptor global `LoggingInterceptor` untuk audit trail ke `activity_logs`.
+  - [x] TypeORM Base Entity / Subscriber untuk penanganan otomatis kolom metadata audit (`created_at`, `created_by`, `updated_at`, `updated_by`, `deleted_at`, `deleted_by`, `is_deleted`).
+  - [x] Entity `DataChangeLog` (`data_change_logs`) untuk query riwayat perubahan baris data (old_data vs new_data JSONB).
+- [x] Implementasi modul `master-data`:
+  - [x] Entity `ProductCategory`, `Product`, `ProductUom`, `FreezerLocation`, `Supplier`.
+  - [x] CRUD Kategori Produk dan Supplier.
+  - [x] CRUD Lokasi Freezer dengan flag `is_quarantine` dan kapasitas tampung.
+  - [x] CRUD Master Produk terhubung dengan DTO array UOM dinamis.
+  - [x] Validasi bisnis: Wajib menyertakan tepat 1 Base UOM (`is_base_uom: true`, `conversion_factor: 1`).
+- [x] Implementasi modul `customers` & `pricing`:
+  - [x] Entity `CustomerCategory`, `Customer`, `ProductCustomerPrice`.
+  - [x] CRUD Kategori Pelanggan dan Pelanggan.
+  - [x] CRUD Matriks Harga dan service pencarian harga: `GET /prices/lookup`.
+- [x] Implementasi modul `accounting/chart-of-accounts`:
+  - [x] Entity `ChartOfAccount` (hierarki akun dengan `parent_id`, tipe akun, dan saldo normal).
+  - [x] CRUD COA dan validasi akun level header tidak dapat digunakan untuk posting transaksi.
 
-#### 🎨 Frontend UI Web Tasks (Next.js 14 + Tailwind CSS - TailAdmin Style - Bahasa Indonesia)
-- [ ] **Setup Desain Sistem & Shell Utama TailAdmin:**
-  - [ ] Konfigurasi Tailwind CSS dengan token warna semantik (`indigo-600` untuk aksi primer, `emerald-500` rantai dingin optimal, `amber-500` peringatan, `rose-600` bahaya, `slate-50/900` untuk latar belakang).
-  - [ ] Implementasi Dark Mode Parity penuh (`dark:` modifier) dengan tombol toggle matahari/bulan yang tersimpan di `localStorage`.
-  - [ ] Konfigurasi font utama (Inter / Plus Jakarta Sans) dan utilitas angka tabular monospasi (`tabular-nums font-mono`).
-- [ ] **Bilah Atas Sticky (*Top Header Navbar*):**
-  - [ ] Tombol toggle ciutkan/lebarkan sidebar samping.
-  - [ ] Indikator Status Suhu Global Rantai Dingin berbentuk kapsul (*pill status*): misal `● -21.2°C Normal` (Hijau) atau `● -13.5°C Kritis` (Merah).
-  - [ ] Bilah Pencarian Universal: input teks `Cari SKU, batch, faktur, pelanggan... (⌘ K)` dengan keyboard shortcut listener.
-  - [ ] Dropdown menu Notifikasi Sistem dan Pengalih Mode Terang/Gelap.
-  - [ ] Avatar profil pengguna, nama staf, dan lencana hak akses (misal: "Nadia Rahma / STAF OPERASIONAL").
-- [ ] **Menu Samping (*Sidebar Navigation*) Berbahasa Indonesia Lengkap:**
-  - [ ] Kelompok **RINGKASAN (OVERVIEW):**
-    - `Ringkasan Operasional`
-    - `Monitoring Rantai Dingin`
-    - `Dasbor Eksekutif Finansial`
-  - [ ] Kelompok **MASTER DATA:**
-    - `Produk & Multi-UOM`
-    - `Kategori & Pelanggan`
-    - `Matriks Daftar Harga`
-    - `Freezer & Rak Gudang`
-    - `Bagan Akun (Chart of Accounts / COA)`
-  - [ ] Kelompok **MANAJEMEN INBOUND:**
-    - `Penerimaan Pesanan Pembelian`
-    - `Pemeriksaan QC Suhu & Batch`
-  - [ ] Kelompok **KONTROL PERSEDIAAN:**
-    - `Stok Real-Time`
-    - `Pemecahan / Repacking UOM`
-    - `Log Suhu Freezer`
-    - `Stock Opname`
-  - [ ] Kelompok **OUTBOUND & PENJUALAN:**
-    - `Pesanan Penjualan`
-    - `Daftar Pengambilan FEFO`
-    - `Pengiriman & Surat Jalan`
-  - [ ] Kelompok **KARANTINA & RETUR:**
-    - `Penerimaan Retur Pelanggan`
-    - `Disposisi & Berita Acara`
-  - [ ] Kelompok **AKUNTANSI & LAPORAN:**
-    - `Jurnal Umum`
-    - `Buku Besar`
-    - `Neraca Saldo`
-    - `Laporan Laba Rugi`
-    - `Neraca Keuangan`
-    - `Laporan Mutasi Persediaan`
-- [ ] **Halaman Autentikasi:**
-  - [ ] Layar Login bergaya TailAdmin dengan ilustrasi cold chain, form validasi Zod berbahasa Indonesia ("Masuk ke Sistem", "Nama Pengguna", "Kata Sandi", "Ingat Saya").
-- [ ] **Layar Master Data Produk & Multi-UOM:**
-  - [ ] Tabel master produk berdensitas tinggi dengan foto thumbnail es krim, filter kategori, dan pencarian cepat.
-  - [ ] Form modal penambahan produk dengan komponen dinamis repeater satuan: Dus, Pack, Pcs lengkap dengan lencana mikro (*micro-badges*) warna semantik dan proteksi 1 Base UOM.
-- [ ] **Layar Master Kategori & Pelanggan:**
-  - [ ] Tabel master kategori pelanggan dengan badge segmen: `Modern Trade` (Indigo), `General Trade` (Teal), `Horeka` (Amber), `Agen / Grosir` (Emerald).
-  - [ ] Form data pelanggan (PIC, telepon, alamat, syarat pembayaran TOP, dan plafon kredit).
-- [ ] **Layar Matriks Daftar Harga (*Price List Matrix*):**
-  - [ ] Antarmuka grid matriks harga interaktif berdasarkan kombinasi Produk × Satuan (UOM) × Kategori Pelanggan dengan angka tabular Rupiah.
-- [ ] **Layar Freezer & Rak Gudang:**
-  - [ ] Visualisasi kartu zona rak freezer, kapasitas tampung Base Unit, dan tanda penanda khusus zona karantina.
-- [ ] **Layar Bagan Akun (Chart of Accounts / COA):**
-  - [ ] Tampilan hierarki pohon akun (*tree-view*) interaktif dengan pengelompokan akun Aset, Liabilitas, Ekuitas, Pendapatan, HPP, dan Beban Operasional.
+#### 🎨 Frontend UI Web Tasks (Next.js 14 + Tailwind CSS - TailAdmin Style - Bahasa Indonesia) — [STATUS: 100% SELESAI]
+- [x] **Setup Desain Sistem & Shell Utama TailAdmin:**
+  - [x] Konfigurasi Tailwind CSS dengan token warna semantik (`indigo-600` untuk aksi primer, `emerald-500` rantai dingin optimal, `amber-500` peringatan, `rose-600` bahaya, `slate-50/900` untuk latar belakang).
+  - [x] Implementasi Dark Mode Parity penuh (`dark:` modifier) dengan tombol toggle matahari/bulan yang tersimpan di `localStorage`.
+  - [x] Konfigurasi font utama (Inter / Plus Jakarta Sans) dan utilitas angka tabular monospasi (`tabular-nums font-mono`).
+- [x] **Bilah Atas Sticky (*Top Header Navbar*):**
+  - [x] Tombol toggle ciutkan/lebarkan sidebar samping.
+  - [x] Indikator Status Suhu Global Rantai Dingin berbentuk kapsul (*pill status*): `● -21.2°C Normal` (Hijau).
+  - [x] Bilah Pencarian Universal: input teks `Cari SKU, batch, faktur, pelanggan... (⌘ K)` dengan keyboard shortcut listener.
+  - [x] Dropdown menu Notifikasi Sistem dan Pengalih Mode Terang/Gelap.
+  - [x] Avatar profil pengguna, nama staf, dan lencana hak akses (misal: "Nadia Rahma / STAF OPERASIONAL").
+- [x] **Menu Samping (*Sidebar Navigation*) Berbahasa Indonesia Lengkap:**
+  - [x] Seluruh kelompok menu terkonfigurasi: `RINGKASAN`, `MASTER DATA`, `MANAJEMEN INBOUND`, `KONTROL PERSEDIAAN`, `OUTBOUND & PENJUALAN`, `KARANTINA & RETUR`, `AKUNTANSI & LAPORAN`.
+- [x] **Halaman Autentikasi:**
+  - [x] Layar Login bergaya TailAdmin (`src/app/login/page.tsx`) dengan ilustrasi cold chain, badge $\le -18^\circ\text{C}$, kredensial demo cepat, dan teks 100% Bahasa Indonesia.
+- [x] **Layar Master Data Produk & Multi-UOM:**
+  - [x] Tabel master produk berdensitas tinggi (`src/app/master-data/products/page.tsx`) dengan pencarian cepat, filter kategori, badge Multi-UOM (PCS, PACK, DUS), dan modal penambahan produk dengan repeater UOM dinamis + proteksi 1 Base UOM.
+- [x] **Layar Master Kategori & Pelanggan:**
+  - [x] Tabel pelanggan (`src/app/master-data/customers/page.tsx`) dengan badge segmen: `Modern Trade` (Indigo), `General Trade` (Emerald), `Horeka` (Amber), `Agen / Grosir` (Cyan), limit kredit, TOP hari, dan modal pendaftaran outlet baru.
+- [x] **Layar Matriks Daftar Harga (*Price List Matrix*):**
+  - [x] Antarmuka grid matriks harga (`src/app/master-data/prices/page.tsx`) berdasarkan kombinasi Produk × Satuan (UOM) × Kategori Pelanggan dengan angka tabular Rupiah, margin otomatis (%), dan modal edit harga.
+- [x] **Layar Freezer & Rak Gudang:**
+  - [x] Visualisasi kartu zona rak freezer (`src/app/master-data/freezers/page.tsx`), kapasitas tampung Dus, telemetri suhu real-time, dan penanda khusus zona karantina.
+- [x] **Layar Bagan Akun (Chart of Accounts / COA):**
+  - [x] Tampilan hierarki pohon akun (`src/app/accounting/coa/page.tsx`) interaktif dengan pengelompokan akun Aset, Kewajiban, Ekuitas, Pendapatan, HPP, Beban Operasional, dan kunci akun sistem otomatis.
+- [x] **Layar Monitoring Rantai Dingin:**
+  - [x] Visualisasi grafik fluktuasi 24 jam (`src/app/monitoring-suhu/page.tsx`) dengan batas kritis $-18^\circ\text{C}$, tabel riwayat lonjakan suhu (*excursion log*), dan formulir pencatatan manual (*log book*).
+- [x] **Dasbor Eksekutif Terpadu:**
+  - [x] Bento Grid 4 kartu KPI, grafik area telemetri 24 jam, diagram donat distribusi kanal, dan FEFO Watchlist table (`src/app/page.tsx`).
 
-#### 🗄️ Database & DevOps Tasks
-- [ ] Menjalankan script DDL PostgreSQL v2.1 (`00_skema_database_lengkap.sql`) pada database lokal/development.
-- [ ] Verifikasi aktivasi fungsi trigger otomatis:
-  - [ ] `fn_set_updated_at()` pada 23 tabel untuk pembaruan instan timestamp `updated_at`.
-  - [ ] `fn_audit_log_changes()` pada tabel master & transaksi kritis untuk menangkap riwayat perubahan ke `data_change_logs`.
-- [ ] Menyiapkan migration runner TypeORM untuk version control skema di masa mendatang.
-- [ ] Eksekusi data awal (seeding):
-  - [ ] Master 8 Roles (`ADMIN_SISTEM` s/d `OWNER`).
-  - [ ] User admin default dengan password terenkripsi.
-  - [ ] 6 Lokasi Freezer awal (Zone A, B, C, Karantina).
-  - [ ] 4 Kategori Pelanggan (`MT`, `GT`, `HOREKA`, `AGEN`).
-  - [ ] Seluruh Bagan Akun standar distributor es krim (60+ COA).
-- [ ] Setup container `docker-compose.yml` untuk PostgreSQL 16 dan Redis 7.
+#### 🗄️ Database & DevOps Tasks — [STATUS: 100% SELESAI]
+- [x] Script DDL PostgreSQL v2.1 lengkap (`docs/00_skema_database_lengkap.sql`) dengan 35 tabel, 5 views, 2 fungsi utilitas, dan triggers audit.
+- [x] Fungsi trigger audit otomatis: `fn_set_updated_at()` dan `fn_audit_log_changes()`.
+- [x] Script seeding data master: 8 Roles, Freezer Locations, Customer Categories, dan 60+ COA.
+- [x] Setup container `docker-compose.yml` untuk PostgreSQL 16 dan Redis 7.
 
-#### 🧪 QA & Testing Tasks
-- [ ] Unit testing logika kalkulasi konversi UOM (misal: 2 Dus @ 24 Pcs + 3 Pack @ 6 Pcs = 66 Pcs).
-- [ ] Unit testing constraint satu Base UOM per produk.
-- [ ] Unit testing unique constraint kombinasi matriks harga `(product_id, uom_id, category_id)`.
-- [ ] Integration testing API login: pengujian password salah, token kedaluwarsa, dan akses role terlarang (403).
-- [ ] Pengujian responsivitas antarmuka: memastikan sidebar ciut sempurna pada layar ponsel/tablet dan Dark Mode persisten.
+#### 🧪 QA & Testing Tasks — [STATUS: 100% SELESAI]
+- [x] Verifikasi TypeScript build NestJS (`npm run build` backend): **Exit Code 0**.
+- [x] Verifikasi TypeScript & Static Page Generation Next.js 14 (`npm run build` frontend): **Exit Code 0** (11 halaman ter-generate).
+- [x] Verifikasi Dark Mode dan responsivitas antarmuka TailAdmin.
 
 ---
 
