@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Delete,
   Body,
   Param,
@@ -10,7 +11,8 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
+import { CreateProductDto, ProductUomDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -34,6 +36,11 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
+  @Get(':id/audit-logs')
+  async getAuditLogs(@Param('id', ParseIntPipe) id: number) {
+    return this.productsService.getAuditLogs(id);
+  }
+
   @Post()
   @Roles('ADMIN_SISTEM', 'MANAJER_GUDANG')
   async create(
@@ -41,6 +48,26 @@ export class ProductsController {
     @CurrentUser('id') userId: number,
   ) {
     return this.productsService.create(dto, userId);
+  }
+
+  @Put(':id')
+  @Roles('ADMIN_SISTEM', 'MANAJER_GUDANG')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateProductDto,
+    @CurrentUser('id') userId: number,
+  ) {
+    return this.productsService.update(id, dto, userId);
+  }
+
+  @Put(':id/uoms')
+  @Roles('ADMIN_SISTEM', 'MANAJER_GUDANG')
+  async updateUoms(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() uoms: ProductUomDto[],
+    @CurrentUser('id') userId: number,
+  ) {
+    return this.productsService.updateUoms(id, uoms, userId);
   }
 
   @Delete(':id')

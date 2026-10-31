@@ -5,6 +5,7 @@ import { ProductUom } from './entities/product-uom.entity';
 import { ProductCategory } from './entities/product-category.entity';
 import { FreezerLocation } from './entities/freezer-location.entity';
 import { Supplier } from './entities/supplier.entity';
+import { DataChangeLog } from '../users/entities/data-change-log.entity';
 import { ProductsService } from './products.service';
 import { ProductsController } from './products.controller';
 import { FreezersService } from './freezers.service';
@@ -20,6 +21,7 @@ import { SuppliersController } from './suppliers.controller';
       ProductCategory,
       FreezerLocation,
       Supplier,
+      DataChangeLog,
     ]),
   ],
   controllers: [
