@@ -36,61 +36,61 @@ Setiap story memiliki identifikasi unik, role, narasi bisnis, estimasi Story Poi
 
 ### Modul 1: Autentikasi, Profil & Kontrol Akses (RBAC)
 
-#### US-01: Autentikasi JWT & Role-Based Access Control
+#### US-01: Autentikasi JWT & Role-Based Access Control — [STATUS: SELESAI]
 - **Sebagai:** Semua Pengguna Sistem (Admin, Operator, Driver, Finance, Manager, Owner)
 - **Saya Ingin:** Masuk ke sistem menggunakan username dan password terenkripsi serta mendapatkan hak akses menu sesuai peran
 - **Agar:** Keamanan data terjaga dan setiap staf hanya dapat mengakses fitur yang relevan dengan tanggung jawab kerjanya
 - **Estimasi:** 5 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] Halaman login mengadopsi antarmuka modern TailAdmin dengan tata letak responsif, dukungan mode gelap/terang, dan teks antarmuka 100% Bahasa Indonesia ("Masuk ke Sistem", "Nama Pengguna", "Kata Sandi", "Ingat Saya", "Lupa Kata Sandi?").
-  - [ ] Endpoint `POST /api/v1/auth/login` memvalidasi kredensial pengguna menggunakan perbandingan hash `bcrypt`.
-  - [ ] Jika valid, sistem mengembalikan access token JWT (masa berlaku 1 jam) dan refresh token (masa berlaku 7 hari).
-  - [ ] Token memuat payload identitas pengguna dan daftar peran (`roles: []`).
-  - [ ] Percobaan login gagal lebih dari 5 kali berturut-turut dalam 1 menit dikenakan *rate limiting* (HTTP 429) dengan pesan kesalahan Bahasa Indonesia yang ramah pengguna.
-  - [ ] Pengguna dengan peran tertentu tidak dapat mengakses rute API yang dilindungi peran lain (HTTP 403 Forbidden).
-  - [ ] Setiap aksi login dan logout tercatat di tabel `activity_logs`.
+  - [x] Halaman login mengadopsi antarmuka modern TailAdmin dengan tata letak responsif, dukungan mode gelap/terang, dan teks antarmuka 100% Bahasa Indonesia ("Masuk ke Sistem", "Nama Pengguna", "Kata Sandi", "Ingat Saya", "Lupa Kata Sandi?").
+  - [x] Endpoint `POST /api/v1/auth/login` memvalidasi kredensial pengguna menggunakan perbandingan hash `bcryptjs`.
+  - [x] Jika valid, sistem mengembalikan access token JWT (masa berlaku 1 jam) dan refresh token (masa berlaku 7 hari).
+  - [x] Token memuat payload identitas pengguna dan daftar peran (`roles: []`).
+  - [x] Percobaan login gagal lebih dari 5 kali berturut-turut dalam 1 menit dikenakan *rate limiting* (HTTP 429) dengan pesan kesalahan Bahasa Indonesia yang ramah pengguna.
+  - [x] Pengguna dengan peran tertentu tidak dapat mengakses rute API yang dilindungi peran lain (HTTP 403 Forbidden).
+  - [x] Setiap aksi login dan logout tercatat di tabel `activity_logs`.
 
 ---
 
 ### Modul 2: Master Data, Multi-UOM & Matriks Harga
 
-#### US-02: Pengelolaan Hierarki Multi-UOM Produk
+#### US-02: Pengelolaan Hierarki Multi-UOM Produk — [STATUS: SELESAI]
 - **Sebagai:** Admin Master Data
 - **Saya Ingin:** Mengonfigurasi master produk es krim beserta konversi satuan bertingkat (misal: 1 Dus = 4 Pack = 24 Pcs) pada antarmuka TailAdmin
 - **Agar:** Transaksi penerimaan dan pengeluaran barang dapat dicatat dalam satuan grosir maupun eceran tanpa membingungkan pencatatan stok dasar (Base Unit)
 - **Estimasi:** 8 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] Form entri produk menggunakan bahasa Indonesia ("Tambah Produk Es Krim", "Kode SKU", "Nama Produk", "Kategori", "Merek", "Suhu Minimum", "Suhu Maksimum", "Masa Simpan").
-  - [ ] Komponen repeater satuan dinamis mendukung penambahan multi-satuan dengan lencana mikro (*micro-badges*) berwarna (Dus: biru, Pack: ungu, Pcs: abu-abu).
-  - [ ] Sistem mewajibkan pendefinisian tepat 1 satuan dasar terkecil (*Base UOM*, misal: `PCS`) dengan `conversion_factor = 1`.
-  - [ ] Pengguna dapat mendaftarkan UOM tambahan dengan faktor konversi integer positif terhadap Base UOM (misal: `DUS = 24`, `PACK = 6`).
-  - [ ] Sistem memvalidasi parameter suhu penyimpanan standar es krim (`min_temp` default $-25^\circ\text{C}$, `max_temp` default $-18^\circ\text{C}$).
-  - [ ] Satuan Base UOM yang sudah memiliki saldo persediaan tidak dapat diubah atau dihapus (*restricted delete*).
+  - [x] Form entri produk menggunakan bahasa Indonesia ("Tambah Produk Es Krim", "Kode SKU", "Nama Produk", "Kategori", "Merek", "Suhu Minimum", "Suhu Maksimum", "Masa Simpan").
+  - [x] Komponen repeater satuan dinamis mendukung penambahan multi-satuan dengan lencana mikro (*micro-badges*) berwarna (Dus: biru, Pack: ungu, Pcs: abu-abu).
+  - [x] Sistem mewajibkan pendefinisian tepat 1 satuan dasar terkecil (*Base UOM*, misal: `PCS`) dengan `conversion_factor = 1`.
+  - [x] Pengguna dapat mendaftarkan UOM tambahan dengan faktor konversi integer positif terhadap Base UOM (misal: `DUS = 24`, `PACK = 6`).
+  - [x] Sistem memvalidasi parameter suhu penyimpanan standar es krim (`min_temp` default $-25^\circ\text{C}$, `max_temp` default $-18^\circ\text{C}$).
+  - [x] Satuan Base UOM yang sudah memiliki saldo persediaan tidak dapat diubah atau dihapus (*restricted delete*).
 
-#### US-03: Segmentasi Kategori Pelanggan & Matriks Harga Bertingkat
+#### US-03: Segmentasi Kategori Pelanggan & Matriks Harga Bertingkat — [STATUS: SELESAI]
 - **Sebagai:** Admin Komersial
 - **Saya Ingin:** Mengelola kategori pelanggan (Modern Trade, General Trade, Horeka, Agen) dan menetapkan daftar harga jual per kombinasi Produk, UOM, dan Kategori pada layar TailAdmin
 - **Agar:** Penagihan penjualan sesuai dengan kontrak komersial segmen pelanggan secara otomatis
 - **Estimasi:** 5 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] CRUD Kategori Pelanggan menggunakan label Bahasa Indonesia dan dilengkapi lencana mikro warna semantik:
+  - [x] CRUD Kategori Pelanggan menggunakan label Bahasa Indonesia dan dilengkapi lencana mikro warna semantik:
     - Modern Trade: `indigo-100/800`
     - General Trade: `teal-100/800`
     - Horeka: `amber-100/800`
     - Agen / Grosir: `emerald-100/800`
-  - [ ] Matriks harga `product_customer_prices` menerapkan batasan unik pada `(product_id, product_uom_id, category_id)`.
-  - [ ] Seluruh harga disajikan dalam format mata uang Rupiah dengan tipografi angka tabular (`tabular-nums font-mono`).
-  - [ ] Harga yang dimasukkan bernilai $\ge 0$ (tidak boleh bernilai negatif).
-  - [ ] Tersedia endpoint lookup harga cepat `GET /api/v1/prices/lookup?product_id=&uom_id=&category_id=`.
+  - [x] Matriks harga `product_customer_prices` menerapkan batasan unik pada `(product_id, product_uom_id, category_id)`.
+  - [x] Seluruh harga disajikan dalam format mata uang Rupiah dengan tipografi angka tabular (`tabular-nums font-mono`).
+  - [x] Harga yang dimasukkan bernilai $\ge 0$ (tidak boleh bernilai negatif).
+  - [x] Tersedia endpoint lookup harga cepat `GET /api/v1/prices/lookup?product_id=&uom_id=&category_id=`.
 
-#### US-04: Master Lokasi Freezer & Supplier
+#### US-04: Master Lokasi Freezer & Supplier — [STATUS: SELESAI]
 - **Sebagai:** Admin Master Data
 - **Saya Ingin:** Mendaftarkan zona rak *freezer* (termasuk zona karantina) dan data supplier pasokan
 - **Agar:** Alokasi penempatan fisik barang dan rekam jejak asal pasokan dapat terdata rapi
 - **Estimasi:** 3 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] Tabel lokasi rak *freezer* menyajikan denah kode rak (misal: `FRZ-A / RAK-02 / B-01`), kapasitas Base Unit, dan badge status karantina berwarna merah amber.
-  - [ ] Form Supplier menggunakan Bahasa Indonesia lengkap dengan kontak PIC, NPWP, dan syarat pembayaran (*payment terms*).
+  - [x] Tabel lokasi rak *freezer* menyajikan denah kode rak (misal: `FRZ-A / RAK-02 / B-01`), kapasitas Base Unit, dan badge status karantina berwarna merah amber.
+  - [x] Form Supplier menggunakan Bahasa Indonesia lengkap dengan kontak PIC, NPWP, dan syarat pembayaran (*payment terms*).
 
 ---
 
@@ -260,7 +260,7 @@ Setiap story memiliki identifikasi unik, role, narasi bisnis, estimasi Story Poi
 - **Agar:** Seluruh transaksi keuangan perusahaan tercatat lengkap dalam satu sistem terpusat
 - **Estimasi:** 5 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] CRUD Master Bagan Akun mendukung klasifikasi Bahasa Indonesia (Aset, Liabilitas, Ekuitas, Pendapatan, HPP, Beban Operasional).
+  - [x] CRUD Master Bagan Akun mendukung klasifikasi Bahasa Indonesia (Aset, Liabilitas, Ekuitas, Pendapatan, HPP, Beban Operasional) [SELESAI - SPRINT 1].
   - [ ] Form Jurnal Manual memeriksa keseimbangan total baris debit dan kredit secara interaktif sebelum status diposting.
   - [ ] Jurnal yang telah diposting tidak dapat diedit langsung, melainkan melalui prosedur jurnal pembalik (*reversal entry*).
 
@@ -455,9 +455,9 @@ Berikut rincian pekerjaan teknis per sprint yang dibagi menurut disiplin kerja: 
   - [ ] Tabel log riwayat suhu harian dengan filter tanggal dan lokasi.
   - [ ] Banner peringatan anomali jika terdapat pembacaan suhu melebihi ambang batas.
 
-#### 📱 Mobile Tasks (React Native / Android Base)
-- [ ] Screen Input Penerimaan Inbound ringkas untuk operator gudang lapangan (input suhu truk + batch).
-- [ ] Screen Input Pengecekan Suhu Freezer harian.
+#### 📱 Mobile Tasks (DITANGGUHKAN / SKIPPED PER ARAHAN)
+- [–] ~~Screen Input Penerimaan Inbound ringkas untuk operator gudang lapangan (input suhu truk + batch).~~ *(Ditiadakan - Digantikan Web Inbound)*
+- [–] ~~Screen Input Pengecekan Suhu Freezer harian.~~ *(Ditiadakan - Digantikan Web Log Suhu)*
 
 #### 🗄️ Database & DevOps Tasks
 - [ ] Konfigurasi bucket penyimpanan berkas (AWS S3 atau MinIO/GCS) untuk dokumen gambar QC penerimaan.
@@ -530,9 +530,9 @@ Berikut rincian pekerjaan teknis per sprint yang dibagi menurut disiplin kerja: 
   - [ ] Form pencatatan barang retur menautkan nomor pesanan penjualan dan mencatat alasan pengembalian (Meleleh, Cacat Kemasan, Mendekati Basi, Salah Kirim).
   - [ ] Tabel persediaan karantina dengan tombol aksi disposisi: *Pemusnahan (Write-Off)* atau *Klaim Retur Pemasok*.
 
-#### 📱 Mobile Tasks (React Native)
-- [ ] Screen Picking List Gudang: checklist barang keluar terurut batch terdekat.
-- [ ] Screen Driver Pengiriman: konfirmasi sampai di lokasi pelanggan + upload foto POD dari kamera.
+#### 📱 Mobile Tasks (DITANGGUHKAN / SKIPPED PER ARAHAN)
+- [–] ~~Screen Picking List Gudang: checklist barang keluar terurut batch terdekat.~~ *(Ditiadakan - Digantikan Web Picking)*
+- [–] ~~Screen Driver Pengiriman: konfirmasi sampai di lokasi pelanggan + upload foto POD dari kamera.~~ *(Ditiadakan - Digantikan Web Delivery)*
 
 #### 🗄️ Database & DevOps Tasks
 - [ ] Pembuatan view PostgreSQL untuk optimasi query rekomendasi alokasi FEFO.

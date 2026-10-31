@@ -187,3 +187,4 @@ Untuk rincian implementasi mendalam, silakan merujuk ke dokumen pada folder `doc
 
 ---
 *Dikembangkan dengan standar keandalan tinggi untuk operasional distributor es krim modern.*
+
