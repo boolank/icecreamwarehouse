@@ -81,3 +81,4 @@ export class OutboundController {
     return this.outboundService.breakdownUom(dto, user?.userId);
   }
 }
+

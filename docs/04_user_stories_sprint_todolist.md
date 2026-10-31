@@ -2,13 +2,13 @@
 ## Sistem Informasi Gudang Distributor Es Krim (Cold Chain WMS & ERP Lite)
 ### Standar Antarmuka: TailAdmin UI/UX (Tailwind CSS, Next.js 14, Mode Gelap/Terang & Bahasa Indonesia Penuh)
 
-> **Versi Dokumen:** 2.3 (Status Capaian Realisasi Sprint 1 Selesai 100%, Sprint 2 Inbound Selesai, & Sprint 3 Core Outbound Selesai)  
+> **Versi Dokumen:** 2.4 (Status Capaian Realisasi Sprint 1 Selesai 100%, Sprint 2 Inbound Selesai, & Sprint 3 Selesai 100%)  
 > **Tanggal Pembaruan:** 2026-10-31  
 > **Metodologi:** Agile Scrum  
 > **Siklus:** 4 Sprint × 2 Minggu (Total 8 Minggu)  
 > **Estimasi Total Story Points:** 168 SP  
-> **Realisasi Capaian:** 107 SP / 168 SP (63.7% Total Progress — Sprint 1 Lulus 100%, Sprint 2 Inbound Selesai, Sprint 3 Core Outbound Lulus)  
-> **Status Build:** Backend NestJS 10 (Lulus / Exit Code 0) | Frontend Next.js 14 (Lulus / Exit Code 0, 16 Rute Statis)  
+> **Realisasi Capaian:** 116 SP / 168 SP (69.0% Total Progress — Sprint 1 Lulus 100%, Sprint 2 Inbound Selesai, Sprint 3 Lulus 100%)  
+> **Status Build:** Backend NestJS 10 (Lulus / Exit Code 0) | Frontend Next.js 14 (Lulus / Exit Code 0, 18 Rute Statis)  
 > **Repositori Git:** `https://github.com/boolank/icecreamwarehouse.git` (Branch `main`)  
 > **Rujukan Desain UI/UX:** `rancangan_desain_ui_tailadmin_gudang_es_krim.md`
 
@@ -20,9 +20,9 @@
 | :--- | :--- | :---: | :---: | :---: |
 | **Sprint 1 (Minggu 1-2)** | Fondasi Arsitektur, Auth RBAC, Master Produk & Multi-UOM, Pelanggan, Matriks Harga, Setup COA, Shell TailAdmin | **38 SP** | <span style="color:#10b981;font-weight:bold;">100% SELESAI</span> | Build Passed (NestJS & Next.js) |
 | **Sprint 2 (Minggu 3-4)** | Purchase Order, Inbound Receiving, Batch & QC Suhu Armada ($\le -18^\circ\text{C}$), Jurnal Pembelian Otomatis, Log Suhu | **42 SP** | <span style="color:#10b981;font-weight:bold;">30 SP SELESAI (71.4%)</span> | PO, Inbound QC & Journal Ready |
-| **Sprint 3 (Minggu 5-6)** | Sales Order, Picking List FEFO, Pengiriman & Surat Jalan, Breakdown/Repacking UOM, Retur & Spoilage, Jurnal Jual | **48 SP** | <span style="color:#10b981;font-weight:bold;">39 SP SELESAI (81.25%)</span> | SO, FEFO Picking & Dual Journal Ready |
+| **Sprint 3 (Minggu 5-6)** | Sales Order, Picking List FEFO, Pengiriman & Surat Jalan, Breakdown/Repacking UOM, Retur & Spoilage, Jurnal Jual | **48 SP** | <span style="color:#10b981;font-weight:bold;">100% SELESAI</span> | SO, FEFO, Retur, & Spoilage Journal Ready |
 | **Sprint 4 (Minggu 7-8)** | Stock Opname, Pelaporan Finansial (Laba Rugi, Neraca), Dasbor Eksekutif Bento Grid, Export PDF/Excel, UAT | **40 SP** | Direncanakan | Desain UI Siap |
-| **TOTAL** | **Cold Chain WMS & Automated Accounting** | **168 SP** | **107 SP (63.7%)** | **Sprint 1, 2, & 3 Core Lulus & Teruji** |
+| **TOTAL** | **Cold Chain WMS & Automated Accounting** | **168 SP** | **116 SP (69.0%)** | **Sprint 1, 2 (Inbound), & 3 (100%) Lulus** |
 
 > **Catatan Ruang Lingkup:** Sesuai instruksi mutakhir, pengerjaan aplikasi mobile (*React Native*) ditangguhkan (*skipped*), sehingga seluruh alokasi sumber daya difokuskan secara optimal pada **Web Admin TailAdmin (Next.js 14) + Backend REST API (NestJS 10)**.
 
@@ -219,35 +219,42 @@ Setiap story memiliki identifikasi unik, role, narasi bisnis, estimasi Story Poi
 
 ### Modul 6: Retur Barang, Karantina & Pemusnahan (Spoilage)
 
-#### US-15: Pencatatan Retur Pelanggan & Alokasi Karantina
+#### US-15: Pencatatan Retur Pelanggan & Alokasi Karantina — [STATUS: SELESAI]
 - **Sebagai:** Operator Inbound / Gudang
 - **Saya Ingin:** Mencatat produk es krim yang dikembalikan oleh pelanggan (akibat leleh saat kirim, cacat kemasan, salah kirim) dan menempatkannya ke zona karantina
 - **Agar:** Es krim bermasalah terisolasi dari inventaris aktif dan tidak terambil untuk pesanan lain
 - **Estimasi:** 5 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] Formulir retur menautkan nomor Sales Order dan mencatat kondisi fisik produk (Rusak Kemasan, Meleleh Total, Mendekati Kedaluwarsa, Salah Kirim).
-  - [ ] Barang retur dialokasikan ke lokasi rak bertanda `is_quarantine = TRUE`.
-  - [ ] Status retur awal adalah `Karantina`.
+  - [x] Formulir retur menautkan nomor Sales Order dan mencatat kondisi fisik produk (Rusak Kemasan, Meleleh Total, Mendekati Kedaluwarsa, Salah Kirim).
+  - [x] Barang retur dialokasikan ke lokasi rak bertanda `is_quarantine = TRUE` (misal: `KRN-01`).
+  - [x] Status retur awal adalah `Karantina` (`QUARANTINE`).
 
-#### US-16: Disposisi Retur & Pemusnahan Barang (Write-off Spoilage)
+#### US-16: Disposisi Retur & Pemusnahan Barang (Write-off Spoilage) — [STATUS: SELESAI]
 - **Sebagai:** Manajer Gudang & Staf Finance
-- **Saya Ingin:** Menyetujui disposisi barang karantina untuk dimusnahkan (*write-off*) atau dikembalikan ke supplier (*claim*)
+- **Saya Ingin:** Menyetujui disposisi barang karantina untuk dimusnahkan (*write-off*), dikembalikan ke rak aktif (*restock*), atau dikembalikan ke supplier (*claim*)
 - **Agar:** Saldo stok fisik karantina terhapus dan nilai kerugian diakui pada beban laporan keuangan
 - **Estimasi:** 5 SP
 - **Kriteria Penerimaan (Acceptance Criteria):**
-  - [ ] Jika disposisi `Pemusnahan (Write-Off)`, kuantitas stok karantina dipotong.
-  - [ ] Sistem menerbitkan jurnal beban kerugian: Debit `5201 Beban Kerugian Barang Rusak/Meleleh`, Kredit `1120 Persediaan`.
-  - [ ] Nilai kerugian dihitung dari harga pokok modal batch (`cost_price_per_base_uom`).
+  - [x] Jika disposisi `Pemusnahan (Write-Off)`, kuantitas stok karantina dipotong.
+  - [x] Sistem menerbitkan jurnal beban kerugian: Debit `5201 Beban Kerugian Barang Rusak/Meleleh`, Kredit `1130 Persediaan Barang Dagang Es Krim`.
+  - [x] Nilai kerugian dihitung dari harga pokok modal batch (`cost_price_per_base_uom`).
+  - [x] Berita Acara Pemusnahan resmi dapat diterbitkan dan dicetak.
 
 ---
 
 ### Modul 7: Akuntansi Keuangan Terintegrasi (Automated Ledger)
 
-#### US-17: Mesin Jurnal Otomatis Transaksi Gudang (*Journal Engine*)
+#### US-17: Mesin Jurnal Otomatis Transaksi Gudang (*Journal Engine*) — [STATUS: SELESAI]
 - **Sebagai:** Staf Akuntansi / Finance
 - **Saya Ingin:** Setiap transaksi operasional gudang (Inbound, Outbound, Spoilage, Adjustment) otomatis membentuk ayat jurnal berpasangan yang seimbang
 - **Agar:** Tidak ada celah selisih antara pencatatan stok fisik dan buku besar keuangan tanpa butuh input manual berulang
 - **Estimasi:** 8 SP
+- **Kriteria Penerimaan (Acceptance Criteria):**
+  - [x] Jurnal Pembelian Inbound: Debit 1130 Persediaan, Kredit 2101 Utang Usaha.
+  - [x] Jurnal Penjualan Outbound: Debit 1120 Piutang Usaha, Kredit 4101 Pendapatan Penjualan.
+  - [x] Jurnal HPP FEFO Outbound: Debit 5101 Beban Pokok Penjualan, Kredit 1130 Persediaan.
+  - [x] Jurnal Pemusnahan Spoilage: Debit 5201 Beban Kerugian Barang Rusak, Kredit 1130 Persediaan.
+  - [x] Validasi ketat keseimbangan: Total Debit == Total Kredit pada setiap transaksi.
 - **Kriteria Penerimaan (Acceptance Criteria):**
   - [ ] Inbound: Debit `1120 Persediaan`, Kredit `2101 Utang Usaha` / `1103 Bank`.
   - [ ] Outbound (Penjualan): Debit `1110-1114 Piutang Usaha` / `1103 Bank`, Kredit `4101-4104 Pendapatan Penjualan`.
@@ -473,12 +480,12 @@ Berikut rincian pekerjaan teknis per sprint yang dibagi menurut disiplin kerja: 
 ---
 
 ### 🚚 SPRINT 3 (Minggu 5 - 6): FEFO Outbound, Breakdown UOM, Matrix Pricing & Jurnal Penjualan/HPP
-**Sasaran Sprint (Sprint Goal):** Mewujudkan alur pemrosesan pesanan penjualan dengan harga otomatis sesuai segmen pelanggan, penerbitan picking list berbasis FEFO berorientasi rute gudang, delivery & POD, dialog pemecahan satuan (breakdown), penanganan retur ke karantina, serta pembentukan jurnal ganda (Penjualan dan HPP FEFO).  
+**Sasaran Sprint (Sprint Goal):** Mewujudkan alur pemrosesan pesanan penjualan dengan harga otomatis sesuai segmen pelanggan, penerbitan picking list berbasis FEFO berorientasi rute gudang, delivery & POD, dialog pemecahan satuan (breakdown), penanganan retur ke karantina, serta pembentukan jurnal ganda (Penjualan, HPP FEFO, dan Kerugian Spoilage).  
 **Alokasi Story:** US-07, US-08, US-12, US-13, US-14, US-15, US-16, US-17 (Outbound & Spoilage Engine)  
 **Total Beban:** 48 Story Points  
-**Status Eksekusi:** <span style="color:#10b981;font-weight:bold;">39 SP SELESAI (81.25%) — VERIFIED & PASSED BUILD</span>  
+**Status Eksekusi:** <span style="color:#10b981;font-weight:bold;">48 SP SELESAI (100%) — LULUS VERIFIKASI & SELESAI PENUH</span>  
 
-#### 🛠️ Backend Tasks (NestJS) — [STATUS: CORE OUTBOUND & FEFO SELESAI]
+#### 🛠️ Backend Tasks (NestJS) — [STATUS: 100% SELESAI]
 - [x] Implementasi modul `sales-orders` (terintegrasi di `OutboundModule`):
   - [x] Entity `SalesOrder`, `SalesOrderItem`.
   - [x] Generator nomor otomatis: `SO-YYYYMM-XXXX`.
@@ -499,10 +506,11 @@ Berikut rincian pekerjaan teknis per sprint yang dibagi menurut disiplin kerja: 
 - [x] Implementasi fitur `Breakdown/Repacking UOM`:
   - [x] Endpoint `POST /api/v1/outbound/breakdown`.
   - [x] Pencatatan transaksi mutasi `BREAKDOWN` tanpa mengubah total saldo Base UOM dan tanpa menerbitkan jurnal.
-- [ ] Implementasi modul `returns` & `karantina`:
-  - [ ] Entity `ReturnOrder`, `ReturnOrderItem`.
-  - [ ] Alokasi kuantitas retur langsung ke lokasi freezer berstatus karantina (`is_quarantine = true`).
-  - [ ] Endpoint disposisi retur: jika `WRITE_OFF`, potong stok karantina dan terbitkan jurnal beban kerugian (Debit `5201 Beban Kerugian Barang Rusak`, Kredit `1120 Persediaan`).
+- [x] Implementasi modul `returns` & `karantina` (`ReturnsModule`):
+  - [x] Entity `ReturnOrder`, `ReturnOrderItem`.
+  - [x] Alokasi kuantitas retur langsung ke lokasi freezer berstatus karantina (`is_quarantine = true`).
+  - [x] Endpoint disposisi retur (`PATCH /api/v1/returns/:id/dispose`): jika `WRITE_OFF`, potong stok karantina dan terbitkan jurnal beban kerugian seimbang (Debit `5201 Beban Kerugian Barang Rusak`, Kredit `1130 Persediaan Barang Dagang Es Krim`).
+  - [x] Dukungan disposisi `RESTOCK` ke rak freezer aktif dan `RETURN_TO_SUPPLIER`.
 
 #### 🎨 Frontend UI Web Tasks (Next.js 14 - TailAdmin Style - Bahasa Indonesia) — [STATUS: 100% SELESAI]
 - [x] **Layar Pesanan Penjualan (Sales Order) — `/sales-orders`:**
@@ -523,9 +531,14 @@ Berikut rincian pekerjaan teknis per sprint yang dibagi menurut disiplin kerja: 
   - [x] Form Tailwind TailAdmin: pilih produk & nomor batch asal.
   - [x] Input kuantitas karton besar (Dus) dengan panel kalkulator konversi real-time: "Input 2 Dus $\rightarrow$ Menjadi 48 Pcs Base Unit".
   - [x] Dropdown lokasi rak tujuan dan tombol konfirmasi yang memperbarui saldo tanpa mengubah valuasi moneter (Netto = Rp 0).
-- [ ] **Layar Retur & Manajemen Karantina:**
-  - [ ] Form pencatatan barang retur menautkan nomor pesanan penjualan dan mencatat alasan pengembalian (Meleleh, Cacat Kemasan, Mendekati Basi, Salah Kirim).
-  - [ ] Tabel persediaan karantina dengan tombol aksi disposisi: *Pemusnahan (Write-Off)* atau *Klaim Retur Pemasok*.
+- [x] **Layar Penerimaan Retur Pelanggan & Karantina — `/returns`:**
+  - [x] Form pencatatan barang retur menautkan nomor pesanan penjualan dan mencatat kondisi fisik (Meleleh, Cacat Kemasan, Mendekati Basi, Salah Kirim).
+  - [x] Penempatan fisik otomatis ke lokasi rak freezer berstatus karantina (`KRN-01`).
+  - [x] Tabel daftar retur karantina dengan badge status dan kondisi visual.
+- [x] **Layar Disposisi & Berita Acara Pemusnahan — `/returns/disposition`:**
+  - [x] Tabel barang karantina menunggu penetapan status akhir (write-off, restock, supplier claim).
+  - [x] Wizard eksekusi disposisi dengan input Berita Acara resmi (`BA-SPOIL-XXXX`).
+  - [x] Kartu Jurnal Kerugian Otomatis (*Balanced Spoilage Journal Card*) Debit 5201 vs Kredit 1130 (Seimbang).
 
 #### 📱 Mobile Tasks (DITANGGUHKAN / SKIPPED PER ARAHAN)
 - [–] ~~Screen Picking List Gudang: checklist barang keluar terurut batch terdekat.~~ *(Ditiadakan - Digantikan Web Picking)*

@@ -273,6 +273,85 @@ export class JournalEngineService {
   }
 
   /**
+   * Otomasi Jurnal Pemusnahan Es Krim Rusak / Meleleh (Spoilage Write-Off):
+   * Debit: 5201 Beban Kerugian Barang Rusak / Meleleh
+   * Kredit: 1130 Persediaan Barang Dagang Es Krim
+   */
+  async createSpoilageJournal(params: {
+    returnNumber: string;
+    totalLossAmount: number;
+    reason?: string;
+    userId?: number;
+    queryRunner?: QueryRunner;
+  }): Promise<JournalEntry> {
+    const { returnNumber, totalLossAmount, reason, userId, queryRunner } = params;
+
+    if (totalLossAmount <= 0) {
+      throw new BadRequestException("Total nilai moneter pemusnahan barang harus lebih dari nol.");
+    }
+
+    const runner = queryRunner || this.dataSource.createQueryRunner();
+    const isLocalRunner = !queryRunner;
+
+    if (isLocalRunner) {
+      await runner.connect();
+      await runner.startTransaction();
+    }
+
+    try {
+      const entryNumber = await this.generateEntryNumber(runner);
+
+      const accSpoilageLoss = await this.getAccountByNumber("5201", runner);
+      const accInventory = await this.getAccountByNumber("1130", runner);
+
+      const journal = runner.manager.create(JournalEntry, {
+        entryNumber,
+        referenceType: "SPOILAGE_WRITEOFF",
+        referenceId: 0,
+        description: `Pemusnahan Es Krim Rusak / Meleleh Ref ${returnNumber}${reason ? ` (${reason})` : ""}`,
+        isPosted: true,
+        createdBy: userId || 1,
+      });
+
+      const savedJournal = await runner.manager.save(journal);
+
+      const lineDebit = runner.manager.create(JournalLine, {
+        journalId: savedJournal.id,
+        accountId: accSpoilageLoss.id,
+        description: `Pengakuan Kerugian Es Krim Rusak / Spoilage ${returnNumber}`,
+        debitAmount: totalLossAmount,
+        creditAmount: 0,
+      });
+
+      const lineCredit = runner.manager.create(JournalLine, {
+        journalId: savedJournal.id,
+        accountId: accInventory.id,
+        description: `Pengurangan Persediaan Es Krim Rusak ${returnNumber}`,
+        debitAmount: 0,
+        creditAmount: totalLossAmount,
+      });
+
+      await runner.manager.save([lineDebit, lineCredit]);
+      savedJournal.lines = [lineDebit, lineCredit];
+
+      if (isLocalRunner) {
+        await runner.commitTransaction();
+      }
+
+      return savedJournal;
+    } catch (err) {
+      if (isLocalRunner) {
+        await runner.rollbackTransaction();
+      }
+      throw err;
+    } finally {
+      if (isLocalRunner) {
+        await runner.release();
+      }
+    }
+  }
+
+  /**
    * Mengambil daftar seluruh jurnal beserta baris akunnya
    */
   async findAllJournals(): Promise<JournalEntry[]> {

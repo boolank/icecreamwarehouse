@@ -81,3 +81,4 @@ export class SalesOrderItem {
   @Column({ name: "updated_by", nullable: true })
   updatedBy: number;
 }
+

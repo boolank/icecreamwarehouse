@@ -39,3 +39,4 @@ import { AccountingModule } from "../accounting/accounting.module";
   exports: [OutboundService],
 })
 export class OutboundModule {}
+

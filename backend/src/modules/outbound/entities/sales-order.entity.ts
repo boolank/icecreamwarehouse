@@ -99,3 +99,4 @@ export class SalesOrder {
   @OneToMany(() => DeliveryOrder, (doItem) => doItem.salesOrder)
   deliveryOrders: DeliveryOrder[];
 }
+

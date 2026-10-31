@@ -11,6 +11,7 @@ import { PricingModule } from './modules/pricing/pricing.module';
 import { AccountingModule } from './modules/accounting/accounting.module';
 import { InboundModule } from './modules/inbound/inbound.module';
 import { OutboundModule } from './modules/outbound/outbound.module';
+import { ReturnsModule } from './modules/returns/returns.module';
 
 // Entities
 import { User } from './modules/users/entities/user.entity';
@@ -41,6 +42,8 @@ import { SalesOrderItem } from './modules/outbound/entities/sales-order-item.ent
 import { PickingList } from './modules/outbound/entities/picking-list.entity';
 import { PickingListItem } from './modules/outbound/entities/picking-list-item.entity';
 import { DeliveryOrder } from './modules/outbound/entities/delivery-order.entity';
+import { ReturnOrder } from './modules/returns/entities/return-order.entity';
+import { ReturnOrderItem } from './modules/returns/entities/return-order-item.entity';
 
 @Module({
   imports: [
@@ -87,6 +90,8 @@ import { DeliveryOrder } from './modules/outbound/entities/delivery-order.entity
           PickingList,
           PickingListItem,
           DeliveryOrder,
+          ReturnOrder,
+          ReturnOrderItem,
         ],
         synchronize: false, // Gunakan migration / DDL script
         logging: config.get<string>('NODE_ENV') === 'development',
@@ -100,6 +105,7 @@ import { DeliveryOrder } from './modules/outbound/entities/delivery-order.entity
     AccountingModule,
     InboundModule,
     OutboundModule,
+    ReturnsModule,
   ],
 })
 export class AppModule {}

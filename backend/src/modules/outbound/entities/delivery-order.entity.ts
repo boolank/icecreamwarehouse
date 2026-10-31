@@ -74,3 +74,4 @@ export class DeliveryOrder {
   @Column({ name: "updated_by", nullable: true })
   updatedBy: number;
 }
+

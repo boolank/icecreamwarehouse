@@ -51,3 +51,4 @@ export class CreateSalesOrderDto {
   @Type(() => CreateSalesOrderItemDto)
   items: CreateSalesOrderItemDto[];
 }
+

@@ -58,3 +58,4 @@ export class PickingList {
   @OneToMany(() => PickingListItem, (item) => item.pickingList, { cascade: true })
   items: PickingListItem[];
 }
+
