@@ -1,0 +1,29 @@
+{
+  "name": "icecream-wms-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cold Chain Warehouse Management System & ERP Lite Distributor Es Krim",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev:backend": "npm run start:dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "test:backend": "npm run test --workspace=backend"
+  },
+  "keywords": [
+    "cold-chain",
+    "wms",
+    "erp",
+    "ice-cream",
+    "fefo",
+    "multi-uom",
+    "accounting"
+  ],
+  "author": "Antigravity Engineering",
+  "license": "UNLICENSED"
+}
+

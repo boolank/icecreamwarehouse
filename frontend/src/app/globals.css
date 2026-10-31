@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 248 250 252; /* slate-50 */
+    --foreground: 15 23 42;    /* slate-900 */
+    --card: 255 255 255;       /* white */
+    --card-foreground: 15 23 42;
+    --border: 226 232 240;     /* slate-200 */
+  }
+
+  .dark {
+    --background: 15 23 42;    /* slate-900 */
+    --foreground: 248 250 252; /* slate-50 */
+    --card: 30 41 59;          /* slate-800 */
+    --card-foreground: 248 250 252;
+    --border: 51 65 85;        /* slate-700 */
+  }
+}
+
+body {
+  color: rgb(var(--foreground));
+  background-color: rgb(var(--background));
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Tabular numbers for financial and stock figures */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
