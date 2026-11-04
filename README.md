@@ -20,8 +20,8 @@ Semua antarmuka web dibangun menggunakan standar **TailAdmin** (Next.js 14, Tail
 
 ## 🚀 Status Realisasi & Capaian Proyek (Progress Tracking)
 
-> **Capaian Keseluruhan:** **168 / 168 Story Points (100.0%) — SPRINT 1, 2, 3, & 4 LULUS 100%**  
-> **Status Build:** Backend NestJS (`Exit Code 0`) | Frontend Next.js (`Exit Code 0`, 31 Rute Statis Aktif Prerendered)  
+> **Capaian Keseluruhan:** **178 / 178 Story Points (100.0%) — SPRINT 1, 2, 3, 4 & MODUL KEUANGAN LANJUTAN LULUS 100%**  
+> **Status Build:** Backend NestJS (`Exit Code 0`) | Frontend Next.js (`Exit Code 0`, 33 Rute Statis Aktif Prerendered)  
 > **Git Repository:** `https://github.com/boolank/icecreamwarehouse.git` (Branch `main`)
 
 | Siklus | Sasaran Utama | Target SP | Status | Catatan Teknis |
@@ -30,6 +30,7 @@ Semua antarmuka web dibangun menggunakan standar **TailAdmin** (Next.js 14, Tail
 | **Sprint 2 (Minggu 3-4)** | Purchase Order, Inbound Receiving, Batch & QC Suhu Armada ($\le -18^\circ\text{C}$), Jurnal Pembelian Otomatis, Log Suhu | **42 SP** | **100% SELESAI** | Modul Inbound, PO Management, QC Suhu & Journal Ready |
 | **Sprint 3 (Minggu 5-6)** | Sales Order, Picking List FEFO, Pengiriman & Surat Jalan, Breakdown/Repacking UOM, Retur & Spoilage, Jurnal Jual | **48 SP** | **100% SELESAI** | SO Auto-Pricing, FEFO Picking, Breakdown UOM, Retur, & Spoilage Journal Ready |
 | **Sprint 4 (Minggu 7-8)** | Stock Opname, Pelaporan Finansial (Jurnal Umum, Buku Besar, Neraca Saldo, Laba Rugi, Neraca, Mutasi Stok), Dasbor Eksekutif Bento Grid | **40 SP** | **100% SELESAI** | Full Financial Statements, Stock Opname, & Executive Dashboard Ready |
+| **Add-on Finansial & Hutang** | Mesin Diskon Penjualan (Baris & Global Faktur), Manajemen Hutang Usaha Supplier (AP Aging & Cicilan), Pinjaman Eksternal (Bank KMK/Investasi & Leasing Truk) | **10 SP** | **100% SELESAI** | Diskon Contra-Revenue 4111, AP Supplier 2101, Utang Bank 2201, Beban Bunga 6501 Ready |
 
 *Catatan: Sesuai instruksi mutakhir, pengembangan aplikasi mobile (React Native) ditiadakan guna memfokuskan 100% kapabilitas pada platform Web Admin TailAdmin dan Backend REST API.*
 
@@ -102,6 +103,8 @@ icecream/
 │   ├── src/
 │   │   ├── app/
 │   │   │   ├── accounting/coa/            # Layar Bagan Akun Standar (COA Tree-View)
+│   │   │   ├── accounting/payable/        # Layar Hutang Usaha Supplier (AP Aging & Pembayaran)
+│   │   │   ├── accounting/loans/          # Layar Pinjaman Eksternal (Bank KMK & Leasing Truk)
 │   │   │   ├── master-data/customers/     # Layar Pelanggan & Segmentasi
 │   │   │   ├── master-data/freezers/      # Layar Freezer & Rak Cold Storage
 │   │   │   ├── master-data/prices/        # Layar Matriks Daftar Harga

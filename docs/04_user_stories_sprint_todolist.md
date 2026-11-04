@@ -2,13 +2,13 @@
 ## Sistem Informasi Gudang Distributor Es Krim (Cold Chain WMS & ERP Lite)
 ### Standar Antarmuka: TailAdmin UI/UX (Tailwind CSS, Next.js 14, Mode Gelap/Terang & Bahasa Indonesia Penuh)
 
-> **Versi Dokumen:** 2.5 (Status Capaian Realisasi Seluruh Sprint 1, 2, 3, & 4 Selesai 100%)  
-> **Tanggal Pembaruan:** 2026-10-31  
+> **Versi Dokumen:** 2.6 (Penambahan Mesin Diskon Penjualan, Manajemen Hutang Usaha AP, & Pinjaman Eksternal)  
+> **Tanggal Pembaruan:** 2026-11-04  
 > **Metodologi:** Agile Scrum  
-> **Siklus:** 4 Sprint × 2 Minggu (Total 8 Minggu)  
-> **Estimasi Total Story Points:** 168 SP  
-> **Realisasi Capaian:** 168 SP / 168 SP (100% Total Progress — Seluruh Fitur Inti Selesai)  
-> **Status Build:** Backend NestJS 10 (Lulus / Exit Code 0) | Frontend Next.js 14 (Lulus / Exit Code 0, 31 Rute Statis Prerendered)  
+> **Siklus:** 4 Sprint × 2 Minggu + Modul Keuangan Lanjutan  
+> **Estimasi Total Story Points:** 178 SP  
+> **Realisasi Capaian:** 178 SP / 178 SP (100% Total Progress — Seluruh Fitur Inti & Lanjutan Selesai)  
+> **Status Build:** Backend NestJS 10 (Lulus / Exit Code 0) | Frontend Next.js 14 (Lulus / Exit Code 0, 33 Rute Statis Prerendered)  
 > **Repositori Git:** `https://github.com/boolank/icecreamwarehouse.git` (Branch `main`)  
 > **Rujukan Desain UI/UX:** `rancangan_desain_ui_tailadmin_gudang_es_krim.md`
 
@@ -22,7 +22,8 @@
 | **Sprint 2 (Minggu 3-4)** | Purchase Order, Inbound Receiving, Batch & QC Suhu Armada ($\le -18^\circ\text{C}$), Jurnal Pembelian Otomatis, Log Suhu | **42 SP** | <span style="color:#10b981;font-weight:bold;">100% SELESAI</span> | PO, Inbound QC & Journal Ready |
 | **Sprint 3 (Minggu 5-6)** | Sales Order, Picking List FEFO, Pengiriman & Surat Jalan, Breakdown/Repacking UOM, Retur & Spoilage, Jurnal Jual | **48 SP** | <span style="color:#10b981;font-weight:bold;">100% SELESAI</span> | SO, FEFO, Retur, & Spoilage Journal Ready |
 | **Sprint 4 (Minggu 7-8)** | Stock Opname, Pelaporan Finansial (Laba Rugi, Neraca), Dasbor Eksekutif Bento Grid, Manajemen Pengguna & Auth Sesi, Export | **40 SP** | <span style="color:#10b981;font-weight:bold;">100% SELESAI</span> | 31 Halaman Statis Prerendered |
-| **TOTAL** | **Cold Chain WMS & Automated Accounting** | **168 SP** | **168 SP (100%)** | **Seluruh Sprint 1-4 Lulus Penuh** |
+| **Modul Keuangan Lanjutan** | Diskon Penjualan (Baris & Faktur), Hutang Usaha Supplier (AP Aging & Pembayaran), Pinjaman Eksternal (Bank KMK & Leasing Truk) | **10 SP** | <span style="color:#10b981;font-weight:bold;">100% SELESAI</span> | 33 Halaman Statis Prerendered (Lulus Penuh) |
+| **TOTAL** | **Cold Chain WMS & Automated Accounting** | **178 SP** | **178 SP (100%)** | **Seluruh Sprint 1-4 & Modul Keuangan Lulus** |
 
 > **Catatan Ruang Lingkup:** Sesuai instruksi mutakhir, pengerjaan aplikasi mobile (*React Native*) ditangguhkan (*skipped*), sehingga seluruh alokasi sumber daya difokuskan secara optimal pada **Web Admin TailAdmin (Next.js 14) + Backend REST API (NestJS 10)**.
 
@@ -306,6 +307,46 @@ Setiap story memiliki identifikasi unik, role, narasi bisnis, estimasi Story Poi
     - Kanan: Diagram Donat Distribusi Kanal Penjualan (Agen/Grosir, Modern Trade, General Trade).
   - [ ] Tabel FEFO Watchlist memprioritaskan 5 produk teratas yang mendekati kedaluwarsa beserta sisa hari dan tombol tindakan cepat (Promo / Disposisi).
   - [ ] Dropdown Pusat Pemberitahuan di bilah atas menampilkan alert kenaikan suhu dan alert batch kritis.
+
+---
+
+### Modul 10: Kebijakan Diskon Penjualan & Promosi
+
+#### US-21: Mesin Diskon Penjualan (Line Item & Global Faktur) — [STATUS: SELESAI]
+- **Sebagai:** Staf Penjualan / Staf Akuntansi
+- **Saya Ingin:** Menginput diskon per baris item (% atau nominal Rp) dan diskon promosi global pada Sales Order
+- **Agar:** Fleksibilitas komersial tercapai dan potongan penjualan tercatat otomatis sebagai contra-revenue pada akun COA 4111 tanpa merusak pencatatan omzet bruto
+- **Estimasi:** 3 SP
+- **Kriteria Penerimaan (Acceptance Criteria):**
+  - [x] Form Sales Order (`/sales-orders`) mendukung input persentase diskon per baris produk dan diskon promosi faktur.
+  - [x] Ringkasan finansial otomatis menghitung: Bruto, Total Diskon, DPP, PPN 11%, dan Netto Tagihan.
+  - [x] Kartu Jurnal Otomatis Berimbang mencatat: Debit Piutang Usaha (1110/1120), Debit Diskon Penjualan (4111), Kredit Pendapatan Penjualan (4101).
+
+---
+
+### Modul 11: Manajemen Hutang Usaha & Pinjaman Eksternal
+
+#### US-22: Pengelolaan Hutang Usaha Supplier (AP Aging & Cicilan) — [STATUS: SELESAI]
+- **Sebagai:** Staf Akuntansi / Manajer Keuangan
+- **Saya Ingin:** Mengawasi jadwal jatuh tempo tagihan supplier es krim dan mencatat pelunasan/cicilan
+- **Agar:** Kewajiban pembayaran pabrik/prinsipal terkontrol rapi dan tidak terjadi penalti keterlambatan
+- **Estimasi:** 4 SP
+- **Kriteria Penerimaan (Acceptance Criteria):**
+  - [x] Layar Hutang Usaha (`/accounting/payable`) menampilkan KPI Sisa Hutang, Overdue, Jatuh Tempo &le; 7 Hari, dan Total Terbayar.
+  - [x] Tabel AP Aging dengan status: Lancar, Mendekati Jatuh Tempo, Lewat Jatuh Tempo, dan Lunas.
+  - [x] Modal form pembayaran (100% lunas atau cicilan) dengan preview jurnal berimbang otomatis: Debit 2101 Utang Usaha, Kredit 1103 Bank BCA.
+  - [x] Modal riwayat pembayaran & voucher kas keluar per faktur supplier.
+
+#### US-23: Pengelolaan Pinjaman Eksternal Perusahaan (Bank & Leasing) — [STATUS: SELESAI]
+- **Sebagai:** Manajer Keuangan / Direktur
+- **Saya Ingin:** Mengelola fasilitas kredit modal kerja (KMK), kredit investasi cold storage, dan leasing armada truk pendingin
+- **Agar:** Kewajiban pinjaman eksternal, jadwal amortisasi, dan pemisahan porsi pokok vs beban bunga tercatat akurat
+- **Estimasi:** 3 SP
+- **Kriteria Penerimaan (Acceptance Criteria):**
+  - [x] Layar Pinjaman Eksternal (`/accounting/loans`) menampilkan KPI Sisa Pokok Pinjaman, Angsuran Bulanan, Beban Bunga 6501, dan Fasilitas Aktif.
+  - [x] Modal penambahan fasilitas kredit dengan jurnal pencairan otomatis: Debit 1103 Bank, Kredit 2201 Utang Bank / 2202 Utang Leasing.
+  - [x] Modal pembayaran angsuran dengan pemisahan porsi pokok (mengurangi utang) dan beban bunga (Debit 6501 Beban Bunga Pinjaman Bank, Kredit 1103 Bank BCA).
+  - [x] Modal jadwal amortisasi dan histori transaksi cicilan pinjaman.
 
 ---
 
@@ -608,7 +649,7 @@ Berikut rincian pekerjaan teknis per sprint yang dibagi menurut disiplin kerja: 
 
 #### 🧪 QA & Testing Tasks — [STATUS: 100% SELESAI]
 - [x] Verifikasi build backend NestJS 10 (`npm run build`): **Exit Code 0**.
-- [x] Verifikasi build frontend Next.js 14 (`npm run build`): **Exit Code 0** (30 static pages prerendered).
+- [x] Verifikasi build frontend Next.js 14 (`npm run build`): **Exit Code 0** (33 static pages prerendered).
 - [x] Verifikasi konsistensi 100% Bahasa Indonesia dan Dark Mode TailAdmin.
 - [ ] Final sign-off dan pelaksanaan rilis ke lingkungan *Production*.
 

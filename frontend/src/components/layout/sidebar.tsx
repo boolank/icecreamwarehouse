@@ -27,6 +27,7 @@ import {
   Scale,
   PieChart,
   Landmark,
+  Receipt,
   Layers,
   Snowflake,
   UserCheck,
@@ -93,6 +94,13 @@ const menuGroups: MenuGroup[] = [
     items: [
       { title: "Penerimaan Retur Pelanggan", href: "/returns", icon: RotateCcw },
       { title: "Disposisi & Berita Acara", href: "/returns/disposition", icon: FileCheck2 },
+    ],
+  },
+  {
+    groupName: "HUTANG & PEMBIAYAAN",
+    items: [
+      { title: "Hutang Usaha Supplier", href: "/accounting/payable", icon: Receipt },
+      { title: "Pinjaman Eksternal (Loans)", href: "/accounting/loans", icon: Landmark },
     ],
   },
   {
