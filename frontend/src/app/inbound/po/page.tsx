@@ -17,7 +17,8 @@ import {
   ChevronRight,
   X,
   History,
-  Trash2
+  Trash2,
+  Printer,
 } from "lucide-react";
 import { formatRupiah, formatNumber } from "@/lib/utils";
 
@@ -541,77 +542,149 @@ export default function PurchaseOrdersPage() {
         </div>
       </div>
 
-      {/* Modal Detail PO */}
+      {/* Modal Detail PO - Dioptimasi untuk Banyak Data (Scrollable & Responsive) */}
       {selectedPoDetail && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-6 relative">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
-              <div className="flex items-center gap-2">
-                <FileText className="w-5 h-5 text-cyan-500" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm overflow-y-auto">
+          <div className="w-full max-w-4xl max-h-[92vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden my-auto">
+            {/* Header Modal - Pinned */}
+            <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between bg-slate-50/80 dark:bg-slate-800/50 shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center shrink-0">
+                  <FileText className="w-5 h-5" />
+                </div>
                 <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-white">
-                    Rincian Pesanan: {selectedPoDetail.poNumber}
-                  </h3>
-                  <p className="text-xs text-slate-400">
-                    Supplier: {selectedPoDetail.supplierName} &bull; Tgl: {selectedPoDetail.orderDate}
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold text-slate-900 dark:text-white text-base font-mono">
+                      {selectedPoDetail.poNumber}
+                    </h3>
+                    {getStatusBadge(selectedPoDetail.status)}
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                    Pemasok: <strong className="text-slate-800 dark:text-slate-200">{selectedPoDetail.supplierName}</strong> &bull; Tgl Terbit: {selectedPoDetail.orderDate} &bull; Tiba: {selectedPoDetail.expectedDate}
                   </p>
                 </div>
               </div>
-              <button
-                onClick={() => setSelectedPoDetail(null)}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-200"
-              >
-                <X className="w-5 h-5" />
-              </button>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => window.print()}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold shadow-sm transition"
+                  title="Cetak Dokumen Purchase Order"
+                >
+                  <Printer className="w-4 h-4" />
+                  <span className="hidden sm:inline">Cetak PO</span>
+                </button>
+                <button
+                  onClick={() => setSelectedPoDetail(null)}
+                  className="p-1.5 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-slate-800 transition"
+                  title="Tutup Modal"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
-            <div className="mt-4 space-y-4">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 dark:bg-slate-800 text-slate-500 font-semibold uppercase">
+            {/* Quick Stat Ribbon */}
+            <div className="px-5 py-2.5 bg-slate-100/70 dark:bg-slate-950 border-b border-slate-200/70 dark:border-slate-800 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs shrink-0">
+              <div>
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Total Varian:</span>
+                <span className="font-mono font-bold text-slate-800 dark:text-slate-200">
+                  {selectedPoDetail.items.length} Macam SKU
+                </span>
+              </div>
+              <div>
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Total Volume:</span>
+                <span className="font-mono font-bold text-slate-800 dark:text-slate-200">
+                  {selectedPoDetail.items.reduce((sum, it) => sum + it.orderedQty, 0)} Dus
+                </span>
+              </div>
+              <div>
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">Dasar Pengenaan Pajak:</span>
+                <span className="font-mono font-semibold text-slate-700 dark:text-slate-300">
+                  {formatRupiah(Math.round(selectedPoDetail.totalAmount / 1.11))}
+                </span>
+              </div>
+              <div className="text-right sm:text-left">
+                <span className="text-slate-400 block text-[10px] uppercase font-bold">PPN (11%):</span>
+                <span className="font-mono font-semibold text-slate-700 dark:text-slate-300">
+                  {formatRupiah(selectedPoDetail.totalAmount - Math.round(selectedPoDetail.totalAmount / 1.11))}
+                </span>
+              </div>
+            </div>
+
+            {/* Scrollable Table Area */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-5 max-h-[52vh] scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-700">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead className="bg-slate-100 dark:bg-slate-800/90 text-slate-600 dark:text-slate-300 font-bold uppercase sticky top-0 shadow-sm z-10 border-b border-slate-200 dark:border-slate-700">
                   <tr>
-                    <th className="p-2.5">SKU &amp; Produk</th>
-                    <th className="p-2.5">Satuan</th>
-                    <th className="p-2.5 text-center">Jumlah Pesan</th>
+                    <th className="p-2.5 text-center w-10">No</th>
+                    <th className="p-2.5">Deskripsi Produk Es Krim</th>
+                    <th className="p-2.5 text-center">Kemasan / UOM</th>
+                    <th className="p-2.5 text-center">Qty Dus</th>
                     <th className="p-2.5 text-right">Harga Satuan</th>
                     <th className="p-2.5 text-right">Subtotal</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-mono">
                   {selectedPoDetail.items.map((it, idx) => (
-                    <tr key={idx}>
-                      <td className="p-2.5 font-medium text-slate-900 dark:text-slate-100">
+                    <tr
+                      key={idx}
+                      className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors"
+                    >
+                      <td className="p-2.5 text-center text-slate-400">{idx + 1}</td>
+                      <td className="p-2.5 font-sans font-semibold text-slate-900 dark:text-slate-100">
                         {it.productName}
-                        <span className="block text-[10px] text-slate-400 font-mono">
-                          {it.sku}
+                        <span className="block text-[10px] text-slate-400 font-mono mt-0.5">
+                          SKU: {it.sku}
                         </span>
                       </td>
-                      <td className="p-2.5 font-bold text-slate-600 dark:text-slate-400">
+                      <td className="p-2.5 text-center font-bold text-slate-600 dark:text-slate-300">
                         {it.uom}
                       </td>
-                      <td className="p-2.5 text-center font-mono font-semibold">
+                      <td className="p-2.5 text-center font-bold text-cyan-600 dark:text-cyan-400 text-sm">
                         {it.orderedQty}
                       </td>
-                      <td className="p-2.5 text-right font-mono tabular-nums">
+                      <td className="p-2.5 text-right tabular-nums text-slate-600 dark:text-slate-400">
                         {formatRupiah(it.unitPrice)}
                       </td>
-                      <td className="p-2.5 text-right font-mono font-bold tabular-nums text-slate-900 dark:text-white">
+                      <td className="p-2.5 text-right font-bold tabular-nums text-slate-900 dark:text-white">
                         {formatRupiah(it.totalPrice)}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+            </div>
 
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
-                <div className="text-xs text-slate-500">
-                  Status: {getStatusBadge(selectedPoDetail.status)}
-                </div>
+            {/* Footer Modal - Pinned */}
+            <div className="p-4 sm:p-5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/90 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shrink-0">
+              <div className="text-xs text-slate-500 max-w-md">
+                {selectedPoDetail.notes ? (
+                  <p className="italic text-slate-600 dark:text-slate-400">
+                    &ldquo;{selectedPoDetail.notes}&rdquo;
+                  </p>
+                ) : (
+                  <p>Term of Payment: Tunai / COD sesuai tanggal jatuh tempo.</p>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4">
                 <div className="text-right">
-                  <span className="text-xs text-slate-400 block">Total Tagihan:</span>
-                  <span className="text-base font-bold font-mono text-cyan-600 dark:text-cyan-400">
+                  <span className="text-[11px] text-slate-400 block font-medium uppercase">
+                    Grand Total Tagihan:
+                  </span>
+                  <span className="text-lg font-black font-mono text-cyan-600 dark:text-cyan-400">
                     {formatRupiah(selectedPoDetail.totalAmount)}
                   </span>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedPoDetail(null)}
+                  className="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-semibold text-slate-800 dark:text-slate-200 transition"
+                >
+                  Tutup Rincian
+                </button>
               </div>
             </div>
           </div>
