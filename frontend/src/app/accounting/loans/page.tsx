@@ -1122,7 +1122,15 @@ export default function ExternalLoansPage() {
               )}
             </div>
 
-            <div className="pt-4 mt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+            <div className="pt-4 mt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-sm transition"
+              >
+                <Printer className="w-3.5 h-3.5" />
+                Cetak Lembar Riwayat Angsuran (Ctrl+P)
+              </button>
               <button
                 type="button"
                 onClick={() => setIsAmortizationModalOpen(false)}

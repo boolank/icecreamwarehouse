@@ -31,3 +31,53 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* Print Stylesheet Optimization */
+@media print {
+  /* Hide interactive elements and navigation */
+  aside,
+  header,
+  nav,
+  button,
+  .no-print,
+  .print\\:hidden {
+    display: none !important;
+  }
+
+  /* Reset body & layout for crisp black & white printing */
+  body, html {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Force full width on main layout */
+  main, .lg\\:pl-64, .main-content {
+    padding-left: 0 !important;
+    padding-top: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Optimize borders and shadows */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  .border {
+    border-color: #cbd5e1 !important;
+  }
+
+  /* Page break rules */
+  .page-break-after {
+    page-break-after: always;
+  }
+
+  .page-break-avoid {
+    page-break-inside: avoid;
+  }
+}
+

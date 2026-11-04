@@ -14,6 +14,7 @@ import {
   Clock,
   ArrowRight,
   FileText,
+  X,
 } from "lucide-react";
 
 interface DeliveryRecord {
@@ -34,6 +35,7 @@ interface DeliveryRecord {
 export default function DeliveryPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
+  const [selectedDeliveryForPrint, setSelectedDeliveryForPrint] = useState<DeliveryRecord | null>(null);
 
   const deliveries: DeliveryRecord[] = [
     {
@@ -137,7 +139,7 @@ export default function DeliveryPage() {
         </div>
 
         <button
-          onClick={() => alert("Fitur cetak Surat Jalan (DO) siap dicetak...")}
+          onClick={() => setSelectedDeliveryForPrint(deliveries[0])}
           className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition"
         >
           <Printer className="w-4 h-4" />
@@ -263,9 +265,9 @@ export default function DeliveryPage() {
                   </td>
                   <td className="py-3.5 px-4 text-right">
                     <button
-                      onClick={() => alert(`Mencetak Surat Jalan ${item.deliveryNumber}...`)}
+                      onClick={() => setSelectedDeliveryForPrint(item)}
                       className="p-1.5 rounded-lg text-slate-500 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-                      title="Cetak Surat Jalan"
+                      title="Cetak Surat Jalan Resmi"
                     >
                       <Printer className="w-4 h-4" />
                     </button>
@@ -276,6 +278,231 @@ export default function DeliveryPage() {
           </table>
         </div>
       </div>
+
+      {/* Modal Pratinjau & Cetak Surat Jalan Resmi (Printable Delivery Order) */}
+      {selectedDeliveryForPrint && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl w-full max-w-4xl max-h-[92vh] flex flex-col overflow-hidden my-6">
+            {/* Header Modal - Sembunyi saat cetak */}
+            <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800/50 no-print">
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-indigo-50 dark:bg-indigo-950/60 rounded-lg text-indigo-600 dark:text-indigo-400">
+                  <Printer className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                    Pratinjau Dokumen Cetak Surat Jalan (Delivery Order)
+                  </h3>
+                  <p className="text-[11px] text-slate-500">
+                    Format Dokumen Resmi Pengiriman Rantai Dingin Cold Chain (&le; -18&deg;C)
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => window.print()}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition"
+                >
+                  <Printer className="w-4 h-4" />
+                  Cetak Dokumen (Ctrl+P)
+                </button>
+                <button
+                  onClick={() => setSelectedDeliveryForPrint(null)}
+                  className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Area Lembar Kerja Surat Jalan Cetak (A4 Layout) */}
+            <div className="flex-1 overflow-y-auto p-8 bg-white text-slate-900 dark:text-slate-900 printable-document">
+              {/* Kop Surat Resmi */}
+              <div className="flex items-start justify-between border-b-2 border-slate-800 pb-4 mb-6">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl font-black tracking-wider text-slate-900 uppercase">
+                      PT FROST FLOW COLD DISTRIBUSI
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-600 mt-1">
+                    Gudang Pusat Distribusi Es Krim & Rantai Dingin Terpadu
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Kawasan Industri Pergudangan Cold Storage No. 18, Tangerang &bull; Telp: (021) 555-0199
+                  </p>
+                </div>
+                <div className="text-right">
+                  <div className="inline-block px-3 py-1 bg-slate-900 text-white font-black text-sm tracking-widest uppercase mb-1">
+                    SURAT JALAN
+                  </div>
+                  <p className="text-xs font-mono font-bold text-slate-800">
+                    NO: {selectedDeliveryForPrint.deliveryNumber}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Ref SO: {selectedDeliveryForPrint.soNumber}
+                  </p>
+                </div>
+              </div>
+
+              {/* Data Tujuan & Armada */}
+              <div className="grid grid-cols-2 gap-6 p-4 rounded-xl bg-slate-50 border border-slate-200 mb-6 text-xs">
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    TUJUAN PENGIRIMAN (OUTLET / CUSTOMER):
+                  </p>
+                  <p className="font-bold text-sm text-slate-900">
+                    {selectedDeliveryForPrint.customerName}
+                  </p>
+                  <p className="text-slate-600 mt-0.5 leading-relaxed">
+                    {selectedDeliveryForPrint.destination}
+                  </p>
+                </div>
+                <div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        TANGGAL PENGIRIMAN:
+                      </p>
+                      <p className="font-semibold text-slate-800 mt-0.5">
+                        {selectedDeliveryForPrint.dispatchTime}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        STATUS PRE-COOLING:
+                      </p>
+                      <p className="font-bold text-emerald-700 mt-0.5">
+                        SUHU {selectedDeliveryForPrint.truckTemp.toFixed(1)}&deg;C (&le; -18&deg;C VALID)
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        ARMADA REEFER:
+                      </p>
+                      <p className="font-semibold text-slate-800 mt-0.5">
+                        {selectedDeliveryForPrint.vehiclePlate}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        NAMA PENGEMUDI:
+                      </p>
+                      <p className="font-semibold text-slate-800 mt-0.5">
+                        {selectedDeliveryForPrint.driverName}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tabel Muatan Barang */}
+              <table className="w-full text-xs border-collapse border border-slate-300 mb-6">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
+                    <th className="p-2 border-r border-slate-300 text-center w-10">NO</th>
+                    <th className="p-2 border-r border-slate-300 text-left">KODE &amp; NAMA PRODUK ES KRIM</th>
+                    <th className="p-2 border-r border-slate-300 text-center">NO. BATCH</th>
+                    <th className="p-2 border-r border-slate-300 text-center">TGL KEDALUWARSA (FEFO)</th>
+                    <th className="p-2 border-r border-slate-300 text-center">QTY KEMASAN</th>
+                    <th className="p-2 text-center">TOTAL SATUAN DASAR</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  <tr className="border-b border-slate-200">
+                    <td className="p-2 border-r border-slate-200 text-center font-mono">1</td>
+                    <td className="p-2 border-r border-slate-200">
+                      <p className="font-bold">Aice Mochi Vanilla 30g</p>
+                      <p className="text-[10px] font-mono text-slate-500">SKU: AIC-MOC-VAN</p>
+                    </td>
+                    <td className="p-2 border-r border-slate-200 text-center font-mono font-bold">
+                      B202610-01
+                    </td>
+                    <td className="p-2 border-r border-slate-200 text-center font-mono text-slate-600">
+                      2027-10-15
+                    </td>
+                    <td className="p-2 border-r border-slate-200 text-center font-bold">
+                      {Math.ceil(selectedDeliveryForPrint.totalBoxes * 0.6)} Dus
+                    </td>
+                    <td className="p-2 text-center font-mono font-bold text-slate-800">
+                      {Math.ceil(selectedDeliveryForPrint.totalBoxes * 0.6) * 24} Pcs
+                    </td>
+                  </tr>
+                  <tr className="border-b border-slate-200">
+                    <td className="p-2 border-r border-slate-200 text-center font-mono">2</td>
+                    <td className="p-2 border-r border-slate-200">
+                      <p className="font-bold">Wall&apos;s Feast Cokelat 65ml</p>
+                      <p className="text-[10px] font-mono text-slate-500">SKU: WLS-FST-CHK</p>
+                    </td>
+                    <td className="p-2 border-r border-slate-200 text-center font-mono font-bold">
+                      B202609-08
+                    </td>
+                    <td className="p-2 border-r border-slate-200 text-center font-mono text-slate-600">
+                      2027-09-20
+                    </td>
+                    <td className="p-2 border-r border-slate-200 text-center font-bold">
+                      {Math.floor(selectedDeliveryForPrint.totalBoxes * 0.4)} Dus
+                    </td>
+                    <td className="p-2 text-center font-mono font-bold text-slate-800">
+                      {Math.floor(selectedDeliveryForPrint.totalBoxes * 0.4) * 24} Pcs
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr className="bg-slate-50 font-bold border-t-2 border-slate-300">
+                    <td colSpan={4} className="p-2 text-right border-r border-slate-300">
+                      TOTAL VOLUME ANGKUT:
+                    </td>
+                    <td className="p-2 text-center border-r border-slate-300 font-mono">
+                      {selectedDeliveryForPrint.totalBoxes} Dus
+                    </td>
+                    <td className="p-2 text-center font-mono">
+                      {selectedDeliveryForPrint.totalBoxes * 24} Pcs
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+
+              {/* Syarat & Klausul Rantai Dingin */}
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-[10px] text-amber-900 mb-8 space-y-1">
+                <p className="font-bold uppercase tracking-wider text-amber-800">
+                  PERHATIAN RANTAI DINGIN (COLD CHAIN INTEGRITY):
+                </p>
+                <p>
+                  1. Es krim wajib segera dipindahkan ke freezer toko penyimpanan bersuhu minimal &le; -18&deg;C selambat-lambatnya 15 menit setelah serah terima barang.
+                </p>
+                <p>
+                  2. Barang yang telah diterima dan ditandatangani dalam keadaan beku sempurna tidak dapat diretur akibat kelalaian pemadaman listrik toko penerima.
+                </p>
+              </div>
+
+              {/* Lembar 4 Kolom Tanda Tangan Resmi */}
+              <div className="grid grid-cols-4 gap-4 text-center text-xs page-break-avoid">
+                <div className="border border-slate-300 rounded p-2 flex flex-col justify-between h-28">
+                  <p className="text-[10px] font-bold text-slate-500 uppercase">Gudang Pengirim</p>
+                  <p className="text-[10px] text-slate-400">( .............................. )</p>
+                  <p className="text-[10px] font-bold text-slate-800">Staf Logistik</p>
+                </div>
+                <div className="border border-slate-300 rounded p-2 flex flex-col justify-between h-28">
+                  <p className="text-[10px] font-bold text-slate-500 uppercase">QC Suhu Rantai Dingin</p>
+                  <p className="text-[10px] text-emerald-700 font-bold">LULUS &le; -18&deg;C</p>
+                  <p className="text-[10px] font-bold text-slate-800">Checker Suhu</p>
+                </div>
+                <div className="border border-slate-300 rounded p-2 flex flex-col justify-between h-28">
+                  <p className="text-[10px] font-bold text-slate-500 uppercase">Pengemudi Truk</p>
+                  <p className="text-[10px] text-slate-400">( {selectedDeliveryForPrint.driverName} )</p>
+                  <p className="text-[10px] font-bold text-slate-800">Driver Ekspedisi</p>
+                </div>
+                <div className="border border-slate-300 rounded p-2 flex flex-col justify-between h-28">
+                  <p className="text-[10px] font-bold text-slate-500 uppercase">Toko / Penerima</p>
+                  <p className="text-[10px] text-slate-400">( Cap &amp; Tanda Tangan )</p>
+                  <p className="text-[10px] font-bold text-slate-800">Nama Penerima</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

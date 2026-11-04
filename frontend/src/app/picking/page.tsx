@@ -18,6 +18,8 @@ import {
   DollarSign,
   Scale,
   RefreshCw,
+  Printer,
+  X,
 } from "lucide-react";
 
 interface PickingItem {
@@ -58,6 +60,7 @@ export default function PickingListPage() {
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [selectedSoId, setSelectedSoId] = useState("");
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [showPrintModal, setShowPrintModal] = useState(false);
 
   // Mock initial picking lists
   const [pickingLists, setPickingLists] = useState<PickingListRecord[]>([
@@ -526,15 +529,26 @@ export default function PickingListPage() {
                 </div>
               </div>
 
-              {activePL.status !== "SELESAI" && (
+              <div className="flex items-center gap-2">
                 <button
-                  onClick={handleCompletePicking}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium text-xs shadow transition-colors"
+                  onClick={() => setShowPrintModal(true)}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg font-semibold text-xs border border-gray-300 dark:border-gray-600 shadow-sm transition"
+                  title="Cetak Lembar Kerja Fisik Picking List untuk Staf Gudang"
                 >
-                  <CheckCircle2 className="w-4 h-4" />
-                  Konfirmasi Selesai Picking
+                  <Printer className="w-4 h-4" />
+                  Cetak Lembar Picking
                 </button>
-              )}
+
+                {activePL.status !== "SELESAI" && (
+                  <button
+                    onClick={handleCompletePicking}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium text-xs shadow transition-colors"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    Konfirmasi Selesai
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Instruction Banner */}
@@ -776,6 +790,164 @@ export default function PickingListPage() {
               >
                 Proses Picking List
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Pratinjau & Cetak Lembar Kerja Picking List FEFO */}
+      {showPrintModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl w-full max-w-4xl max-h-[92vh] flex flex-col overflow-hidden my-6">
+            {/* Header Modal - Sembunyi saat cetak */}
+            <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800/50 no-print">
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-blue-50 dark:bg-blue-950/60 rounded-lg text-blue-600 dark:text-blue-400">
+                  <Printer className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                    Lembar Kerja Petugas Gudang (Physical Picking Sheet FEFO)
+                  </h3>
+                  <p className="text-[11px] text-slate-500">
+                    Instruksi Pengambilan Es Krim Sesuai Lokasi Rak Freezer &amp; Urutan Kedaluwarsa
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => window.print()}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm transition"
+                >
+                  <Printer className="w-4 h-4" />
+                  Cetak Lembar Kerja (Ctrl+P)
+                </button>
+                <button
+                  onClick={() => setShowPrintModal(false)}
+                  className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Area Lembar Cetak Dokumen Picking A4 */}
+            <div className="flex-1 overflow-y-auto p-8 bg-white text-slate-900 dark:text-slate-900 printable-document">
+              {/* Kop Surat Dokumen */}
+              <div className="flex items-start justify-between border-b-2 border-slate-800 pb-4 mb-6">
+                <div>
+                  <h2 className="text-xl font-black tracking-wider text-slate-900 uppercase">
+                    PT FROST FLOW COLD DISTRIBUSI
+                  </h2>
+                  <p className="text-xs text-slate-600 mt-0.5">
+                    Unit Operasional Logistik &amp; Pergudangan Cold Storage
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    SOP Rantai Dingin: Batas Maksimal Kerja di Cold Room 25 Menit per Sesi
+                  </p>
+                </div>
+                <div className="text-right">
+                  <div className="inline-block px-3 py-1 bg-blue-600 text-white font-black text-sm tracking-widest uppercase mb-1">
+                    PICKING LIST (FEFO)
+                  </div>
+                  <p className="text-xs font-mono font-bold text-slate-800">
+                    NO: {activePL.plNumber}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Ref SO: {activePL.soNumber}
+                  </p>
+                </div>
+              </div>
+
+              {/* Data Petugas & Waktu */}
+              <div className="grid grid-cols-2 gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200 mb-6 text-xs">
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    PELANGGAN TUJUAN:
+                  </p>
+                  <p className="font-bold text-sm text-slate-900">{activePL.customerName}</p>
+                  <p className="text-slate-600 mt-0.5">Kategori: {activePL.customerCategory}</p>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                      TANGGAL CETAK:
+                    </p>
+                    <p className="font-semibold text-slate-800 mt-0.5">{activePL.date}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                      PETUGAS PICKER:
+                    </p>
+                    <p className="font-bold text-blue-700 mt-0.5">{activePL.pickerName}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tabel Checklist Item Picking */}
+              <table className="w-full text-xs border-collapse border border-slate-300 mb-6">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
+                    <th className="p-2 border-r border-slate-300 text-center w-8">CEK</th>
+                    <th className="p-2 border-r border-slate-300 text-center w-24">LOKASI RAK</th>
+                    <th className="p-2 border-r border-slate-300 text-left">PRODUK ES KRIM</th>
+                    <th className="p-2 border-r border-slate-300 text-center">NO. BATCH</th>
+                    <th className="p-2 border-r border-slate-300 text-center">KEDALUWARSA (FEFO)</th>
+                    <th className="p-2 border-r border-slate-300 text-center">QTY ORDER</th>
+                    <th className="p-2 text-center w-24">QTY DIAMBIL</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  {activePL.items.map((it, idx) => (
+                    <tr key={idx} className="border-b border-slate-200">
+                      <td className="p-2 border-r border-slate-200 text-center">
+                        <div className="w-5 h-5 mx-auto border-2 border-slate-400 rounded"></div>
+                      </td>
+                      <td className="p-2 border-r border-slate-200 text-center font-mono font-bold text-blue-700 bg-blue-50/50">
+                        {it.locationCode}
+                      </td>
+                      <td className="p-2 border-r border-slate-200">
+                        <p className="font-bold">{it.productName}</p>
+                        <p className="text-[10px] font-mono text-slate-500">SKU: {it.productCode}</p>
+                      </td>
+                      <td className="p-2 border-r border-slate-200 text-center font-mono font-semibold">
+                        {it.batchNumber}
+                      </td>
+                      <td className="p-2 border-r border-slate-200 text-center font-mono">
+                        {it.expiryDate}
+                        <span className="block text-[9px] text-amber-700 font-bold">
+                          ({it.daysToExpiry} hari lagi)
+                        </span>
+                      </td>
+                      <td className="p-2 border-r border-slate-200 text-center font-mono font-bold text-slate-900">
+                        {it.requestedQty} {it.uomName}
+                      </td>
+                      <td className="p-2 border-slate-200 text-center font-mono text-slate-400">
+                        [ ...... ]
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* Tanda Tangan Verifikasi Picking */}
+              <div className="grid grid-cols-3 gap-6 text-center text-xs page-break-avoid">
+                <div className="border border-slate-300 rounded p-3 flex flex-col justify-between h-28">
+                  <p className="text-[10px] font-bold text-slate-500 uppercase">Petugas Pengambil (Picker)</p>
+                  <p className="text-[10px] text-slate-400">( {activePL.pickerName} )</p>
+                  <p className="text-[10px] font-bold text-slate-800">Operator Cold Room</p>
+                </div>
+                <div className="border border-slate-300 rounded p-3 flex flex-col justify-between h-28">
+                  <p className="text-[10px] font-bold text-slate-500 uppercase">Checker / Pengawas Mutu</p>
+                  <p className="text-[10px] text-slate-400">( .............................. )</p>
+                  <p className="text-[10px] font-bold text-slate-800">QC Suhu &amp; Kemasan</p>
+                </div>
+                <div className="border border-slate-300 rounded p-3 flex flex-col justify-between h-28">
+                  <p className="text-[10px] font-bold text-slate-500 uppercase">Driver Serah Terima</p>
+                  <p className="text-[10px] text-slate-400">( .............................. )</p>
+                  <p className="text-[10px] font-bold text-slate-800">Ekspedisi Pengiriman</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>

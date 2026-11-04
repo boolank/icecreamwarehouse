@@ -166,6 +166,7 @@ export default function SalesOrdersPage() {
   const [selectedStatus, setSelectedStatus] = useState("Semua");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSoDetail, setSelectedSoDetail] = useState<SalesOrderData | null>(null);
+  const [selectedSoForInvoicePrint, setSelectedSoForInvoicePrint] = useState<SalesOrderData | null>(null);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -512,6 +513,14 @@ export default function SalesOrdersPage() {
                         className="p-1.5 rounded-lg text-slate-400 hover:text-cyan-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
                       >
                         <Eye className="w-4 h-4" />
+                      </button>
+
+                      <button
+                        onClick={() => setSelectedSoForInvoicePrint(so)}
+                        title="Cetak Faktur Penjualan (Invoice)"
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                      >
+                        <Printer className="w-4 h-4" />
                       </button>
 
                       {so.status === "DRAFT" && (
@@ -988,13 +997,248 @@ export default function SalesOrdersPage() {
               <span className="text-[11px] text-slate-400">
                 Status SO: {selectedSoDetail.status}
               </span>
-              <button
-                type="button"
-                onClick={() => setSelectedSoDetail(null)}
-                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 transition"
-              >
-                Tutup Rincian
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const target = selectedSoDetail;
+                    setSelectedSoDetail(null);
+                    setSelectedSoForInvoicePrint(target);
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm transition"
+                >
+                  <Printer className="w-3.5 h-3.5" />
+                  Cetak Faktur Penjualan
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedSoDetail(null)}
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 transition"
+                >
+                  Tutup Rincian
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 3: Pratinjau & Cetak Faktur Penjualan / Invoice Resmi */}
+      {selectedSoForInvoicePrint && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm overflow-y-auto">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl w-full max-w-4xl max-h-[92vh] flex flex-col overflow-hidden my-6">
+            {/* Header Modal - Sembunyi saat cetak */}
+            <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-800/50 no-print">
+              <div className="flex items-center gap-2">
+                <div className="p-2 bg-indigo-50 dark:bg-indigo-950/60 rounded-lg text-indigo-600 dark:text-indigo-400">
+                  <Printer className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                    Pratinjau Dokumen Faktur Penjualan (Commercial Invoice)
+                  </h3>
+                  <p className="text-[11px] text-slate-500">
+                    Tagihan Resmi Dilengkapi Diskon, Pajak &amp; Akun Rekening Pembayaran
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => window.print()}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition"
+                >
+                  <Printer className="w-4 h-4" />
+                  Cetak Faktur (Ctrl+P)
+                </button>
+                <button
+                  onClick={() => setSelectedSoForInvoicePrint(null)}
+                  className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Area Lembar Cetak Faktur A4 */}
+            <div className="flex-1 overflow-y-auto p-8 bg-white text-slate-900 dark:text-slate-900 printable-document">
+              {/* Kop Surat Faktur */}
+              <div className="flex items-start justify-between border-b-2 border-slate-800 pb-4 mb-6">
+                <div>
+                  <h2 className="text-xl font-black tracking-wider text-slate-900 uppercase">
+                    PT FROST FLOW COLD DISTRIBUSI
+                  </h2>
+                  <p className="text-xs text-slate-600 mt-0.5">
+                    Distributor Resmi Es Krim &amp; Pengelolaan Cold Storage Modern
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Kawasan Industri Pergudangan Cold Storage No. 18, Tangerang &bull; Telp: (021) 555-0199
+                  </p>
+                </div>
+                <div className="text-right">
+                  <div className="inline-block px-3 py-1 bg-slate-900 text-white font-black text-sm tracking-widest uppercase mb-1">
+                    FAKTUR PENJUALAN
+                  </div>
+                  <p className="text-xs font-mono font-bold text-slate-800">
+                    NO: INV/{selectedSoForInvoicePrint.soNumber}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Ref Order: {selectedSoForInvoicePrint.soNumber}
+                  </p>
+                </div>
+              </div>
+
+              {/* Data Pelanggan & Transaksi */}
+              <div className="grid grid-cols-2 gap-6 p-4 rounded-xl bg-slate-50 border border-slate-200 mb-6 text-xs">
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    TAGIHAN KEPADA (PELANGGAN):
+                  </p>
+                  <p className="font-bold text-sm text-slate-900">
+                    {selectedSoForInvoicePrint.customerName}
+                  </p>
+                  <p className="text-slate-600 mt-0.5">
+                    Kategori Kanal: <span className="font-semibold text-slate-800">{selectedSoForInvoicePrint.category}</span>
+                  </p>
+                  <p className="text-slate-500 text-[11px] mt-1">
+                    Status Pajak: Pengusaha Kena Pajak (PKP)
+                  </p>
+                </div>
+                <div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        TANGGAL FAKTUR:
+                      </p>
+                      <p className="font-semibold text-slate-800 mt-0.5">
+                        {selectedSoForInvoicePrint.orderDate}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        SYARAT PEMBAYARAN:
+                      </p>
+                      <p className="font-bold text-indigo-700 mt-0.5">
+                        {selectedSoForInvoicePrint.paymentType === "CREDIT" ? "KREDIT (TOP 14 HARI)" : "TUNAI (C.O.D)"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        JATUH TEMPO:
+                      </p>
+                      <p className="font-semibold text-rose-700 mt-0.5">
+                        {selectedSoForInvoicePrint.paymentType === "CREDIT" ? "14 Hari dari Tanggal Faktur" : "Saat Barang Diterima"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        STATUS PESANAN:
+                      </p>
+                      <p className="font-semibold text-slate-800 mt-0.5 uppercase">
+                        {selectedSoForInvoicePrint.status}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tabel Rincian Produk & Diskon */}
+              <table className="w-full text-xs border-collapse border border-slate-300 mb-6">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
+                    <th className="p-2 border-r border-slate-300 text-center w-10">NO</th>
+                    <th className="p-2 border-r border-slate-300 text-left">DESKRIPSI PRODUK ES KRIM</th>
+                    <th className="p-2 border-r border-slate-300 text-center">SATUAN</th>
+                    <th className="p-2 border-r border-slate-300 text-center">KUANTITAS</th>
+                    <th className="p-2 border-r border-slate-300 text-right">HARGA SATUAN</th>
+                    <th className="p-2 border-r border-slate-300 text-right">DISKON ITEM</th>
+                    <th className="p-2 text-right">JUMLAH NETTO</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  {selectedSoForInvoicePrint.items.map((item, idx) => (
+                    <tr key={idx} className="border-b border-slate-200">
+                      <td className="p-2 border-r border-slate-200 text-center font-mono">{idx + 1}</td>
+                      <td className="p-2 border-r border-slate-200">
+                        <p className="font-bold">{item.name}</p>
+                        <p className="text-[10px] font-mono text-slate-500">SKU: {item.sku}</p>
+                      </td>
+                      <td className="p-2 border-r border-slate-200 text-center font-semibold">
+                        {item.uom}
+                      </td>
+                      <td className="p-2 border-r border-slate-200 text-center font-mono font-bold">
+                        {item.orderedQty}
+                      </td>
+                      <td className="p-2 border-r border-slate-200 text-right font-mono">
+                        {formatRupiah(item.unitPrice)}
+                      </td>
+                      <td className="p-2 border-r border-slate-200 text-right font-mono text-rose-600">
+                        {item.discountAmount > 0 ? `-${formatRupiah(item.discountAmount)} (${item.discountPct}%)` : "-"}
+                      </td>
+                      <td className="p-2 text-right font-mono font-bold text-slate-900">
+                        {formatRupiah(item.subtotal)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* Rekap Finansial & Instruksi Pembayaran */}
+              <div className="grid grid-cols-2 gap-6 mb-8">
+                {/* Rekening Pembayaran */}
+                <div className="p-4 rounded-xl border border-slate-300 bg-slate-50/70 text-xs space-y-2">
+                  <p className="font-bold text-slate-800 uppercase tracking-wider text-[11px]">
+                    INSTRUKSI PEMBAYARAN TRANSFER BANK:
+                  </p>
+                  <div className="p-2.5 bg-white rounded-lg border border-slate-200 font-mono text-xs space-y-1">
+                    <p className="text-slate-600">Bank: <strong className="text-slate-900">BANK CENTRAL ASIA (BCA)</strong></p>
+                    <p className="text-slate-600">No. Rekening: <strong className="text-slate-900">872-0918-201</strong></p>
+                    <p className="text-slate-600">Atas Nama: <strong className="text-slate-900">PT FROST FLOW COLD DISTRIBUSI</strong></p>
+                  </div>
+                  <p className="text-[10px] text-slate-500 italic">
+                    * Harap mencantumkan nomor faktur INV/{selectedSoForInvoicePrint.soNumber} pada berita acara transfer bank.
+                  </p>
+                </div>
+
+                {/* Kalkulasi Total Faktur */}
+                <div className="p-4 rounded-xl border border-slate-300 bg-slate-50 text-xs space-y-2">
+                  <div className="flex justify-between text-slate-600">
+                    <span>Subtotal Nilai Bruto:</span>
+                    <span className="font-mono">{formatRupiah(selectedSoForInvoicePrint.grossAmount)}</span>
+                  </div>
+                  {selectedSoForInvoicePrint.totalDiscount > 0 && (
+                    <div className="flex justify-between text-rose-600 font-semibold">
+                      <span>Total Potongan Diskon Promosi:</span>
+                      <span className="font-mono">-{formatRupiah(selectedSoForInvoicePrint.totalDiscount)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between text-slate-600 border-t border-slate-200 pt-1.5">
+                    <span>Dasar Pengenaan Pajak (DPP):</span>
+                    <span className="font-mono">{formatRupiah(selectedSoForInvoicePrint.grossAmount - selectedSoForInvoicePrint.totalDiscount)}</span>
+                  </div>
+                  <div className="flex justify-between text-slate-600">
+                    <span>PPN (Bebas / Termasuk Faktur):</span>
+                    <span className="font-mono">Rp 0</span>
+                  </div>
+                  <div className="flex justify-between font-bold text-sm text-slate-900 border-t-2 border-slate-400 pt-2">
+                    <span>TOTAL NETTO TAGIHAN:</span>
+                    <span className="font-mono text-indigo-700">{formatRupiah(selectedSoForInvoicePrint.totalAmount)}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tanda Tangan */}
+              <div className="grid grid-cols-2 gap-12 text-center text-xs page-break-avoid">
+                <div className="border border-slate-300 rounded p-4 flex flex-col justify-between h-32">
+                  <p className="text-[11px] font-bold text-slate-600 uppercase">Bagian Keuangan / Penjualan</p>
+                  <p className="text-[10px] text-slate-400">( .................................................. )</p>
+                  <p className="text-[11px] font-bold text-slate-800">PT FROST FLOW COLD DISTRIBUSI</p>
+                </div>
+                <div className="border border-slate-300 rounded p-4 flex flex-col justify-between h-32">
+                  <p className="text-[11px] font-bold text-slate-600 uppercase">Penerima Tagihan / Pelanggan</p>
+                  <p className="text-[10px] text-slate-400">( Cap Toko &amp; Tanda Tangan )</p>
+                  <p className="text-[11px] font-bold text-slate-800">{selectedSoForInvoicePrint.customerName}</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
