@@ -468,7 +468,7 @@ export default function PickingListPage() {
                     className={`p-4 cursor-pointer transition-colors ${
                       isSelected
                         ? "bg-blue-50/60 dark:bg-blue-950/30 border-l-4 border-blue-600"
-                        : "hover:bg-gray-50 dark:hover:bg-gray-750"
+                        : "hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -583,7 +583,7 @@ export default function PickingListPage() {
                       className={`${
                         item.isPicked
                           ? "bg-emerald-50/40 dark:bg-emerald-950/20"
-                          : "hover:bg-gray-50 dark:hover:bg-gray-750"
+                          : "hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
                       }`}
                     >
                       <td className="py-3 px-3">

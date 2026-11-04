@@ -274,7 +274,7 @@ export default function DispositionPage() {
                 quarantineItems.map((item) => (
                   <tr
                     key={item.id}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+                    className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
                   >
                     <td className="py-3 px-4">
                       <span className="font-mono font-bold text-blue-600 dark:text-blue-400">

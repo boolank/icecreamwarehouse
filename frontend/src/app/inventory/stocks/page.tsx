@@ -425,7 +425,7 @@ export default function RealTimeStocksPage() {
               {filteredStocks.map((item) => (
                 <tr
                   key={item.id}
-                  className="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+                  className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
                 >
                   <td className="py-3 px-4">
                     <p className="font-semibold text-gray-900 dark:text-white">

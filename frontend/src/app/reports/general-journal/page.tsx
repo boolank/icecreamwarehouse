@@ -247,7 +247,7 @@ export default function GeneralJournalPage() {
                       className={
                         idx === 0
                           ? "bg-gray-50/40 dark:bg-gray-750/30 font-medium"
-                          : "hover:bg-gray-50 dark:hover:bg-gray-750"
+                          : "hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
                       }
                     >
                       <td className="py-2.5 px-4 text-gray-500 dark:text-gray-400 whitespace-nowrap">

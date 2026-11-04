@@ -433,7 +433,7 @@ export default function ReturnsPage() {
                 return (
                   <tr
                     key={order.id}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+                    className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
                   >
                     <td className="py-3 px-4 font-mono font-bold text-blue-600 dark:text-blue-400">
                       {order.returnNumber}

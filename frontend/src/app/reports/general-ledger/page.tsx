@@ -184,7 +184,7 @@ export default function GeneralLedgerPage() {
               {ledgerData.map((row) => (
                 <tr
                   key={row.id}
-                  className="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+                  className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
                 >
                   <td className="py-3 px-4 text-gray-500 dark:text-gray-400 whitespace-nowrap">
                     {row.entryDate}

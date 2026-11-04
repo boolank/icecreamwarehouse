@@ -286,7 +286,7 @@ export default function StockOpnamePage() {
                     key={item.id}
                     className={`transition-colors ${
                       isMatch
-                        ? "hover:bg-gray-50 dark:hover:bg-gray-750"
+                        ? "hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
                         : isDeficit
                         ? "bg-rose-50/40 dark:bg-rose-950/20"
                         : "bg-blue-50/40 dark:bg-blue-950/20"
