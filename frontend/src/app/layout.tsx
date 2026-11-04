@@ -5,6 +5,9 @@ import { AppShell } from "@/components/layout/app-shell";
 export const metadata: Metadata = {
   title: "FROST/FLOW — Sistem Gudang & Keuangan Distributor Es Krim",
   description: "Cold Chain Warehouse Management System & Automated Double-Entry Accounting",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
