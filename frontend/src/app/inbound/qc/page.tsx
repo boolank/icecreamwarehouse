@@ -32,37 +32,73 @@ interface InboundQcItem {
 }
 
 export default function InboundQcPage() {
-  const [selectedPo, setSelectedPo] = useState("PO-202610-0001");
-  const [supplierName, setSupplierName] = useState("PT Es Krim Nusantara Sejahtera");
-  const [truckTemperature, setTruckTemperature] = useState<number>(-21.0);
-  const [qcNotes, setQcNotes] = useState("Segel truk pendingin utuh, tidak ditemukan tanda-tanda refreezing.");
+  const [selectedPo, setSelectedPo] = useState("PO-DIS10114");
+  const [supplierName, setSupplierName] = useState("PT. INDO VAN HOUTEN (Miami Ice Cream)");
+  const [truckTemperature, setTruckTemperature] = useState<number>(-21.4);
+  const [qcNotes, setQcNotes] = useState("Segel truk pendingin PT Indo Van Houten utuh, suhu kabin reefer -21.4°C prima.");
   const [isProcessed, setIsProcessed] = useState(false);
 
   // Items State
   const [items, setItems] = useState<InboundQcItem[]>([
     {
-      sku: "ICR-001",
-      name: "Vanilla Bean Classic 100 ml",
-      orderedQtyDus: 100,
-      receivedQtyDus: 100,
-      conversionRatio: 24,
-      unitPriceDus: 84000,
-      batchNumber: "B-VAN-1026",
-      productionDate: "2026-10-15",
-      expiredDate: "2027-10-15",
+      sku: "MIA-BLU-60",
+      name: "Blueberry Ice 60/114",
+      orderedQtyDus: 25,
+      receivedQtyDus: 25,
+      conversionRatio: 60,
+      unitPriceDus: 64865,
+      batchNumber: "B-IVH-BLU-1026",
+      productionDate: "2026-10-25",
+      expiredDate: "2027-10-25",
       targetFreezerRack: "FRZ-A/RAK-01",
     },
     {
-      sku: "ICR-002",
-      name: "Chocolate Fudge Bar 90 ml",
-      orderedQtyDus: 100,
-      receivedQtyDus: 100,
-      conversionRatio: 24,
-      unitPriceDus: 96000,
-      batchNumber: "B-CHO-1026",
-      productionDate: "2026-10-18",
-      expiredDate: "2027-10-18",
+      sku: "MIA-CRN-40",
+      name: "Choco Corn 40/140",
+      orderedQtyDus: 75,
+      receivedQtyDus: 75,
+      conversionRatio: 40,
+      unitPriceDus: 57658,
+      batchNumber: "B-IVH-CRN-1026",
+      productionDate: "2026-10-26",
+      expiredDate: "2027-10-26",
+      targetFreezerRack: "FRZ-A/RAK-02",
+    },
+    {
+      sku: "MIA-GLD-40",
+      name: "Golden Corn 40/140",
+      orderedQtyDus: 80,
+      receivedQtyDus: 80,
+      conversionRatio: 40,
+      unitPriceDus: 57658,
+      batchNumber: "B-IVH-GLD-1026",
+      productionDate: "2026-10-26",
+      expiredDate: "2027-10-26",
+      targetFreezerRack: "FRZ-B/RAK-01",
+    },
+    {
+      sku: "MIA-DBC-40",
+      name: "DOUBLE CRUMBLE CHO - ISI 40",
+      orderedQtyDus: 25,
+      receivedQtyDus: 25,
+      conversionRatio: 40,
+      unitPriceDus: 86487,
+      batchNumber: "B-IVH-DBC-1026",
+      productionDate: "2026-10-25",
+      expiredDate: "2027-10-25",
       targetFreezerRack: "FRZ-B/RAK-02",
+    },
+    {
+      sku: "MIA-DUR-60",
+      name: "KING DURIAN 60",
+      orderedQtyDus: 25,
+      receivedQtyDus: 25,
+      conversionRatio: 60,
+      unitPriceDus: 59460,
+      batchNumber: "B-IVH-DUR-1026",
+      productionDate: "2026-10-25",
+      expiredDate: "2027-10-25",
+      targetFreezerRack: "FRZ-A/RAK-03",
     },
   ]);
 
@@ -138,7 +174,9 @@ export default function InboundQcPage() {
                 value={selectedPo}
                 onChange={(e) => {
                   setSelectedPo(e.target.value);
-                  if (e.target.value === "PO-202610-0001") {
+                  if (e.target.value === "PO-DIS10114") {
+                    setSupplierName("PT. INDO VAN HOUTEN (Miami Ice Cream)");
+                  } else if (e.target.value === "PO-202610-0001") {
                     setSupplierName("PT Es Krim Nusantara Sejahtera");
                   } else {
                     setSupplierName("PT Indo Cold Logistics");
@@ -146,6 +184,7 @@ export default function InboundQcPage() {
                 }}
                 className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-mono font-bold text-slate-900 dark:text-white"
               >
+                <option value="PO-DIS10114">PO-DIS10114 (PT. INDO VAN HOUTEN - 560 Dus)</option>
                 <option value="PO-202610-0001">PO-202610-0001 (Dikonfirmasi)</option>
                 <option value="PO-202610-0002">PO-202610-0002 (Draf)</option>
               </select>

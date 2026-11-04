@@ -55,6 +55,22 @@ interface PayableInvoice {
 
 const INITIAL_PAYABLES: PayableInvoice[] = [
   {
+    id: "ap-ivh",
+    invoiceNo: "JR-2610/K011",
+    poNumber: "PO-DIS10114",
+    supplierName: "PT. INDO VAN HOUTEN (Miami Ice Cream)",
+    supplierCategory: "Pabrik Es Krim",
+    invoiceDate: "2026-10-29",
+    dueDate: "2026-10-29",
+    termDays: 0,
+    daysRemaining: 0,
+    totalAmount: 40790214,
+    paidAmount: 0,
+    balanceDue: 40790214,
+    status: "MENDEKATI_JATUH_TEMPO",
+    payments: [],
+  },
+  {
     id: "ap-1",
     invoiceNo: "INV-AICE-202610-089",
     poNumber: "PO-202610-001",

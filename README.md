@@ -187,6 +187,7 @@ Untuk rincian implementasi mendalam, silakan merujuk ke dokumen pada folder `doc
 - [Spesifikasi API Endpoint](file:///c:/Users/Muhammad%20Ramdan/Documents/DATA/PROJECT2026/icecream/docs/02_spesifikasi_api_endpoint.md)
 - [Chart of Accounts (COA) & Logika Jurnal](file:///c:/Users/Muhammad%20Ramdan/Documents/DATA/PROJECT2026/icecream/docs/03_chart_of_accounts_coa.md)
 - [User Stories, Sprint Plan & To-Do List](file:///c:/Users/Muhammad%20Ramdan/Documents/DATA/PROJECT2026/icecream/docs/04_user_stories_sprint_todolist.md)
+- [Panduan Pengujian Alur Bisnis Menyeluruh (Testing Flow)](file:///c:/Users/Muhammad%20Ramdan/Documents/DATA/PROJECT2026/icecream/docs/05_panduan_pengujian_flow_bisnis.md)
 - [Rancangan Desain Antarmuka TailAdmin UI/UX](file:///c:/Users/Muhammad%20Ramdan/Documents/DATA/PROJECT2026/icecream/rancangan_desain_ui_tailadmin_gudang_es_krim.md)
 
 ---

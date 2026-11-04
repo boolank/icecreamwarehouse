@@ -178,13 +178,13 @@ export default function SalesOrdersPage() {
     includePpn: false,
     items: [
       {
-        sku: "ICR-001",
-        name: "Vanilla Bean Classic 100 ml",
-        uom: "DUS (24 Pcs)",
-        orderedQty: 20,
+        sku: "MIA-BLU-60",
+        name: "Blueberry Ice 60/114 (Miami)",
+        uom: "DUS (60 Pcs)",
+        orderedQty: 10,
         unitPrice: 120000,
         discountPct: 5,
-        discountAmount: 120000,
+        discountAmount: 60000,
       },
     ],
   });
@@ -655,23 +655,41 @@ export default function SalesOrdersPage() {
                             onChange={(e) => {
                               const newItems = [...formData.items];
                               newItems[idx].sku = e.target.value;
-                              if (e.target.value === "ICR-001") {
-                                newItems[idx].name = "Vanilla Bean Classic 100 ml";
-                                newItems[idx].unitPrice = formData.category === "Agen / Grosir" ? 108000 : 120000;
-                              } else if (e.target.value === "ICR-002") {
-                                newItems[idx].name = "Chocolate Fudge Bar 90 ml";
-                                newItems[idx].unitPrice = formData.category === "Agen / Grosir" ? 122000 : 135000;
+                              if (e.target.value === "MIA-BLU-60") {
+                                newItems[idx].name = "Blueberry Ice 60/114 (Miami)";
+                                newItems[idx].uom = "DUS (60 Pcs)";
+                                newItems[idx].unitPrice = formData.category === "Agen / Grosir" ? 99000 : 120000;
+                              } else if (e.target.value === "MIA-CRN-40") {
+                                newItems[idx].name = "Choco Corn 40/140 (Miami)";
+                                newItems[idx].uom = "DUS (40 Pcs)";
+                                newItems[idx].unitPrice = formData.category === "Agen / Grosir" ? 94000 : 120000;
+                              } else if (e.target.value === "MIA-GLD-40") {
+                                newItems[idx].name = "Golden Corn 40/140 (Miami)";
+                                newItems[idx].uom = "DUS (40 Pcs)";
+                                newItems[idx].unitPrice = formData.category === "Agen / Grosir" ? 94000 : 120000;
+                              } else if (e.target.value === "MIA-DBC-40") {
+                                newItems[idx].name = "Double Crumble Cho - Isi 40 (Miami)";
+                                newItems[idx].uom = "DUS (40 Pcs)";
+                                newItems[idx].unitPrice = formData.category === "Agen / Grosir" ? 130000 : 150000;
+                              } else if (e.target.value === "MIA-DUR-60") {
+                                newItems[idx].name = "King Durian 60 (Miami)";
+                                newItems[idx].uom = "DUS (60 Pcs)";
+                                newItems[idx].unitPrice = formData.category === "Agen / Grosir" ? 96000 : 120000;
                               } else {
-                                newItems[idx].name = "Strawberry Swirl Cup 100 ml";
-                                newItems[idx].unitPrice = 115000;
+                                newItems[idx].name = "Micro Cone 24 (Miami)";
+                                newItems[idx].uom = "DUS (24 Pcs)";
+                                newItems[idx].unitPrice = formData.category === "Agen / Grosir" ? 96000 : 120000;
                               }
                               setFormData({ ...formData, items: newItems });
                             }}
                             className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs text-slate-900 dark:text-white"
                           >
-                            <option value="ICR-001">ICR-001 - Vanilla Bean Classic</option>
-                            <option value="ICR-002">ICR-002 - Chocolate Fudge Bar</option>
-                            <option value="ICR-003">ICR-003 - Strawberry Swirl Cup</option>
+                            <option value="MIA-BLU-60">MIA-BLU-60 - Blueberry Ice 60/114</option>
+                            <option value="MIA-CRN-40">MIA-CRN-40 - Choco Corn 40/140</option>
+                            <option value="MIA-GLD-40">MIA-GLD-40 - Golden Corn 40/140</option>
+                            <option value="MIA-DBC-40">MIA-DBC-40 - Double Crumble Cho 40</option>
+                            <option value="MIA-DUR-60">MIA-DUR-60 - King Durian 60</option>
+                            <option value="MIA-MIC-24">MIA-MIC-24 - Micro Cone 24</option>
                           </select>
                         </div>
 
