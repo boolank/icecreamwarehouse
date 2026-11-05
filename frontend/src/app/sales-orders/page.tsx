@@ -57,108 +57,7 @@ interface SalesOrderData {
   notes?: string;
 }
 
-const INITIAL_SOS: SalesOrderData[] = [
-  {
-    id: "so-1",
-    soNumber: "SO-202610-0001",
-    customerName: "IndoGrosir Kemayoran",
-    category: "Modern Trade",
-    orderDate: "2026-10-31",
-    status: "CONFIRMED",
-    paymentType: "CREDIT",
-    grossAmount: 7650000,
-    itemDiscountTotal: 300000,
-    orderDiscountAmount: 100000,
-    totalDiscount: 400000,
-    taxableAmount: 7250000,
-    ppnAmount: 0,
-    includePpn: false,
-    totalAmount: 7250000,
-    items: [
-      {
-        sku: "ICR-001",
-        name: "Vanilla Bean Classic 100 ml",
-        uom: "DUS (24 Pcs)",
-        orderedQty: 30,
-        unitPrice: 120000,
-        discountPct: 5,
-        discountAmount: 180000,
-        subtotal: 3420000,
-      },
-      {
-        sku: "ICR-002",
-        name: "Chocolate Fudge Bar 90 ml",
-        uom: "DUS (24 Pcs)",
-        orderedQty: 30,
-        unitPrice: 135000,
-        discountPct: 3,
-        discountAmount: 120000,
-        subtotal: 3930000,
-      },
-    ],
-    notes: "Pengiriman pukul 14:00 WIB ke Loading Dock B. Diskon promo modern trade diterapkan.",
-  },
-  {
-    id: "so-2",
-    soNumber: "SO-202610-0002",
-    customerName: "Toko Sinar Rejeki (Grosir)",
-    category: "Agen / Grosir",
-    orderDate: "2026-10-31",
-    status: "DRAFT",
-    paymentType: "CREDIT",
-    grossAmount: 5400000,
-    itemDiscountTotal: 270000,
-    orderDiscountAmount: 0,
-    totalDiscount: 270000,
-    taxableAmount: 5130000,
-    ppnAmount: 0,
-    includePpn: false,
-    totalAmount: 5130000,
-    items: [
-      {
-        sku: "ICR-001",
-        name: "Vanilla Bean Classic 100 ml",
-        uom: "DUS (24 Pcs)",
-        orderedQty: 50,
-        unitPrice: 108000,
-        discountPct: 5,
-        discountAmount: 270000,
-        subtotal: 5130000,
-      },
-    ],
-    notes: "Harga khusus tiering agen grosir volume 50 Dus.",
-  },
-  {
-    id: "so-3",
-    soNumber: "SO-202610-0003",
-    customerName: "Kafe Kopi Kenangan Manis",
-    category: "Horeka",
-    orderDate: "2026-10-30",
-    status: "DELIVERED",
-    paymentType: "CASH",
-    grossAmount: 2300000,
-    itemDiscountTotal: 0,
-    orderDiscountAmount: 50000,
-    totalDiscount: 50000,
-    taxableAmount: 2250000,
-    ppnAmount: 0,
-    includePpn: false,
-    totalAmount: 2250000,
-    items: [
-      {
-        sku: "ICR-003",
-        name: "Strawberry Swirl Cup 100 ml",
-        uom: "DUS (24 Pcs)",
-        orderedQty: 20,
-        unitPrice: 115000,
-        discountPct: 0,
-        discountAmount: 0,
-        subtotal: 2300000,
-      },
-    ],
-    notes: "Selesai diantar dan POD terkonfirmasi. Diskon cash delivery Rp 50.000.",
-  },
-];
+const INITIAL_SOS: SalesOrderData[] = [];
 
 export default function SalesOrdersPage() {
   const [soList, setSoList] = useState<SalesOrderData[]>(INITIAL_SOS);
@@ -261,11 +160,11 @@ export default function SalesOrdersPage() {
       items: [
         ...prev.items,
         {
-          sku: "ICR-002",
-          name: "Chocolate Fudge Bar 90 ml",
-          uom: "DUS (24 Pcs)",
+          sku: "MIA-CRN-40",
+          name: "Choco Corn 40/140 (Miami)",
+          uom: "DUS (40 Pcs)",
           orderedQty: 10,
-          unitPrice: 135000,
+          unitPrice: 120000,
           discountPct: 0,
           discountAmount: 0,
         },
@@ -451,7 +350,29 @@ export default function SalesOrdersPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-mono">
-              {filteredSos.map((so) => (
+              {filteredSos.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="px-5 py-12 text-center">
+                    <div className="flex flex-col items-center justify-center max-w-sm mx-auto text-slate-400 font-sans">
+                      <ShoppingCart className="w-10 h-10 mb-2 stroke-1 text-slate-300 dark:text-slate-600" />
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        Belum Ada Pesanan Penjualan (Sales Order)
+                      </p>
+                      <p className="text-xs text-slate-400 mt-1 mb-4">
+                        Daftar transaksi pesanan bersih untuk pengetesan alur penjualan dan diskon dari awal.
+                      </p>
+                      <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="px-3.5 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-xs shadow-sm transition flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Buat Pesanan Baru (SO)</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filteredSos.map((so) => (
                 <tr
                   key={so.id}
                   className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors"
@@ -534,7 +455,7 @@ export default function SalesOrdersPage() {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

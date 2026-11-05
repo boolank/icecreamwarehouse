@@ -32,55 +32,44 @@ interface DeliveryRecord {
   totalBoxes: number;
 }
 
+const DEMO_DELIVERIES: DeliveryRecord[] = [
+  {
+    id: 1,
+    deliveryNumber: "SJ-202610-001",
+    soNumber: "SO-202610-001",
+    customerName: "Minimarket Sumber Makmur BSD",
+    destination: "Jl. BSD Raya Utama No. 8, Tangerang Selatan",
+    driverName: "Budi Santoso",
+    vehiclePlate: "B 9124 KLD (Truk Reefer 4 Roda)",
+    dispatchTime: "2026-10-31 08:30",
+    truckTemp: -20.4,
+    isTempCompliant: true,
+    status: "TERKIRIM",
+    totalBoxes: 15,
+  },
+  {
+    id: 2,
+    deliveryNumber: "SJ-202610-002",
+    soNumber: "SO-202610-002",
+    customerName: "Toko Grosir Berkah Mandiri",
+    destination: "Kav. Pergudangan Daan Mogot Blok C-2, Jakarta Barat",
+    driverName: "Ahmad Riyadi",
+    vehiclePlate: "B 9481 JKL (Truk Reefer 6 Roda)",
+    dispatchTime: "2026-10-31 10:15",
+    truckTemp: -19.2,
+    isTempCompliant: true,
+    status: "DALAM_PENGIRIMAN",
+    totalBoxes: 28,
+  },
+];
+
 export default function DeliveryPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [selectedDeliveryForPrint, setSelectedDeliveryForPrint] = useState<DeliveryRecord | null>(null);
 
-  const deliveries: DeliveryRecord[] = [
-    {
-      id: 1,
-      deliveryNumber: "SJ-202610-001",
-      soNumber: "SO-202610-001",
-      customerName: "Supermarket Fresh Mart BSD",
-      destination: "Jl. BSD Raya Utama No. 8, Tangerang Selatan",
-      driverName: "Budi Santoso",
-      vehiclePlate: "B 9124 KLD (Truk Reefer 4 Roda)",
-      dispatchTime: "2026-10-31 08:30",
-      truckTemp: -20.4,
-      isTempCompliant: true,
-      status: "TERKIRIM",
-      totalBoxes: 15,
-    },
-    {
-      id: 2,
-      deliveryNumber: "SJ-202610-002",
-      soNumber: "SO-202610-002",
-      customerName: "Toko Grosir Berkah Mandiri",
-      destination: "Kav. Pergudangan Daan Mogot Blok C-2, Jakarta Barat",
-      driverName: "Ahmad Riyadi",
-      vehiclePlate: "B 9481 JKL (Truk Reefer 6 Roda)",
-      dispatchTime: "2026-10-31 10:15",
-      truckTemp: -19.2,
-      isTempCompliant: true,
-      status: "DALAM_PENGIRIMAN",
-      totalBoxes: 28,
-    },
-    {
-      id: 3,
-      deliveryNumber: "SJ-202610-003",
-      soNumber: "SO-202610-003",
-      customerName: "Hotel Grand Serpong Lagoon",
-      destination: "Jl. MH Thamrin KM 2.7, Tangerang",
-      driverName: "Dedi Kurniawan",
-      vehiclePlate: "B 9302 TYU (Blind Van Cold Box)",
-      dispatchTime: "2026-10-31 13:00",
-      truckTemp: -21.0,
-      isTempCompliant: true,
-      status: "DIPROSES",
-      totalBoxes: 8,
-    },
-  ];
+  // Delivery state initialized empty for fresh testing
+  const [deliveries, setDeliveries] = useState<DeliveryRecord[]>([]);
 
   const filteredDeliveries = deliveries.filter((d) => {
     const matchesSearch =
@@ -138,13 +127,31 @@ export default function DeliveryPage() {
           </div>
         </div>
 
-        <button
-          onClick={() => setSelectedDeliveryForPrint(deliveries[0])}
-          className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition"
-        >
-          <Printer className="w-4 h-4" />
-          Cetak Surat Jalan Terpilih
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setDeliveries([])}
+            className="px-3 py-2 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-600 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 transition cursor-pointer"
+            title="Kosongkan pengiriman untuk simulasi dari nol"
+          >
+            Kosongkan Surat Jalan
+          </button>
+          <button
+            onClick={() => setDeliveries(DEMO_DELIVERIES)}
+            className="px-3 py-2 text-xs font-semibold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition cursor-pointer"
+            title="Muat contoh surat jalan pengiriman es krim Miami"
+          >
+            Muat Contoh DO
+          </button>
+          {deliveries.length > 0 && (
+            <button
+              onClick={() => setSelectedDeliveryForPrint(deliveries[0])}
+              className="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition cursor-pointer"
+            >
+              <Printer className="w-4 h-4" />
+              Cetak Surat Jalan Terpilih
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Cold Chain Quality Compliance Banner */}
@@ -220,7 +227,28 @@ export default function DeliveryPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
-              {filteredDeliveries.map((item) => (
+              {filteredDeliveries.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-12 px-4 text-center">
+                    <div className="flex flex-col items-center justify-center max-w-sm mx-auto text-slate-400">
+                      <Truck className="w-10 h-10 mb-2 stroke-1 text-slate-300 dark:text-slate-600" />
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        Belum Ada Pengiriman &amp; Surat Jalan (DO)
+                      </p>
+                      <p className="text-xs text-slate-400 mt-1 mb-4">
+                        Daftar pengiriman kosong untuk persiapan pengujian dispatch armada dari awal.
+                      </p>
+                      <button
+                        onClick={() => setDeliveries(DEMO_DELIVERIES)}
+                        className="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs shadow-sm transition cursor-pointer"
+                      >
+                        Muat Contoh Surat Jalan DO (Miami)
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filteredDeliveries.map((item) => (
                 <tr
                   key={item.id}
                   className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
@@ -273,7 +301,7 @@ export default function DeliveryPage() {
                     </button>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

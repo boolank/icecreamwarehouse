@@ -174,19 +174,11 @@ export default function InboundQcPage() {
                 value={selectedPo}
                 onChange={(e) => {
                   setSelectedPo(e.target.value);
-                  if (e.target.value === "PO-DIS10114") {
-                    setSupplierName("PT. INDO VAN HOUTEN (Miami Ice Cream)");
-                  } else if (e.target.value === "PO-202610-0001") {
-                    setSupplierName("PT Es Krim Nusantara Sejahtera");
-                  } else {
-                    setSupplierName("PT Indo Cold Logistics");
-                  }
+                  setSupplierName("PT. INDO VAN HOUTEN (Miami Ice Cream)");
                 }}
                 className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-mono font-bold text-slate-900 dark:text-white"
               >
                 <option value="PO-DIS10114">PO-DIS10114 (PT. INDO VAN HOUTEN - 560 Dus)</option>
-                <option value="PO-202610-0001">PO-202610-0001 (Dikonfirmasi)</option>
-                <option value="PO-202610-0002">PO-202610-0002 (Draf)</option>
               </select>
             </div>
             <div>

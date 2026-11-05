@@ -36,6 +36,24 @@ interface QuarantineStockItem {
   reason: string;
 }
 
+const DEMO_QUARANTINE_ITEMS: QuarantineStockItem[] = [
+  {
+    id: 1,
+    returnNumber: "RTN-202610-001",
+    soNumber: "SO-202610-001",
+    productName: "Blueberry Ice 60/114 (Miami)",
+    productCode: "MIA-BLU-60",
+    batchNumber: "B-IVH-BLU-1026",
+    expiryDate: "2027-10-25",
+    condition: "MELTED",
+    quarantineQtyPcs: 60,
+    unitCost: 1081,
+    totalCost: 64865,
+    quarantineLocation: "KRN-01 / RAK-KARANTINA-A",
+    reason: "Bentuk es krim cair dan kemasan berembun hangat akibat showcase rusak.",
+  },
+];
+
 export default function DispositionPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedItem, setSelectedItem] = useState<QuarantineStockItem | null>(null);
@@ -48,41 +66,10 @@ export default function DispositionPage() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [selectedItemForBap, setSelectedItemForBap] = useState<QuarantineStockItem | null>(null);
 
-  // Mock quarantine items awaiting disposition
-  const [quarantineItems, setQuarantineItems] = useState<QuarantineStockItem[]>([
-    {
-      id: 1,
-      returnNumber: "RTN-202610-001",
-      soNumber: "SO-202610-001",
-      productName: "Vanilla Bean Classic 100ml",
-      productCode: "ICR-001",
-      batchNumber: "B-VAN-1026",
-      expiryDate: "2026-11-12",
-      condition: "MELTED",
-      quarantineQtyPcs: 24,
-      unitCost: 3125,
-      totalCost: 75000,
-      quarantineLocation: "KRN-01 / RAK-KARANTINA-A",
-      reason: "Bentuk es krim cair dan kemasan berembun hangat.",
-    },
-    {
-      id: 2,
-      returnNumber: "RTN-202610-002",
-      soNumber: "SO-202610-002",
-      productName: "Chocolate Fudge Bar 90ml",
-      productCode: "ICR-002",
-      batchNumber: "B-CHO-1026",
-      expiryDate: "2026-11-21",
-      condition: "DAMAGED",
-      quarantineQtyPcs: 48,
-      unitCost: 3333,
-      totalCost: 160000,
-      quarantineLocation: "KRN-01 / RAK-KARANTINA-B",
-      reason: "Karton penyok dan stick es krim patah.",
-    },
-  ]);
+  // Quarantine items awaiting disposition (empty by default for clean testing)
+  const [quarantineItems, setQuarantineItems] = useState<QuarantineStockItem[]>([]);
 
-  const activeItem = selectedItem || quarantineItems[0];
+  const activeItem = selectedItem || (quarantineItems.length > 0 ? quarantineItems[0] : null);
 
   const handleOpenDispose = (item: QuarantineStockItem) => {
     setSelectedItem(item);
@@ -146,13 +133,35 @@ export default function DispositionPage() {
           </p>
         </div>
 
-        <Link
-          href="/returns"
-          className="inline-flex items-center gap-2 px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg text-xs font-medium transition-colors"
-        >
-          <RotateCcw className="w-4 h-4 text-blue-600" />
-          Kembali ke Daftar Retur Karantina
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => {
+              setQuarantineItems([]);
+              setSelectedItem(null);
+            }}
+            className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-gray-600 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400 font-medium text-xs transition cursor-pointer"
+            title="Kosongkan daftar karantina untuk simulasi dari nol"
+          >
+            Kosongkan Karantina
+          </button>
+          <button
+            onClick={() => {
+              setQuarantineItems(DEMO_QUARANTINE_ITEMS);
+              setSelectedItem(DEMO_QUARANTINE_ITEMS[0]);
+            }}
+            className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium text-xs transition cursor-pointer"
+            title="Muat contoh karantina es krim meleleh (Miami)"
+          >
+            Muat Contoh Karantina
+          </button>
+          <Link
+            href="/returns"
+            className="inline-flex items-center gap-2 px-3.5 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg text-xs font-medium transition-colors"
+          >
+            <RotateCcw className="w-4 h-4 text-blue-600" />
+            <span>Ke Daftar Retur Karantina</span>
+          </Link>
+        </div>
       </div>
 
       {/* Alert Notification */}

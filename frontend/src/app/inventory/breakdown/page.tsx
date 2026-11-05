@@ -45,45 +45,8 @@ export default function BreakdownUomPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // Mock list of breakdown history
-  const [historyList, setHistoryList] = useState<BreakdownHistory[]>([
-    {
-      id: 1,
-      transactionNumber: "BD-202610-001",
-      date: "2026-10-31 08:45",
-      productName: "Vanilla Bean Classic 100ml",
-      productCode: "ICR-001",
-      sourceBatchNumber: "B-VAN-1026",
-      sourceQty: 3,
-      sourceUom: "DUS",
-      sourceLocation: "FRZ-A / RAK-02 / B-01",
-      targetQty: 72,
-      targetUom: "PCS",
-      targetLocation: "FRZ-A / RAK-01 / A-01",
-      conversionRatio: 24,
-      totalValuationRp: 225000,
-      operatorName: "Nadia Rahma",
-      notes: "Persiapan pesanan eceran Kios Malioboro",
-    },
-    {
-      id: 2,
-      transactionNumber: "BD-202610-002",
-      date: "2026-10-30 14:15",
-      productName: "Chocolate Fudge Bar 90ml",
-      productCode: "ICR-002",
-      sourceBatchNumber: "B-CHO-1026",
-      sourceQty: 2,
-      sourceUom: "DUS",
-      sourceLocation: "FRZ-B / RAK-03 / B-02",
-      targetQty: 48,
-      targetUom: "PCS",
-      targetLocation: "FRZ-B / RAK-01 / C-01",
-      conversionRatio: 24,
-      totalValuationRp: 160000,
-      operatorName: "Budi Santoso",
-      notes: "Pemecahan karton untuk display outlet",
-    },
-  ]);
+  // Mock list of breakdown history (empty by default for clean testing)
+  const [historyList, setHistoryList] = useState<BreakdownHistory[]>([]);
 
   // Kalkulasi form aktif
   const conversionFactor = 24; // 1 Dus = 24 Pcs
@@ -444,7 +407,20 @@ export default function BreakdownUomPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                  {historyList.map((row) => (
+                  {historyList.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="py-10 px-3 text-center text-gray-400">
+                        <Boxes className="w-8 h-8 mx-auto mb-2 opacity-50 stroke-1" />
+                        <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                          Belum Ada Riwayat Pecah Satuan UOM
+                        </p>
+                        <p className="text-[11px] text-gray-400 mt-0.5">
+                          Form di samping siap digunakan untuk simulasi pemecahan Dus ke Pcs.
+                        </p>
+                      </td>
+                    </tr>
+                  ) : (
+                    historyList.map((row) => (
                     <tr
                       key={row.id}
                       className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
@@ -486,7 +462,7 @@ export default function BreakdownUomPage() {
                         {row.operatorName}
                       </td>
                     </tr>
-                  ))}
+                  )))}
                 </tbody>
               </table>
             </div>

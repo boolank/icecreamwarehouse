@@ -49,6 +49,35 @@ interface ReturnOrderRecord {
   items: ReturnOrderItem[];
 }
 
+const DEMO_RETURN_ORDERS: ReturnOrderRecord[] = [
+  {
+    id: 1,
+    returnNumber: "RTN-202610-001",
+    soNumber: "SO-202610-001",
+    customerName: "Minimarket Sumber Makmur BSD",
+    customerCategory: "General Trade / Minimarket",
+    returnDate: "2026-10-31",
+    status: "QUARANTINE",
+    disposition: null,
+    totalValue: 64865,
+    reason: "Kemasan basah dan bentuk es krim berubah (meleleh) akibat suhu showcase toko bermasalah.",
+    operatorName: "Nadia Rahma",
+    items: [
+      {
+        id: 101,
+        productCode: "MIA-BLU-60",
+        productName: "Blueberry Ice 60/114 (Miami)",
+        batchNumber: "B-IVH-BLU-1026",
+        condition: "MELTED",
+        returnQtyPcs: 60,
+        unitCost: 1081,
+        totalCost: 64865,
+        quarantineLocation: "KRN-01 / RAK-KARANTINA-A",
+      },
+    ],
+  },
+];
+
 export default function ReturnsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCondition, setFilterCondition] = useState<string>("ALL");
@@ -57,95 +86,16 @@ export default function ReturnsPage() {
 
   // Form State
   const [selectedSo, setSelectedSo] = useState("SO-202610-001");
-  const [customerName, setCustomerName] = useState("PT Sumber Dingin Retail");
+  const [customerName, setCustomerName] = useState("Minimarket Sumber Makmur BSD");
   const [productId, setProductId] = useState("1");
-  const [batchNumber, setBatchNumber] = useState("B-VAN-1026");
-  const [returnQtyPcs, setReturnQtyPcs] = useState(24); // 1 Dus = 24 Pcs
+  const [batchNumber, setBatchNumber] = useState("B-IVH-BLU-1026");
+  const [returnQtyPcs, setReturnQtyPcs] = useState(60); // 1 Dus = 60 Pcs
   const [condition, setCondition] = useState<"MELTED" | "DAMAGED" | "NEAR_EXPIRED" | "WRONG_ITEM">("MELTED");
-  const [reason, setReason] = useState("Es krim mengalami kenaikan suhu di kendaraan ekspedisi luar sehingga mencair.");
+  const [reason, setReason] = useState("Es krim mengalami kenaikan suhu di showcase toko mitra sehingga mencair.");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Mock list of returns
-  const [returnOrders, setReturnOrders] = useState<ReturnOrderRecord[]>([
-    {
-      id: 1,
-      returnNumber: "RTN-202610-001",
-      soNumber: "SO-202610-001",
-      customerName: "PT Sumber Dingin Retail",
-      customerCategory: "Modern Trade / Supermarket",
-      returnDate: "2026-10-31",
-      status: "QUARANTINE",
-      disposition: null,
-      totalValue: 75000,
-      reason: "Kemasan basah dan bentuk es krim berubah (meleleh) saat serah terima oleh driver.",
-      operatorName: "Nadia Rahma",
-      items: [
-        {
-          id: 101,
-          productCode: "ICR-001",
-          productName: "Vanilla Bean Classic 100ml",
-          batchNumber: "B-VAN-1026",
-          condition: "MELTED",
-          returnQtyPcs: 24,
-          unitCost: 3125,
-          totalCost: 75000,
-          quarantineLocation: "KRN-01 / RAK-KARANTINA-A",
-        },
-      ],
-    },
-    {
-      id: 2,
-      returnNumber: "RTN-202610-002",
-      soNumber: "SO-202610-002",
-      customerName: "Toko Berkah Es Krim Segar",
-      customerCategory: "Agen / Grosir",
-      returnDate: "2026-10-30",
-      status: "QUARANTINE",
-      disposition: null,
-      totalValue: 80000,
-      reason: "Karton luar rusak penyok parah terkena benturan palet pengiriman.",
-      operatorName: "Budi Santoso",
-      items: [
-        {
-          id: 102,
-          productCode: "ICR-002",
-          productName: "Chocolate Fudge Bar 90ml",
-          batchNumber: "B-CHO-1026",
-          condition: "DAMAGED",
-          returnQtyPcs: 24,
-          unitCost: 3333,
-          totalCost: 80000,
-          quarantineLocation: "KRN-01 / RAK-KARANTINA-B",
-        },
-      ],
-    },
-    {
-      id: 3,
-      returnNumber: "RTN-202610-003",
-      soNumber: "SO-202610-003",
-      customerName: "Kios Es Krim Malioboro",
-      customerCategory: "General Trade / Warung",
-      returnDate: "2026-10-29",
-      status: "DISPOSED",
-      disposition: "WRITE_OFF",
-      totalValue: 37500,
-      reason: "Salah kirim varian rasa yang tidak sesuai dengan faktur pesanan.",
-      operatorName: "Ahmad Riyadi",
-      items: [
-        {
-          id: 103,
-          productCode: "ICR-003",
-          productName: "Strawberry Swirl Cup 100ml",
-          batchNumber: "B-STR-1026",
-          condition: "WRONG_ITEM",
-          returnQtyPcs: 12,
-          unitCost: 3125,
-          totalCost: 37500,
-          quarantineLocation: "KRN-01 / RAK-KARANTINA-A",
-        },
-      ],
-    },
-  ]);
+  // Mock list of returns (empty by default for clean testing)
+  const [returnOrders, setReturnOrders] = useState<ReturnOrderRecord[]>([]);
 
   const getConditionBadge = (c: string) => {
     switch (c) {
@@ -285,20 +235,34 @@ export default function ReturnsPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => setReturnOrders([])}
+            className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-gray-600 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400 font-medium text-xs transition cursor-pointer"
+            title="Kosongkan daftar retur untuk simulasi dari nol"
+          >
+            Kosongkan Retur
+          </button>
+          <button
+            onClick={() => setReturnOrders(DEMO_RETURN_ORDERS)}
+            className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium text-xs transition cursor-pointer"
+            title="Muat contoh es krim retur meleleh (Miami)"
+          >
+            Muat Contoh Retur
+          </button>
           <Link
             href="/returns/disposition"
-            className="inline-flex items-center gap-2 px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg text-xs font-medium transition-colors"
+            className="inline-flex items-center gap-2 px-3.5 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg text-xs font-medium transition-colors"
           >
             <FileText className="w-4 h-4 text-purple-600" />
-            Ke Menu Disposisi & Pemusnahan
+            <span>Disposisi &amp; Pemusnahan</span>
           </Link>
           <button
             onClick={() => setShowCreateModal(true)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-xs shadow transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-xs shadow transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
-            Catat Retur Baru
+            <span>Catat Retur Baru</span>
           </button>
         </div>
       </div>
@@ -428,7 +392,28 @@ export default function ReturnsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-              {filteredOrders.map((order) => {
+              {filteredOrders.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="py-12 px-4 text-center">
+                    <div className="flex flex-col items-center justify-center max-w-sm mx-auto text-gray-400">
+                      <RotateCcw className="w-10 h-10 mb-2 stroke-1 text-gray-300 dark:text-gray-600" />
+                      <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        Tidak Ada Barang Retur Karantina
+                      </p>
+                      <p className="text-xs text-gray-400 mt-1 mb-4">
+                        Daftar retur bersih untuk pengetesan alur karantina dan berita acara dari awal.
+                      </p>
+                      <button
+                        onClick={() => setReturnOrders(DEMO_RETURN_ORDERS)}
+                        className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-sm transition cursor-pointer"
+                      >
+                        Muat Contoh Retur Es Krim Meleleh (Miami)
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filteredOrders.map((order) => {
                 const item = order.items[0];
                 return (
                   <tr
@@ -477,7 +462,7 @@ export default function ReturnsPage() {
                     </td>
                   </tr>
                 );
-              })}
+              }))}
             </tbody>
           </table>
         </div>

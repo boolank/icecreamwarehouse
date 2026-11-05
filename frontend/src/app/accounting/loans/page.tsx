@@ -61,7 +61,7 @@ interface LoanFacility {
   payments: LoanPaymentRecord[];
 }
 
-const INITIAL_LOANS: LoanFacility[] = [
+const DEMO_LOANS: LoanFacility[] = [
   {
     id: "loan-1",
     loanCode: "LOAN-BCA-2025-01",
@@ -94,74 +94,10 @@ const INITIAL_LOANS: LoanFacility[] = [
       },
     ],
   },
-  {
-    id: "loan-2",
-    loanCode: "LOAN-MDR-2026-02",
-    facilityName: "Kredit Investasi Mesin Pendingin & Walk-in Freezer",
-    creditorName: "PT Bank Mandiri (Persero) Tbk",
-    loanType: "INVESTASI_COLD_STORAGE",
-    principalAmount: 180000000,
-    interestRatePct: 9.0,
-    tenorMonths: 36,
-    disbursementDate: "2026-01-10",
-    maturityDate: "2029-01-10",
-    monthlyPrincipal: 5000000,
-    monthlyInterest: 1350000,
-    monthlyTotal: 6350000,
-    remainingPrincipal: 135000000,
-    liabilityAccount: "2201 Utang Bank Jangka Panjang",
-    status: "MENDEKATI_JATUH_TEMPO",
-    payments: [
-      {
-        id: "pay-l-2",
-        paymentDate: "2026-10-10",
-        installmentNo: 9,
-        principalAmount: 5000000,
-        interestAmount: 1350000,
-        totalPaid: 6350000,
-        bankAccount: "1104 Bank Mandiri — Rekening Operasional",
-        referenceNo: "AUTODEBIT-MDR-0009",
-        paidBy: "Autodebit Sistem Bank",
-        notes: "Angsuran ke-9 investasi kompresor cold storage.",
-      },
-    ],
-  },
-  {
-    id: "loan-3",
-    loanCode: "LEAS-ASTRA-2025-01",
-    facilityName: "Leasing Pembiayaan 2 Unit Truk Reefer Isuzu Giga",
-    creditorName: "PT Astra Sedaya Finance (ACC)",
-    loanType: "LEASING_ARMADA_REEFER",
-    principalAmount: 320000000,
-    interestRatePct: 10.0,
-    tenorMonths: 36,
-    disbursementDate: "2025-08-20",
-    maturityDate: "2028-08-20",
-    monthlyPrincipal: 8888889,
-    monthlyInterest: 2666667,
-    monthlyTotal: 11555556,
-    remainingPrincipal: 195555556,
-    liabilityAccount: "2202 Utang Leasing Kendaraan",
-    status: "AKTIF",
-    payments: [
-      {
-        id: "pay-l-3",
-        paymentDate: "2026-10-20",
-        installmentNo: 14,
-        principalAmount: 8888889,
-        interestAmount: 2666667,
-        totalPaid: 11555556,
-        bankAccount: "1103 Bank BCA — Rekening Operasional",
-        referenceNo: "TRF-ASTRA-0014",
-        paidBy: "Hendra Wijaya (Finance)",
-        notes: "Cicilan ke-14 leasing armada cold truck.",
-      },
-    ],
-  },
 ];
 
 export default function ExternalLoansPage() {
-  const [loans, setLoans] = useState<LoanFacility[]>(INITIAL_LOANS);
+  const [loans, setLoans] = useState<LoanFacility[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("Semua");
   const [toastMsg, setToastMsg] = useState<string | null>(null);
@@ -409,13 +345,29 @@ export default function ExternalLoansPage() {
           </p>
         </div>
 
-        <button
-          onClick={openAddModal}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-xs transition-all shadow-sm hover:shadow cursor-pointer"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Tambah Pinjaman Baru</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => setLoans([])}
+            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-600 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 font-medium text-xs transition cursor-pointer"
+            title="Kosongkan daftar pinjaman untuk simulasi dari nol"
+          >
+            Kosongkan Pinjaman
+          </button>
+          <button
+            onClick={() => setLoans(DEMO_LOANS)}
+            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium text-xs transition cursor-pointer"
+            title="Muat contoh fasilitas kredit bank & leasing"
+          >
+            Muat Contoh Pinjaman
+          </button>
+          <button
+            onClick={openAddModal}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-xs transition-all shadow-sm hover:shadow cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Tambah Pinjaman Baru</span>
+          </button>
+        </div>
       </div>
 
       {/* KPI Bento Cards */}
@@ -508,7 +460,29 @@ export default function ExternalLoansPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-mono">
-              {filteredLoans.map((loan) => (
+              {filteredLoans.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="px-5 py-12 text-center">
+                    <div className="flex flex-col items-center justify-center max-w-sm mx-auto text-slate-400 font-sans">
+                      <Landmark className="w-10 h-10 mb-2 stroke-1 text-slate-300 dark:text-slate-600" />
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        Belum Ada Fasilitas Pinjaman Eksternal
+                      </p>
+                      <p className="text-xs text-slate-400 mt-1 mb-4">
+                        Daftar pinjaman bersih untuk pengetesan input fasilitas kredit atau pinjaman baru dari awal.
+                      </p>
+                      <button
+                        onClick={openAddModal}
+                        className="px-3.5 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-xs shadow-sm transition flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Tambah Fasilitas Pinjaman Baru</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filteredLoans.map((loan) => (
                 <tr
                   key={loan.id}
                   className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors"
@@ -600,7 +574,7 @@ export default function ExternalLoansPage() {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

@@ -53,6 +53,71 @@ interface PickingListRecord {
   items: PickingItem[];
 }
 
+const DEMO_PICKING_LISTS: PickingListRecord[] = [
+  {
+    id: 1,
+    plNumber: "PL-202610-001",
+    soNumber: "SO-202610-001",
+    customerName: "Minimarket Sumber Makmur BSD",
+    customerCategory: "General Trade / Minimarket",
+    date: "2026-10-31 09:30",
+    status: "DIPROSES",
+    pickerName: "Budi Santoso",
+    totalItems: 3,
+    pickedItems: 2,
+    items: [
+      {
+        id: 101,
+        productCode: "MIA-DUR-60",
+        productName: "King Durian 60 (Miami)",
+        batchNumber: "B-IVH-DUR-1026",
+        expiryDate: "2026-11-20",
+        daysToExpiry: 16,
+        locationCode: "FRZ-A / RAK-03 / A-01",
+        requestedQty: 10,
+        uomName: "DUS (60 Pcs)",
+        baseQtyPcs: 600,
+        pickedQty: 10,
+        isPicked: true,
+        unitCost: 59460,
+        sellingPrice: 110000,
+      },
+      {
+        id: 102,
+        productCode: "MIA-BLU-60",
+        productName: "Blueberry Ice 60/114 (Miami)",
+        batchNumber: "B-IVH-BLU-1026",
+        expiryDate: "2027-10-25",
+        daysToExpiry: 355,
+        locationCode: "FRZ-A / RAK-01 / A-01",
+        requestedQty: 8,
+        uomName: "DUS (60 Pcs)",
+        baseQtyPcs: 480,
+        pickedQty: 8,
+        isPicked: true,
+        unitCost: 64865,
+        sellingPrice: 110000,
+      },
+      {
+        id: 103,
+        productCode: "MIA-CRN-40",
+        productName: "Choco Corn 40/140 (Miami)",
+        batchNumber: "B-IVH-CRN-1026",
+        expiryDate: "2027-10-26",
+        daysToExpiry: 356,
+        locationCode: "FRZ-A / RAK-02 / B-01",
+        requestedQty: 5,
+        uomName: "DUS (40 Pcs)",
+        baseQtyPcs: 200,
+        pickedQty: 0,
+        isPicked: false,
+        unitCost: 57658,
+        sellingPrice: 110000,
+      },
+    ],
+  },
+];
+
 export default function PickingListPage() {
   const [activeTab, setActiveTab] = useState<string>("ALL");
   const [searchTerm, setSearchTerm] = useState("");
@@ -62,149 +127,10 @@ export default function PickingListPage() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [showPrintModal, setShowPrintModal] = useState(false);
 
-  // Mock initial picking lists
-  const [pickingLists, setPickingLists] = useState<PickingListRecord[]>([
-    {
-      id: 1,
-      plNumber: "PL-202610-001",
-      soNumber: "SO-202610-001",
-      customerName: "PT Sumber Dingin Retail",
-      customerCategory: "Modern Trade / Supermarket",
-      date: "2026-10-31 09:30",
-      status: "DIPROSES",
-      pickerName: "Budi Santoso",
-      totalItems: 3,
-      pickedItems: 2,
-      items: [
-        {
-          id: 101,
-          productCode: "MIA-DUR-60",
-          productName: "King Durian 60 (Miami)",
-          batchNumber: "B-IVH-DUR-1026",
-          expiryDate: "2026-11-20",
-          daysToExpiry: 16,
-          locationCode: "FRZ-A / RAK-03 / A-01",
-          requestedQty: 10,
-          uomName: "DUS (60 Pcs)",
-          baseQtyPcs: 600,
-          pickedQty: 10,
-          isPicked: true,
-          unitCost: 59460,
-          sellingPrice: 110000,
-        },
-        {
-          id: 102,
-          productCode: "MIA-BLU-60",
-          productName: "Blueberry Ice 60/114 (Miami)",
-          batchNumber: "B-IVH-BLU-1026",
-          expiryDate: "2027-10-25",
-          daysToExpiry: 355,
-          locationCode: "FRZ-A / RAK-01 / A-01",
-          requestedQty: 8,
-          uomName: "DUS (60 Pcs)",
-          baseQtyPcs: 480,
-          pickedQty: 8,
-          isPicked: true,
-          unitCost: 64865,
-          sellingPrice: 110000,
-        },
-        {
-          id: 103,
-          productCode: "MIA-CRN-40",
-          productName: "Choco Corn 40/140 (Miami)",
-          batchNumber: "B-IVH-CRN-1026",
-          expiryDate: "2027-10-26",
-          daysToExpiry: 356,
-          locationCode: "FRZ-A / RAK-02 / B-01",
-          requestedQty: 5,
-          uomName: "DUS (40 Pcs)",
-          baseQtyPcs: 200,
-          pickedQty: 0,
-          isPicked: false,
-          unitCost: 57658,
-          sellingPrice: 110000,
-        },
-      ],
-    },
-    {
-      id: 2,
-      plNumber: "PL-202610-002",
-      soNumber: "SO-202610-002",
-      customerName: "Toko Berkah Es Krim Segar",
-      customerCategory: "Agen / Grosir",
-      date: "2026-10-31 10:15",
-      status: "DRAFT",
-      pickerName: "Belum Ditugaskan",
-      totalItems: 2,
-      pickedItems: 0,
-      items: [
-        {
-          id: 201,
-          productCode: "ICR-004",
-          productName: "Mango Sorbet Cup 120ml",
-          batchNumber: "B-MNG-0926",
-          expiryDate: "2026-12-15",
-          daysToExpiry: 45,
-          locationCode: "FRZ-B / RAK-04 / C-01",
-          requestedQty: 15,
-          uomName: "DUS (24 Pcs)",
-          baseQtyPcs: 360,
-          pickedQty: 0,
-          isPicked: false,
-          unitCost: 85000,
-          sellingPrice: 135000,
-        },
-        {
-          id: 202,
-          productCode: "ICR-005",
-          productName: "Cookies & Cream Pint 100ml",
-          batchNumber: "B-COO-0926",
-          expiryDate: "2027-01-20",
-          daysToExpiry: 81,
-          locationCode: "FRZ-A / RAK-04 / A-02",
-          requestedQty: 12,
-          uomName: "DUS (24 Pcs)",
-          baseQtyPcs: 288,
-          pickedQty: 0,
-          isPicked: false,
-          unitCost: 90000,
-          sellingPrice: 145000,
-        },
-      ],
-    },
-    {
-      id: 3,
-      plNumber: "PL-202610-003",
-      soNumber: "SO-202610-003",
-      customerName: "Kios Es Krim Malioboro",
-      customerCategory: "General Trade / Warung",
-      date: "2026-10-30 16:40",
-      status: "SELESAI",
-      pickerName: "Ahmad Riyadi",
-      totalItems: 1,
-      pickedItems: 1,
-      items: [
-        {
-          id: 301,
-          productCode: "ICR-001",
-          productName: "Vanilla Bean Classic 100ml",
-          batchNumber: "B-VAN-0926",
-          expiryDate: "2026-11-10",
-          daysToExpiry: 10,
-          locationCode: "FRZ-A / RAK-02 / B-01",
-          requestedQty: 5,
-          uomName: "DUS (24 Pcs)",
-          baseQtyPcs: 120,
-          pickedQty: 5,
-          isPicked: true,
-          unitCost: 75000,
-          sellingPrice: 125000,
-        },
-      ],
-    },
-  ]);
+  // Initial picking lists state (empty by default for fresh testing)
+  const [pickingLists, setPickingLists] = useState<PickingListRecord[]>([]);
 
-  const activePL = selectedPL || pickingLists[0];
+  const activePL = selectedPL || (pickingLists.length > 0 ? pickingLists[0] : null);
 
   const getUrgencyBadge = (days: number) => {
     if (days <= 30) {
@@ -311,14 +237,18 @@ export default function PickingListPage() {
   };
 
   // Hitung total finansial picking untuk preview jurnal
-  const totalCost = activePL.items.reduce(
-    (sum, item) => sum + item.requestedQty * item.unitCost,
-    0
-  );
-  const totalRevenue = activePL.items.reduce(
-    (sum, item) => sum + item.requestedQty * item.sellingPrice,
-    0
-  );
+  const totalCost = activePL
+    ? activePL.items.reduce(
+        (sum, item) => sum + item.requestedQty * item.unitCost,
+        0
+      )
+    : 0;
+  const totalRevenue = activePL
+    ? activePL.items.reduce(
+        (sum, item) => sum + item.requestedQty * item.sellingPrice,
+        0
+      )
+    : 0;
 
   return (
     <div className="space-y-6">
@@ -338,13 +268,37 @@ export default function PickingListPage() {
           </p>
         </div>
 
-        <button
-          onClick={() => setShowGenerateModal(true)}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-sm shadow transition-colors"
-        >
-          <Plus className="w-4 h-4" />
-          Generate Picking dari SO
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => {
+              setPickingLists([]);
+              setSelectedPL(null);
+            }}
+            className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-gray-600 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400 font-medium text-xs transition cursor-pointer"
+            title="Kosongkan antrean picking untuk simulasi dari nol"
+          >
+            Kosongkan Antrean
+          </button>
+
+          <button
+            onClick={() => {
+              setPickingLists(DEMO_PICKING_LISTS);
+              setSelectedPL(DEMO_PICKING_LISTS[0]);
+            }}
+            className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium text-xs transition cursor-pointer"
+            title="Muat contoh antrean picking list FEFO es krim Miami"
+          >
+            Muat Contoh FEFO
+          </button>
+
+          <button
+            onClick={() => setShowGenerateModal(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium text-xs shadow transition-colors cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Generate Picking dari SO</span>
+          </button>
+        </div>
       </div>
 
       {/* Alert Notification */}
@@ -452,60 +406,74 @@ export default function PickingListPage() {
           </div>
 
           <div className="divide-y divide-gray-100 dark:divide-gray-700 overflow-y-auto max-h-[600px]">
-            {pickingLists
-              .filter(
-                (pl) =>
-                  pl.plNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                  pl.soNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                  pl.customerName.toLowerCase().includes(searchTerm.toLowerCase())
-              )
-              .map((pl) => {
-                const isSelected = activePL.id === pl.id;
-                return (
-                  <div
-                    key={pl.id}
-                    onClick={() => setSelectedPL(pl)}
-                    className={`p-4 cursor-pointer transition-colors ${
-                      isSelected
-                        ? "bg-blue-50/60 dark:bg-blue-950/30 border-l-4 border-blue-600"
-                        : "hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-xs font-bold text-blue-600 dark:text-blue-400">
-                        {pl.plNumber}
-                      </span>
-                      {getStatusBadge(pl.status)}
-                    </div>
-                    <p className="text-xs font-medium text-gray-900 dark:text-white mt-1 truncate">
-                      {pl.customerName}
-                    </p>
-                    <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
-                      <span className="font-mono text-[11px]">{pl.soNumber}</span>
-                      <span>
-                        {pl.pickedItems}/{pl.totalItems} Selesai
-                      </span>
-                    </div>
+            {pickingLists.length === 0 ? (
+              <div className="p-8 text-center text-gray-400">
+                <CheckSquare className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                <p className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                  Belum Ada Picking List
+                </p>
+                <p className="text-[11px] text-gray-400 mt-1">
+                  Antrean picking kosong untuk persiapan testing alur outbound dari awal.
+                </p>
+              </div>
+            ) : (
+              pickingLists
+                .filter(
+                  (pl) =>
+                    pl.plNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    pl.soNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    pl.customerName.toLowerCase().includes(searchTerm.toLowerCase())
+                )
+                .map((pl) => {
+                  const isSelected = activePL?.id === pl.id;
+                  return (
+                    <div
+                      key={pl.id}
+                      onClick={() => setSelectedPL(pl)}
+                      className={`p-4 cursor-pointer transition-colors ${
+                        isSelected
+                          ? "bg-blue-50/60 dark:bg-blue-950/30 border-l-4 border-blue-600"
+                          : "hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-xs font-bold text-blue-600 dark:text-blue-400">
+                          {pl.plNumber}
+                        </span>
+                        {getStatusBadge(pl.status)}
+                      </div>
+                      <p className="text-xs font-medium text-gray-900 dark:text-white mt-1 truncate">
+                        {pl.customerName}
+                      </p>
+                      <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mt-2">
+                        <span className="font-mono text-[11px]">{pl.soNumber}</span>
+                        <span>
+                          {pl.pickedItems}/{pl.totalItems} Selesai
+                        </span>
+                      </div>
 
-                    {/* Progress Bar */}
-                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mt-2">
-                      <div
-                        className="bg-blue-600 h-1.5 rounded-full"
-                        style={{
-                          width: `${(pl.pickedItems / pl.totalItems) * 100}%`,
-                        }}
-                      ></div>
+                      {/* Progress Bar */}
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5 mt-2">
+                        <div
+                          className="bg-blue-600 h-1.5 rounded-full"
+                          style={{
+                            width: `${(pl.pickedItems / pl.totalItems) * 100}%`,
+                          }}
+                        ></div>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })
+            )}
           </div>
         </div>
 
         {/* Right Column: Picking Execution & Details */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Header Card for Active Picking List */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm">
+          {activePL ? (
+            <>
+              {/* Header Card for Active Picking List */}
+              <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-gray-100 dark:border-gray-700 pb-4">
               <div>
                 <div className="flex items-center gap-3">
@@ -725,8 +693,29 @@ export default function PickingListPage() {
               </span>
             </div>
           </div>
+        </>
+      ) : (
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-12 text-center flex flex-col items-center justify-center">
+          <CheckSquare className="w-12 h-12 text-gray-300 dark:text-gray-600 mb-3 stroke-1" />
+          <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200">
+            Belum Ada Dokumen Picking Aktif
+          </h3>
+          <p className="text-xs text-gray-400 mt-1 max-w-sm mb-4">
+            Antrean picking list kosong untuk persiapan pengujian alur outbound dari awal. Buat Sales Order terlebih dahulu atau klik Muat Contoh Picking FEFO.
+          </p>
+          <button
+            onClick={() => {
+              setPickingLists(DEMO_PICKING_LISTS);
+              setSelectedPL(DEMO_PICKING_LISTS[0]);
+            }}
+            className="px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-sm transition cursor-pointer"
+          >
+            Muat Contoh Dokumen Picking FEFO (Miami)
+          </button>
         </div>
-      </div>
+      )}
+    </div>
+  </div>
 
       {/* Modal Generate Picking dari Sales Order */}
       {showGenerateModal && (

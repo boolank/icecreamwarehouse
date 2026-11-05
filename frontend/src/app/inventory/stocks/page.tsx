@@ -33,142 +33,110 @@ interface StockRecord {
   unitCostPcs: number;
 }
 
+const INITIAL_MIAMI_STOCKS: StockRecord[] = [
+  {
+    id: 1,
+    sku: "MIA-BLU-60",
+    name: "Blueberry Ice 60/114 (Miami)",
+    category: "Stick/Bar",
+    batchNumber: "B-IVH-BLU-1026",
+    expiryDate: "2027-10-25",
+    daysToExpiry: 355,
+    locationCode: "FRZ-A1 / RAK-01 / A-01",
+    zone: "Zona A",
+    temperature: "-21.4°C",
+    baseQtyPcs: 1500, // 25 Dus
+    conversionFactorDus: 60,
+    conversionFactorPack: 10,
+    unitCostPcs: 1081,
+  },
+  {
+    id: 2,
+    sku: "MIA-CRN-40",
+    name: "Choco Corn 40/140 (Miami)",
+    category: "Cone",
+    batchNumber: "B-IVH-CRN-1026",
+    expiryDate: "2027-10-26",
+    daysToExpiry: 356,
+    locationCode: "FRZ-A1 / RAK-02 / B-01",
+    zone: "Zona A",
+    temperature: "-21.4°C",
+    baseQtyPcs: 3000, // 75 Dus
+    conversionFactorDus: 40,
+    conversionFactorPack: 10,
+    unitCostPcs: 1441,
+  },
+  {
+    id: 3,
+    sku: "MIA-GLD-40",
+    name: "Golden Corn 40/140 (Miami)",
+    category: "Cone",
+    batchNumber: "B-IVH-GLD-1026",
+    expiryDate: "2027-10-26",
+    daysToExpiry: 356,
+    locationCode: "FRZ-B1 / RAK-01 / A-02",
+    zone: "Zona B",
+    temperature: "-20.8°C",
+    baseQtyPcs: 3200, // 80 Dus
+    conversionFactorDus: 40,
+    conversionFactorPack: 10,
+    unitCostPcs: 1441,
+  },
+  {
+    id: 4,
+    sku: "MIA-DBC-40",
+    name: "Double Crumble Cho - Isi 40 (Miami)",
+    category: "Stick/Bar",
+    batchNumber: "B-IVH-DBC-1026",
+    expiryDate: "2027-10-25",
+    daysToExpiry: 355,
+    locationCode: "FRZ-B1 / RAK-02 / B-02",
+    zone: "Zona B",
+    temperature: "-20.8°C",
+    baseQtyPcs: 1000, // 25 Dus
+    conversionFactorDus: 40,
+    conversionFactorPack: 10,
+    unitCostPcs: 2162,
+  },
+  {
+    id: 5,
+    sku: "MIA-DUR-60",
+    name: "King Durian 60 (Miami)",
+    category: "Stick/Bar",
+    batchNumber: "B-IVH-DUR-1026",
+    expiryDate: "2026-11-20", // Batch mendekati kedaluwarsa untuk tes FEFO!
+    daysToExpiry: 16,
+    locationCode: "FRZ-A2 / RAK-03 / A-01",
+    zone: "Zona A",
+    temperature: "-21.2°C",
+    baseQtyPcs: 1500, // 25 Dus
+    conversionFactorDus: 60,
+    conversionFactorPack: 10,
+    unitCostPcs: 991,
+  },
+  {
+    id: 6,
+    sku: "MIA-MIC-24",
+    name: "Micro Cone 24 (Miami)",
+    category: "Cone",
+    batchNumber: "B-IVH-MIC-1026",
+    expiryDate: "2027-10-25",
+    daysToExpiry: 355,
+    locationCode: "FRZ-B2 / RAK-01 / C-01",
+    zone: "Zona B",
+    temperature: "-21.0°C",
+    baseQtyPcs: 600, // 25 Dus
+    conversionFactorDus: 24,
+    conversionFactorPack: 6,
+    unitCostPcs: 2703,
+  },
+];
+
 export default function RealTimeStocksPage() {
+  const [stocks, setStocks] = useState<StockRecord[]>(INITIAL_MIAMI_STOCKS);
   const [searchTerm, setSearchTerm] = useState("");
   const [zoneFilter, setZoneFilter] = useState("ALL");
   const [uomMode, setUomMode] = useState<"BREAKDOWN" | "BASE" | "ESTIMATED_DUS">("BREAKDOWN");
-
-  // Mock real-time inventory stocks
-  const stocks: StockRecord[] = [
-    {
-      id: 1,
-      sku: "MIA-BLU-60",
-      name: "Blueberry Ice 60/114 (Miami)",
-      category: "Stick/Bar",
-      batchNumber: "B-IVH-BLU-1026",
-      expiryDate: "2027-10-25",
-      daysToExpiry: 355,
-      locationCode: "FRZ-A1 / RAK-01 / A-01",
-      zone: "Zona A",
-      temperature: "-21.4°C",
-      baseQtyPcs: 1500, // 25 Dus
-      conversionFactorDus: 60,
-      conversionFactorPack: 10,
-      unitCostPcs: 1081,
-    },
-    {
-      id: 2,
-      sku: "MIA-CRN-40",
-      name: "Choco Corn 40/140 (Miami)",
-      category: "Cone",
-      batchNumber: "B-IVH-CRN-1026",
-      expiryDate: "2027-10-26",
-      daysToExpiry: 356,
-      locationCode: "FRZ-A1 / RAK-02 / B-01",
-      zone: "Zona A",
-      temperature: "-21.4°C",
-      baseQtyPcs: 3000, // 75 Dus
-      conversionFactorDus: 40,
-      conversionFactorPack: 10,
-      unitCostPcs: 1441,
-    },
-    {
-      id: 3,
-      sku: "MIA-GLD-40",
-      name: "Golden Corn 40/140 (Miami)",
-      category: "Cone",
-      batchNumber: "B-IVH-GLD-1026",
-      expiryDate: "2027-10-26",
-      daysToExpiry: 356,
-      locationCode: "FRZ-B1 / RAK-01 / A-02",
-      zone: "Zona B",
-      temperature: "-20.8°C",
-      baseQtyPcs: 3200, // 80 Dus
-      conversionFactorDus: 40,
-      conversionFactorPack: 10,
-      unitCostPcs: 1441,
-    },
-    {
-      id: 4,
-      sku: "MIA-DBC-40",
-      name: "Double Crumble Cho - Isi 40 (Miami)",
-      category: "Stick/Bar",
-      batchNumber: "B-IVH-DBC-1026",
-      expiryDate: "2027-10-25",
-      daysToExpiry: 355,
-      locationCode: "FRZ-B1 / RAK-02 / B-02",
-      zone: "Zona B",
-      temperature: "-20.8°C",
-      baseQtyPcs: 1000, // 25 Dus
-      conversionFactorDus: 40,
-      conversionFactorPack: 10,
-      unitCostPcs: 2162,
-    },
-    {
-      id: 5,
-      sku: "MIA-DUR-60",
-      name: "King Durian 60 (Miami)",
-      category: "Stick/Bar",
-      batchNumber: "B-IVH-DUR-1026",
-      expiryDate: "2026-11-20", // Batch mendekati kedaluwarsa untuk tes FEFO!
-      daysToExpiry: 16,
-      locationCode: "FRZ-A2 / RAK-03 / A-01",
-      zone: "Zona A",
-      temperature: "-21.2°C",
-      baseQtyPcs: 1500, // 25 Dus
-      conversionFactorDus: 60,
-      conversionFactorPack: 10,
-      unitCostPcs: 991,
-    },
-    {
-      id: 6,
-      sku: "MIA-MIC-24",
-      name: "Micro Cone 24 (Miami)",
-      category: "Cone",
-      batchNumber: "B-IVH-MIC-1026",
-      expiryDate: "2027-10-25",
-      daysToExpiry: 355,
-      locationCode: "FRZ-B2 / RAK-01 / C-01",
-      zone: "Zona B",
-      temperature: "-21.0°C",
-      baseQtyPcs: 600, // 25 Dus
-      conversionFactorDus: 24,
-      conversionFactorPack: 6,
-      unitCostPcs: 2703,
-    },
-    {
-      id: 5,
-      sku: "ICR-004",
-      name: "Mango Sorbet Cup 120ml",
-      category: "Sorbet Buah",
-      batchNumber: "B-MNG-0926",
-      expiryDate: "2026-12-15",
-      daysToExpiry: 45,
-      locationCode: "FRZ-B2 / RAK-04 / C-01",
-      zone: "Zona B",
-      temperature: "-22.0°C",
-      baseQtyPcs: 1008, // 42 Dus
-      conversionFactorDus: 24,
-      conversionFactorPack: 6,
-      unitCostPcs: 3541,
-    },
-    {
-      id: 6,
-      sku: "ICR-005",
-      name: "Cookies & Cream Pint 100ml",
-      category: "Pint Premium",
-      batchNumber: "B-COO-0926",
-      expiryDate: "2027-01-20",
-      daysToExpiry: 81,
-      locationCode: "FRZ-C1 / RAK-01 / A-02",
-      zone: "Zona C",
-      temperature: "-21.6°C",
-      baseQtyPcs: 1320, // 55 Dus
-      conversionFactorDus: 24,
-      conversionFactorPack: 6,
-      unitCostPcs: 3750,
-    },
-  ];
 
   const filteredStocks = stocks.filter((item) => {
     const matchesSearch =
@@ -275,41 +243,62 @@ export default function RealTimeStocksPage() {
           </p>
         </div>
 
-        {/* Multi-UOM Segmented Switcher */}
-        <div className="inline-flex p-1 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
-          <button
-            type="button"
-            onClick={() => setUomMode("BREAKDOWN")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              uomMode === "BREAKDOWN"
-                ? "bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-300 shadow-sm font-bold"
-                : "text-gray-600 dark:text-gray-400 hover:text-gray-900"
-            }`}
-          >
-            Tampilan Terurai (Dus/Pack/Pcs)
-          </button>
-          <button
-            type="button"
-            onClick={() => setUomMode("BASE")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              uomMode === "BASE"
-                ? "bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-300 shadow-sm font-bold"
-                : "text-gray-600 dark:text-gray-400 hover:text-gray-900"
-            }`}
-          >
-            Standarisasi Base (Pcs)
-          </button>
-          <button
-            type="button"
-            onClick={() => setUomMode("ESTIMATED_DUS")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              uomMode === "ESTIMATED_DUS"
-                ? "bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-300 shadow-sm font-bold"
-                : "text-gray-600 dark:text-gray-400 hover:text-gray-900"
-            }`}
-          >
-            Estimasi Total Dus
-          </button>
+        {/* Action Controls & Multi-UOM Segmented Switcher */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setStocks([])}
+              className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-gray-600 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400 font-medium text-xs transition cursor-pointer"
+              title="Kosongkan stok untuk simulasi kondisi awal sebelum penerimaan barang"
+            >
+              Kosongkan Stok (Pra-Inbound)
+            </button>
+            <button
+              type="button"
+              onClick={() => setStocks(INITIAL_MIAMI_STOCKS)}
+              className="px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium text-xs transition cursor-pointer"
+              title="Muat stok pasokan es krim Miami hasil penerimaan PO-DIS10114"
+            >
+              Muat Stok PO-DIS10114
+            </button>
+          </div>
+
+          <div className="inline-flex p-1 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm">
+            <button
+              type="button"
+              onClick={() => setUomMode("BREAKDOWN")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                uomMode === "BREAKDOWN"
+                  ? "bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-300 shadow-sm font-bold"
+                  : "text-gray-600 dark:text-gray-400 hover:text-gray-900"
+              }`}
+            >
+              Tampilan Terurai (Dus/Pack/Pcs)
+            </button>
+            <button
+              type="button"
+              onClick={() => setUomMode("BASE")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                uomMode === "BASE"
+                  ? "bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-300 shadow-sm font-bold"
+                  : "text-gray-600 dark:text-gray-400 hover:text-gray-900"
+              }`}
+            >
+              Standarisasi Base (Pcs)
+            </button>
+            <button
+              type="button"
+              onClick={() => setUomMode("ESTIMATED_DUS")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                uomMode === "ESTIMATED_DUS"
+                  ? "bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-300 shadow-sm font-bold"
+                  : "text-gray-600 dark:text-gray-400 hover:text-gray-900"
+              }`}
+            >
+              Estimasi Total Dus
+            </button>
+          </div>
         </div>
       </div>
 
@@ -422,7 +411,29 @@ export default function RealTimeStocksPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-              {filteredStocks.map((item) => (
+              {filteredStocks.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="py-12 px-4 text-center">
+                    <div className="flex flex-col items-center justify-center max-w-sm mx-auto text-gray-400">
+                      <Boxes className="w-10 h-10 mb-2 stroke-1 text-gray-300 dark:text-gray-600" />
+                      <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        Gudang Kosong / Belum Ada Stok Pasokan
+                      </p>
+                      <p className="text-xs text-gray-400 mt-1 mb-4">
+                        Stok awal kosong untuk simulasi alur bisnis pra-inbound. Lakukan penerimaan barang di Inbound QC atau muat stok PO-DIS10114.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setStocks(INITIAL_MIAMI_STOCKS)}
+                        className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs transition cursor-pointer"
+                      >
+                        Muat Stok Masuk PO-DIS10114 (560 Dus)
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filteredStocks.map((item) => (
                 <tr
                   key={item.id}
                   className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
@@ -474,7 +485,7 @@ export default function RealTimeStocksPage() {
                     Rp {(item.baseQtyPcs * item.unitCostPcs).toLocaleString("id-ID")}
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

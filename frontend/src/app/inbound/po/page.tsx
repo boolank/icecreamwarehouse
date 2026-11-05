@@ -50,7 +50,7 @@ const INITIAL_POS: PurchaseOrderData[] = [
     supplierName: "PT. INDO VAN HOUTEN (Miami Ice Cream)",
     orderDate: "2026-10-29",
     expectedDate: "2026-10-29",
-    status: "CONFIRMED",
+    status: "DRAFT",
     totalAmount: 40790214,
     items: [
       {
@@ -208,82 +208,6 @@ const INITIAL_POS: PurchaseOrderData[] = [
     ],
     notes: "Total 560 Dus es krim Miami. DPP: Rp 36.747.940 + PPN 11%: Rp 4.042.274. Syarat: Tunai / COD 0 Hari.",
   },
-  {
-    id: "po-1",
-    poNumber: "PO-202610-0001",
-    supplierName: "PT Es Krim Nusantara Sejahtera",
-    orderDate: "2026-10-28",
-    expectedDate: "2026-10-31",
-    status: "CONFIRMED",
-    totalAmount: 18000000,
-    items: [
-      {
-        sku: "ICR-001",
-        productName: "Vanilla Bean Classic 100 ml",
-        uom: "DUS (24 Pcs)",
-        orderedQty: 100,
-        unitPrice: 84000,
-        totalPrice: 8400000,
-      },
-      {
-        sku: "ICR-002",
-        productName: "Chocolate Fudge Bar 90 ml",
-        uom: "DUS (24 Pcs)",
-        orderedQty: 100,
-        unitPrice: 96000,
-        totalPrice: 9600000,
-      },
-    ],
-    notes: "Pengiriman via truk pendingin Thermo King dengan suhu wajib ≤ -20°C.",
-  },
-  {
-    id: "po-2",
-    poNumber: "PO-202610-0002",
-    supplierName: "PT Indo Cold Logistics",
-    orderDate: "2026-10-29",
-    expectedDate: "2026-11-02",
-    status: "DRAFT",
-    totalAmount: 12600000,
-    items: [
-      {
-        sku: "ICR-003",
-        productName: "Strawberry Swirl Cup 100 ml",
-        uom: "DUS (24 Pcs)",
-        orderedQty: 150,
-        unitPrice: 84000,
-        totalPrice: 12600000,
-      },
-    ],
-    notes: "Pesanan restock persediaan akhir bulan.",
-  },
-  {
-    id: "po-3",
-    poNumber: "PO-202610-0003",
-    supplierName: "PT Gelato Prima Dairy",
-    orderDate: "2026-10-25",
-    expectedDate: "2026-10-27",
-    status: "RECEIVED",
-    totalAmount: 24500000,
-    items: [
-      {
-        sku: "ICR-004",
-        productName: "Mango Sorbet 120 ml",
-        uom: "DUS (20 Pcs)",
-        orderedQty: 100,
-        unitPrice: 90000,
-        totalPrice: 9000000,
-      },
-      {
-        sku: "ICR-005",
-        productName: "Cookies & Cream 100 ml",
-        uom: "DUS (24 Pcs)",
-        orderedQty: 150,
-        unitPrice: 102000,
-        totalPrice: 15300000,
-      },
-    ],
-    notes: "Telah diterima penuh dengan suhu armada truk -21.4°C.",
-  },
 ];
 
 export default function PurchaseOrdersPage() {
@@ -295,16 +219,16 @@ export default function PurchaseOrdersPage() {
 
   // Form State
   const [newPoData, setNewPoData] = useState({
-    supplierName: "PT Es Krim Nusantara Sejahtera",
-    expectedDate: "2026-11-05",
+    supplierName: "PT. INDO VAN HOUTEN (Miami Ice Cream)",
+    expectedDate: "2026-10-29",
     notes: "Pengiriman dengan armada berpendingin (Cold Truck ≤ -18°C).",
     items: [
       {
-        sku: "ICR-001",
-        productName: "Vanilla Bean Classic 100 ml",
-        uom: "DUS (24 Pcs)",
-        orderedQty: 50,
-        unitPrice: 84000,
+        sku: "MIA-BLU-60",
+        productName: "Blueberry Ice 60/114",
+        uom: "DUS (60 Pcs)",
+        orderedQty: 25,
+        unitPrice: 64865,
       },
     ],
   });
@@ -421,13 +345,33 @@ export default function PurchaseOrdersPage() {
           </p>
         </div>
 
-        <button
-          onClick={() => setIsCreateModalOpen(true)}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-sm transition-all shadow-sm hover:shadow cursor-pointer"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Buat PO Baru</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setPoList([])}
+            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-600 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 font-medium text-xs transition-all cursor-pointer flex items-center gap-1.5"
+            title="Kosongkan seluruh data transaksi PO untuk simulasi dari nol"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+            <span>Kosongkan PO</span>
+          </button>
+
+          <button
+            onClick={() => setPoList(INITIAL_POS)}
+            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium text-xs transition-all cursor-pointer flex items-center gap-1.5"
+            title="Muat ulang draf dokumen PO-DIS10114 resmi pabrik Miami"
+          >
+            <History className="w-3.5 h-3.5" />
+            <span>Muat Draf PO-DIS10114</span>
+          </button>
+
+          <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-xs transition-all shadow-sm hover:shadow cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Buat PO Baru</span>
+          </button>
+        </div>
       </div>
 
       {/* Filter and Search Bar */}
@@ -477,11 +421,33 @@ export default function PurchaseOrdersPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
-              {filteredPos.map((po) => (
-                <tr
-                  key={po.id}
-                  className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors"
-                >
+              {filteredPos.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-5 py-12 text-center">
+                    <div className="flex flex-col items-center justify-center max-w-sm mx-auto text-slate-400">
+                      <Inbox className="w-10 h-10 mb-2 stroke-1 text-slate-300 dark:text-slate-600" />
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        Belum Ada Dokumen Purchase Order
+                      </p>
+                      <p className="text-xs text-slate-400 mt-1 mb-4">
+                        Tabel transaksi PO kosong untuk persiapan testing alur bisnis dari awal.
+                      </p>
+                      <button
+                        onClick={() => setPoList(INITIAL_POS)}
+                        className="px-3.5 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-xs shadow-sm transition flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <History className="w-3.5 h-3.5" />
+                        <span>Muat Draf Dokumen PO-DIS10114</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filteredPos.map((po) => (
+                  <tr
+                    key={po.id}
+                    className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors"
+                  >
                   <td className="px-5 py-4 font-mono font-bold text-cyan-600 dark:text-cyan-400">
                     {po.poNumber}
                   </td>
@@ -536,7 +502,7 @@ export default function PurchaseOrdersPage() {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

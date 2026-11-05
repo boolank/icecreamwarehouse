@@ -32,119 +32,67 @@ interface JournalEntryRecord {
   lines: JournalLineItem[];
 }
 
+const DEMO_JOURNAL_ENTRIES: JournalEntryRecord[] = [
+  {
+    id: 1,
+    entryNumber: "JV-202610-0001",
+    entryDate: "2026-10-29",
+    referenceType: "INBOUND",
+    referenceCode: "PO-DIS10114",
+    description: "Penerimaan Pasokan 560 Dus Es Krim Miami (PT Indo Van Houten)",
+    lines: [
+      {
+        id: 1,
+        accountCode: "1130",
+        accountName: "Persediaan Barang Dagang Es Krim",
+        description: "Penambahan Persediaan Masuk PO-DIS10114",
+        debit: 40790214,
+        credit: 0,
+      },
+      {
+        id: 2,
+        accountCode: "2101",
+        accountName: "Utang Usaha",
+        description: "Kewajiban Supplier PT Indo Van Houten (COD 0 Hari)",
+        debit: 0,
+        credit: 40790214,
+      },
+    ],
+  },
+  {
+    id: 2,
+    entryNumber: "JV-202610-0002",
+    entryDate: "2026-10-29",
+    referenceType: "PAYMENT_AP",
+    referenceCode: "BKK-202610-001",
+    description: "Pelunasan Hutang Pembelian PO-DIS10114 via Rekening BCA",
+    lines: [
+      {
+        id: 3,
+        accountCode: "2101",
+        accountName: "Utang Usaha",
+        description: "Pelunasan Tagihan PT Indo Van Houten",
+        debit: 40790214,
+        credit: 0,
+      },
+      {
+        id: 4,
+        accountCode: "1103",
+        accountName: "Bank BCA — Rekening Operasional",
+        description: "Pengeluaran Kas Transfer Pelunasan",
+        debit: 0,
+        credit: 40790214,
+      },
+    ],
+  },
+];
+
 export default function GeneralJournalPage() {
+  const [entries, setEntries] = useState<JournalEntryRecord[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [refFilter, setRefFilter] = useState("ALL");
   const [startDate, setStartDate] = useState("2026-10-01");
   const [endDate, setEndDate] = useState("2026-10-31");
-
-  // Mock list of balanced journal entries
-  const entries: JournalEntryRecord[] = [
-    {
-      id: 1,
-      entryNumber: "JV-202610-0001",
-      entryDate: "2026-10-31",
-      referenceType: "OUTBOUND_REV",
-      referenceCode: "SO-202610-001",
-      description: "Pendapatan Penjualan & Piutang Usaha SO-202610-001 (PT Sumber Dingin)",
-      lines: [
-        {
-          id: 1,
-          accountCode: "1120",
-          accountName: "Piutang Usaha",
-          description: "Piutang Penjualan SO-202610-001",
-          debit: 2815000,
-          credit: 0,
-        },
-        {
-          id: 2,
-          accountCode: "4101",
-          accountName: "Pendapatan Penjualan Es Krim",
-          description: "Pengakuan Penjualan Es Krim SO-202610-001",
-          debit: 0,
-          credit: 2815000,
-        },
-      ],
-    },
-    {
-      id: 2,
-      entryNumber: "JV-202610-0002",
-      entryDate: "2026-10-31",
-      referenceType: "OUTBOUND_COGS",
-      referenceCode: "SO-202610-001",
-      description: "Beban Pokok Penjualan (HPP) FEFO SO-202610-001",
-      lines: [
-        {
-          id: 3,
-          accountCode: "5101",
-          accountName: "Beban Pokok Penjualan (HPP)",
-          description: "HPP FEFO Pengeluaran Stok SO-202610-001",
-          debit: 1750000,
-          credit: 0,
-        },
-        {
-          id: 4,
-          accountCode: "1130",
-          accountName: "Persediaan Barang Dagang Es Krim",
-          description: "Pengurangan Saldo Persediaan SO-202610-001",
-          debit: 0,
-          credit: 1750000,
-        },
-      ],
-    },
-    {
-      id: 3,
-      entryNumber: "JV-202610-0003",
-      entryDate: "2026-10-31",
-      referenceType: "INBOUND",
-      referenceCode: "PO-202610-001",
-      description: "Penerimaan Pasokan Es Krim Gudang Dingin PO-202610-001",
-      lines: [
-        {
-          id: 5,
-          accountCode: "1130",
-          accountName: "Persediaan Barang Dagang Es Krim",
-          description: "Penambahan Persediaan Masuk PO-202610-001",
-          debit: 5400000,
-          credit: 0,
-        },
-        {
-          id: 6,
-          accountCode: "2101",
-          accountName: "Utang Usaha",
-          description: "Pengakuan Kewajiban Supplier PO-202610-001",
-          debit: 0,
-          credit: 5400000,
-        },
-      ],
-    },
-    {
-      id: 4,
-      entryNumber: "JV-202610-0004",
-      entryDate: "2026-10-30",
-      referenceType: "SPOILAGE_WRITEOFF",
-      referenceCode: "RTN-202610-001",
-      description: "Pemusnahan Es Krim Rusak/Meleleh Berita Acara BA-SPOIL-202610-001",
-      lines: [
-        {
-          id: 7,
-          accountCode: "5201",
-          accountName: "Beban Kerugian Barang Rusak / Meleleh",
-          description: "Pengakuan Beban Kerusakan Es Krim BA-SPOIL-001",
-          debit: 75000,
-          credit: 0,
-        },
-        {
-          id: 8,
-          accountCode: "1130",
-          accountName: "Persediaan Barang Dagang Es Krim",
-          description: "Pemotongan Fisik Karantina Write-Off",
-          debit: 0,
-          credit: 75000,
-        },
-      ],
-    },
-  ];
 
   const filtered = entries.filter((e) => {
     const matchesSearch =
@@ -182,14 +130,30 @@ export default function GeneralJournalPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setEntries([])}
+            className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-gray-600 hover:text-rose-600 dark:text-gray-400 dark:hover:text-rose-400 font-medium text-xs transition cursor-pointer"
+            title="Kosongkan jurnal untuk simulasi awal"
+          >
+            Kosongkan Jurnal
+          </button>
+          <button
+            type="button"
+            onClick={() => setEntries(DEMO_JOURNAL_ENTRIES)}
+            className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium text-xs transition cursor-pointer"
+            title="Muat contoh ayat jurnal penyeimbang (Inbound & Pembayaran PO-DIS10114)"
+          >
+            Muat Jurnal PO-DIS10114
+          </button>
           <button
             type="button"
             onClick={() => window.print()}
             className="inline-flex items-center gap-2 px-3.5 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg text-xs font-medium transition-colors"
           >
             <Printer className="w-4 h-4" />
-            Cetak Jurnal
+            <span>Cetak Jurnal</span>
           </button>
         </div>
       </div>
@@ -239,7 +203,29 @@ export default function GeneralJournalPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-              {filtered.map((entry) => (
+              {filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-12 px-4 text-center">
+                    <div className="flex flex-col items-center justify-center max-w-sm mx-auto text-gray-400">
+                      <FileText className="w-10 h-10 mb-2 stroke-1 text-gray-300 dark:text-gray-600" />
+                      <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        Belum Ada Ayat Jurnal Umum
+                      </p>
+                      <p className="text-xs text-gray-400 mt-1 mb-4">
+                        Buku jurnal bersih untuk memverifikasi otomatisasi pembukuan dari transaksi alur bisnis nyata.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setEntries(DEMO_JOURNAL_ENTRIES)}
+                        className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-sm transition cursor-pointer"
+                      >
+                        Muat Contoh Jurnal Penyeimbang PO-DIS10114
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filtered.map((entry) => (
                 <React.Fragment key={entry.id}>
                   {entry.lines.map((line, idx) => (
                     <tr
@@ -293,7 +279,7 @@ export default function GeneralJournalPage() {
                     </tr>
                   ))}
                 </React.Fragment>
-              ))}
+              )))}
             </tbody>
             {/* Grand Total Footer */}
             <tfoot className="bg-gray-100 dark:bg-gray-750 font-bold border-t-2 border-gray-300 dark:border-gray-600">

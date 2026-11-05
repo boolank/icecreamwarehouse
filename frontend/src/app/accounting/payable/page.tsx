@@ -70,103 +70,6 @@ const INITIAL_PAYABLES: PayableInvoice[] = [
     status: "MENDEKATI_JATUH_TEMPO",
     payments: [],
   },
-  {
-    id: "ap-1",
-    invoiceNo: "INV-AICE-202610-089",
-    poNumber: "PO-202610-001",
-    supplierName: "PT Alpen Food Industry (Aice)",
-    supplierCategory: "Prinsipal Utama",
-    invoiceDate: "2026-10-15",
-    dueDate: "2026-11-14",
-    termDays: 30,
-    daysRemaining: 10,
-    totalAmount: 48500000,
-    paidAmount: 20000000,
-    balanceDue: 28500000,
-    status: "LANCAR",
-    payments: [
-      {
-        id: "pay-1",
-        paymentDate: "2026-10-25",
-        amount: 20000000,
-        paymentMethod: "Transfer Bank",
-        bankAccount: "1103 Bank BCA — Rekening Operasional",
-        referenceNo: "TRF-BCA-889124",
-        paidBy: "Hendra Wijaya (Finance)",
-        notes: "Uang muka pelunasan batch Aice Mango Slush.",
-      },
-    ],
-  },
-  {
-    id: "ap-2",
-    invoiceNo: "INV-WALLS-202610-112",
-    poNumber: "PO-202610-002",
-    supplierName: "PT Unilever Indonesia Tbk (Wall's)",
-    supplierCategory: "Prinsipal Utama",
-    invoiceDate: "2026-10-05",
-    dueDate: "2026-11-04",
-    termDays: 30,
-    daysRemaining: 0,
-    totalAmount: 65000000,
-    paidAmount: 0,
-    balanceDue: 65000000,
-    status: "MENDEKATI_JATUH_TEMPO",
-    payments: [],
-  },
-  {
-    id: "ap-3",
-    invoiceNo: "INV-CAMPINA-202609-044",
-    poNumber: "PO-202609-008",
-    supplierName: "PT Campina Ice Cream Industry Tbk",
-    supplierCategory: "Pabrik Es Krim",
-    invoiceDate: "2026-09-20",
-    dueDate: "2026-10-20",
-    termDays: 30,
-    daysRemaining: -15,
-    totalAmount: 32000000,
-    paidAmount: 15000000,
-    balanceDue: 17000000,
-    status: "LEWAT_JATUH_TEMPO",
-    payments: [
-      {
-        id: "pay-2",
-        paymentDate: "2026-10-05",
-        amount: 15000000,
-        paymentMethod: "Transfer Bank",
-        bankAccount: "1104 Bank Mandiri — Rekening Operasional",
-        referenceNo: "TRF-MDR-442190",
-        paidBy: "Hendra Wijaya (Finance)",
-        notes: "Cicilan ke-1 pasokan es krim rasa durian.",
-      },
-    ],
-  },
-  {
-    id: "ap-4",
-    invoiceNo: "INV-DIAMOND-202610-003",
-    poNumber: "PO-202610-004",
-    supplierName: "PT Diamond Cold Storage",
-    supplierCategory: "Pabrik Es Krim",
-    invoiceDate: "2026-10-10",
-    dueDate: "2026-10-24",
-    termDays: 14,
-    daysRemaining: 0,
-    totalAmount: 25000000,
-    paidAmount: 25000000,
-    balanceDue: 0,
-    status: "LUNAS",
-    payments: [
-      {
-        id: "pay-3",
-        paymentDate: "2026-10-22",
-        amount: 25000000,
-        paymentMethod: "Transfer Bank",
-        bankAccount: "1103 Bank BCA — Rekening Operasional",
-        referenceNo: "TRF-BCA-991204",
-        paidBy: "Hendra Wijaya (Finance)",
-        notes: "Pelunasan penuh PO es krim bulk 8 Liter.",
-      },
-    ],
-  },
 ];
 
 export default function AccountsPayablePage() {
@@ -345,6 +248,23 @@ export default function AccountsPayablePage() {
             Pencatatan kewajiban tagihan pasokan es krim ke prinsipal/pabrik, jadwal jatuh tempo (AP Aging), dan otomatisasi jurnal pelunasan utang (Akun 2101).
           </p>
         </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setPayables([])}
+            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-600 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 font-medium text-xs transition cursor-pointer"
+            title="Kosongkan daftar hutang supplier untuk simulasi dari nol"
+          >
+            Kosongkan AP
+          </button>
+          <button
+            onClick={() => setPayables(INITIAL_PAYABLES)}
+            className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium text-xs transition cursor-pointer"
+            title="Muat tagihan PO-DIS10114 PT. Indo Van Houten (Rp 40.790.214)"
+          >
+            Muat Tagihan PO-DIS10114
+          </button>
+        </div>
       </div>
 
       {/* KPI Bento Cards */}
@@ -437,7 +357,28 @@ export default function AccountsPayablePage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 font-mono">
-              {filteredPayables.map((item) => (
+              {filteredPayables.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="px-5 py-12 text-center">
+                    <div className="flex flex-col items-center justify-center max-w-sm mx-auto text-slate-400 font-sans">
+                      <Receipt className="w-10 h-10 mb-2 stroke-1 text-slate-300 dark:text-slate-600" />
+                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        Tidak Ada Tagihan Hutang Usaha
+                      </p>
+                      <p className="text-xs text-slate-400 mt-1 mb-4">
+                        Tabel hutang kosong untuk persiapan simulasi pembayaran kas keluar dari nol.
+                      </p>
+                      <button
+                        onClick={() => setPayables(INITIAL_PAYABLES)}
+                        className="px-3.5 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-xs shadow-sm transition cursor-pointer"
+                      >
+                        Muat Tagihan PO-DIS10114 (Rp 40.790.214)
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filteredPayables.map((item) => (
                 <tr
                   key={item.id}
                   className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30 transition-colors"
@@ -507,7 +448,7 @@ export default function AccountsPayablePage() {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>
